@@ -1,0 +1,23 @@
+.QOverlay {
+	/*background-color: #FFF;*/
+	background:url(../../img/bg_body.jpg) 0 0 repeat;
+	z-index: 9999;
+	width: 100%;
+	height: 100%;
+}
+
+.QLoader {
+	/*background-color: #EE8F9F;*/
+	background:url(../../img/bar_preloader.gif) 0 0 repeat;
+	height: 8px;
+}
+
+@media only screen and (-webkit-min-device-pixel-ratio: 1.5) {
+.QOverlay {
+	/*background-color: #FFF;*/
+	background:url(../../img/bg_body.jpg) 0 0 repeat;
+	z-index: 9999;
+	width: 1000px;
+	height:1000px;
+}
+}
