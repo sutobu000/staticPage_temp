@@ -71,6 +71,10 @@ gulp.task("watch", function() {
 		proxy: {
 		    target: "http://test.dev",
 		}
+        // server: {
+        //     baseDir: "./dist"
+        // },
+		// port: 7890
 	});
     gulp.watch('src/jade/**/*.jade', ["jade"]);
     gulp.watch("src/sass/**/*.+(scss|sass)",["sass"]);
