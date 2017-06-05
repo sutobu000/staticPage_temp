@@ -36,27 +36,41 @@ gulp.task("sass", function() {
 			}
 		}))
 		.pipe(gulp.dest("dist/css"))
-		.pipe(browserSync.stream())
+		// .pipe(browserSync.stream())
 		.pipe(notify({
-			message: 'sass task finished',
-			title: 'sass | scss',
-			sound: 'Glass'
+			message: 'せいれぇぇ〜つっ！',
+			title: 'sass',
+			// sound: 'Glass'
 		}));
 });
 
 //jade
 gulp.task("jade", function() {
 	gulp.src(["src/jade/**/*.jade", "!src/jade/**/_*.jade"])
-		.pipe(plumber({errorHandler: notify.onError('<%= error.message %>')}))
+        .pipe(plumber({errorHandler: notify.onError('<%= error.message %>')}))
 		.pipe(jade({
 			pretty: true
 		}))
 		.pipe(gulp.dest("dist/"))
-		.pipe(browserSync.stream())
+		// .pipe(browserSync.stream())
 		.pipe(notify({
-			message: 'jade task finished',
+			message: '形を作るのが私です',
 			title: 'jade',
-			sound: 'Glass'
+			// sound: 'Glass'
+		}));
+});
+
+//js
+gulp.task("js", function() {
+	gulp.src(["dist/js/*.js"])
+        .pipe(plumber({errorHandler: notify.onError('<%= error.message %>')}))
+        .pipe(uglify())
+		.pipe(gulp.dest("dist/js/min"))
+		// .pipe(browserSync.stream())
+		.pipe(notify({
+			message: '圧縮圧縮ぅ！！',
+			title: 'js',
+			// sound: 'Glass'
 		}));
 });
 
@@ -68,20 +82,20 @@ gulp.task('reload', function () {
 //監視開始
 gulp.task("watch", function() {
 	browserSync.init({
-		proxy: {
-		    target: "http://test.dev",
-		}
-        // server: {
-        //     baseDir: "./dist"
-        // },
-		// port: 7890
+		// proxy: {
+		//     target: "http://test.dev",
+		// }
+        server: {
+            baseDir: "./dist"
+        },
+		port: 5236
 	});
-    gulp.watch('src/jade/**/*.jade', ["jade"]);
-    gulp.watch("src/sass/**/*.+(scss|sass)",["sass"]);
-	gulp.watch("dist/js/**/*.js",["reload"]);
+    gulp.watch('src/jade/**/*.jade', ["jade","reload"]);
+    gulp.watch("src/sass/**/*.+(scss|sass)",["sass","reload"]);
+	gulp.watch("dist/js/**/*.js",["js","reload"]);
 });
 
 gulp.task('default', function(callback){
-	return runSequence('clear', ['jade', 'sass'], 'watch', callback);
+	return runSequence('clear', 'watch', callback);
 });
 
