@@ -38,8 +38,8 @@ gulp.task("sass", function() {
 		.pipe(gulp.dest("dist/css"))
 		// .pipe(browserSync.stream())
 		.pipe(notify({
-			message: 'せいれぇぇ〜つっ！',
-			title: 'sass',
+			message: 'sassをコンパイルしたで',
+			title: 'sassマン',
 			// sound: 'Glass'
 		}));
 });
@@ -54,9 +54,8 @@ gulp.task("jade", function() {
 		.pipe(gulp.dest("dist/"))
 		// .pipe(browserSync.stream())
 		.pipe(notify({
-			message: '形を作るのが私です',
-			title: 'jade',
-			// sound: 'Glass'
+			message: 'jadeをコンパイルしたで',
+			title: 'jadeマン'
 		}));
 });
 
@@ -68,9 +67,8 @@ gulp.task("js", function() {
 		.pipe(gulp.dest("dist/js/min"))
 		// .pipe(browserSync.stream())
 		.pipe(notify({
-			message: '圧縮圧縮ぅ！！',
-			title: 'js',
-			// sound: 'Glass'
+			message: 'jsを圧縮したで',
+			title: 'jsマン'
 		}));
 });
 

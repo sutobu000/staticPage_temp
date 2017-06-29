@@ -1,121 +1,15 @@
 ;(function($,window,undefind) {
 
 	var $window = $(window);
-	var $pagetop = $(".btnPagetop");
+	var $pageTop = $(".btnPagetop");
 	var is_pagetop = false;
 
 	setUA();
 
-
-	/* -----------------------------------------------
-	 * FastClick.js
-	 * ----------------------------------------------- */
-	if ('addEventListener' in document) {
-	    document.addEventListener('DOMContentLoaded', function() {
-	        FastClick.attach(document.body);
-	    }, false);
-	}
-
-	/* -----------------------------------------------
-	 * loadアニメーション　fadeIn/fadeOut
-	 * ----------------------------------------------- */
-	var $home = $("#home"),
-		$main = $home.find("main");
-	if($home.offset()){
-		$(document).ready(function() {
-			$("html,body").animate({scrollTop:0}, "1");		
-		});
-		$window.load(function() {
-			TweenMax.to($home, 1, {opacity:1,delay:1}),
-			TweenMax.staggerFromTo($main.children('article'), 1, {y:10,opacity:0},{y:0,opacity:1,delay:2},0.25);
-		});
-	}
-	/* -----------------------------------------------
-	 * SP　ドロワーメニュー
-	 * ----------------------------------------------- */
-	$("header .inner .menu").on("click", function(e) {
-		e.preventDefault();
-		var $list = $(this).next().find('ul li'),
-			tl = new TimelineMax();
-		
-		$(this).toggleClass('current');
-		if($(this).hasClass('current')){
-			// $('body,html').css({"overflow":"hidden","height":"100%"});
-			var $line1 = $(this).find('span').eq(0),
-				$line2 = $(this).find('span').eq(1)
-				$line3 = $(this).find('span').eq(2);
-			TweenMax.to($line1, .5, {ease:Back.easeInOut,rotation:30,y:14}),
-			TweenMax.to($line2, .5, {ease:Back.easeInOut,x:200}),
-			TweenMax.to($line3, .5, {ease:Back.easeInOut,rotation:-30,y:-14});
-
-			tl.to($(this).next(), .5, {ease:Power3.easeInOut,height:"100%"})
-				.staggerFromTo($list, .3, {x:-10,opacity:0}, {ease:Power3.easeInOut,x:0,opacity:1},0.05);
-		}else{
-			// $('body,html').css({"overflow":"visible","height":"auto"});
-			var $line1 = $(this).find('span').eq(0),
-				$line2 = $(this).find('span').eq(1)
-				$line3 = $(this).find('span').eq(2);
-			TweenMax.to($line1, .3, {rotation:0,y:0}),
-			TweenMax.to($line2, .3, {x:0}),
-			TweenMax.to($line3, .3, {rotation:0,y:0});
-			$list = $list.get().reverse();
-			tl.staggerTo($list, .3, {ease:Sine.easeIn,x:-10,opacity:0},.02)
-				.to($(this).next(), .3, {ease:Expo.easeInOut,height:0});
-		}
-	});
-
-	/* -----------------------------------------------
-	 * アコーディオン
-	 * ----------------------------------------------- */
-	$(".sort a").on("click", function() {
-		$(this).toggleClass('current');
-		$(this).next().slideToggle();
-	});
-
-	$(".job h3").on("click", function() {
-		$(this).next().slideToggle();
-		if($(this).hasClass('current')){
-			var $plus = $(this).find('span');
-			TweenMax.to($plus, .3, {rotation:0})
-			$(this).removeClass('current');
-		}else{
-			var $plus = $(this).find('span');
-			TweenMax.to($plus, .3, {rotation:45})
-			$(this).addClass('current');
-		}
-	});
-	$(".close").on("click", function(e) {
-		e.preventDefault();
-		$(this).parent(".content").prev().removeClass('current');
-		$(this).parent(".content").slideToggle();
-		var $plus = $(this).parent(".content").parent("section").find('h3 span');
-		TweenMax.to($plus, .3, {rotation:0})
-	});
-
-	/* -----------------------------------------------
-	 * 文字数制限
-	 * ----------------------------------------------- */
-
-    textNum($('#home main article.topics ul li a .in-text').find('span'),'32',' …');
-    textNum($('#home main article.blog ul li a .in-text').find('span'),'32',' …');
-    textNum($('.comment').find('p'),'41',' …');
-    textNum($('.entry').find('.detail'),'85',' …');
-	function textNum($setElm, cutFigure, afterTxt){
-	    $setElm.each(function(){
-	        var textLength = $(this).text().length;
-	        var textTrim = $(this).text().substr(0,(cutFigure))
-	 
-	        if(cutFigure < textLength) {
-	            $(this).html(textTrim + afterTxt).css({visibility:'visible'});
-	        } else if(cutFigure >= textLength) {
-	            $(this).css({visibility:'visible'});
-	        }
-	    });
-	}
 	/* -----------------------------------------------
 	 * マウスオーバー - フェード
 	 * ----------------------------------------------- */
-	$('ul li.fade a').hover(
+	$('.object').hover(
 		function(){
 			$(this)
 				.stop()
@@ -124,35 +18,6 @@
 			$(this)
 				.stop()
 				.animate({opacity: 1},{duration: 100});
-		}
-	);
-
-	$('.logo, .fade a').hover(
-		function(){
-			$(this).find("img")
-				.stop()
-				.animate({opacity: 0.7},{duration: 100});
-		},function(){
-			$(this).find("img")
-				.stop()
-				.animate({opacity: 1},{duration: 300});
-		}
-	);
-
-	/* -----------------------------------------------
-	 * マウスオーバー - ヘッダーナビ
-	 * ----------------------------------------------- */
-
-	$('header nav ul li a').hover(
-		function(){
-			$(this).next('span')
-				.css({'right':'100%','opacity':'.5'})
-				.stop();
-			TweenMax.to($(this).next('span'),.6,{ease:Circ,'right':'0%','opacity':1});
-		},function(){
-			$(this).next('span')
-				.stop();
-			TweenMax.to($(this).next('span'),.6,{ease:Circ,'right':'-100%','opacity':.5});
 		}
 	);
 
@@ -183,23 +48,16 @@
 			scrollHeight = $(document).height(),
 			scrollPosition = $window.height() + $window.scrollTop(),
 			footHeight = $("footer").height();
-	/* -----------------------------------------------
-	 * トップページアニメーション
-	 * ----------------------------------------------- */
-
-		function sideAnime($object, $sec, $x, $delay, $ease) {
-			TweenMax.fromTo($object, $sec, {x:$x, opacity:0}, {ease:$ease,x:0,opacity:1,delay:$delay});
-		}
 
 		/* -----------------------------------------------
 		 * ページトップの固定
 		 * ----------------------------------------------- */
 	    if ( scrollHeight - scrollPosition  <= footHeight ) {
 	        // ページトップリンクをフッターに固定
-	        $(".btnPagetop").css({"position":"fixed", "bottom": scrollPosition-scrollHeight+footHeight+31});
+	        $pageTop.css({"position":"fixed", "bottom": scrollPosition-scrollHeight+footHeight+31});
 	    } else {
 	        // ページトップリンクを右下に固定
-	        $(".btnPagetop").css({"position":"fixed", "bottom": "31px"});
+	        $pageTop.css({"position":"fixed", "bottom": "31px"});
 	    }
 
 		/* -----------------------------------------------
@@ -208,7 +66,7 @@
 		if (_sTop <= 50) {
 			if (!is_pagetop) return;
 			is_pagetop = false;
-			$pagetop
+			$pageTop
 				.stop()
 				.animate({
 					bottom: 20,
@@ -221,7 +79,7 @@
 			if (is_pagetop) return;
 
 			is_pagetop = true;
-			$pagetop
+			$pageTop
 				.stop()
 				.css({
 					display: 'block',
@@ -250,50 +108,24 @@
 
 	});
 
-
 	/* -----------------------------------------------
-	 * オリエンテーション取得
+	 * 文字数制限
 	 * ----------------------------------------------- */
-	function switchOrientation(){
-		var orientation = window.orientation;
-		if(orientation == 0){
-			$("body").addClass("portrait");
-			$("body").removeClass("landscape");
-		}else{
-			$("body").addClass("landscape");
-			$("body").removeClass("portrait");
-		}
 
+	function textNum($setElm, cutFigure, afterTxt){
+	    $setElm.each(function(){
+	        var textLength = $(this).text().length;
+	        var textTrim = $(this).text().substr(0,(cutFigure))
+	 
+	        if(cutFigure < textLength) {
+	            $(this).html(textTrim + afterTxt).css({visibility:'visible'});
+	        } else if(cutFigure >= textLength) {
+	            $(this).css({visibility:'visible'});
+	        }
+	    });
 	}
 
-	$(document).ready(function(){
-		switchOrientation();
-		var agent = navigator.userAgent;
-		if(agent.search(/iPhone/) != -1){
-			window.onorientationchange = switchOrientation;
-		}else{
-			window.onresize = switchOrientation;
-		}
-
-	});
-
-	/* Android2.3 only */
-	$(function(){
-		$(window).resize(function(){
-			var orientation = window.orientation;
-			if(orientation == 0){
-				$("body").addClass("portrait");
-				$("body").removeClass("landscape");
-			}else{
-				$("body").addClass("landscape");
-				$("body").removeClass("portrait");
-			}
-		});
-	});
-
 })(jQuery,window);
-
-
 
 /* -----------------------------------------------
  * オートスクロール
@@ -320,65 +152,49 @@ function autoScroll(opt_hash, opt_delay, opt_duration, opt_easing){
 		});
 };
 
-
-var ua, agent, isSmp;
-
-function setUA(){
-
-	agent = navigator.userAgent;
-	isSmp = false;
-
-	if(jQuery.browser.msie){
-		var ver_ = parseInt(jQuery.browser.version);
-
-		switch(ver_){
-			case 9:
-			ua = 'ie9'; break;
-
-			case 8:
-			ua = 'ie8'; break;
-
-			case 7:
-			ua = 'ie7'; break;
-
-			case 6:
-			ua = 'ie6'; break;
-		};
-
-	};
-
-	// スマホ、iPad関連はIE7,8モードで処理
-	if(agent.search('iPhone') != -1){
-		ua = 'iPhone';
-		isSmp = true;
-	}else if(agent.search('iPad') != -1){
-		ua = 'iPad';
-		isSmp = true;
-	}else if(agent.search('Android') != -1){
-		ua = 'Android';
-		isSmp = true;
-	};
-
-};
-
-function getParam( opt_key ) {
-	var url   = location.href;
-	parameters    = url.split("?");
-	if(parameters.length < 2) return false;
-	params   = parameters[1].split("&");
-	var paramsArray = [];
-	for ( i = 0; i < params.length; i++ ) {
-		neet = params[i].split("=");
-		paramsArray.push(neet[0]);
-		paramsArray[neet[0]] = neet[1];
-	}
-	var categoryKey = paramsArray[opt_key];
-	return categoryKey;
+/* -----------------------------------------------
+ * FastClick.js
+ * ----------------------------------------------- */
+if ('addEventListener' in document) {
+	document.addEventListener('DOMContentLoaded', function() {
+		FastClick.attach(document.body);
+	}, false);
 }
 
 
-function trace(opt_str){
-	//if (jQuery.browser.msie) {return};
-	//console.log(opt_str);
-};
+/* -----------------------------------------------
+ * ユーザーエージェントを取得
+ * ----------------------------------------------- */
+function setUA() {
+	var ua = navigator.userAgent.toLowerCase();  //エージェント取得
+	var ver = navigator.appVersion.toLowerCase(); //バージョンを取得
 
+	var isMSIE = (ua.indexOf('msie') > -1) && (ua.indexOf('opera') == -1); // IE(11以外)
+	var isIE6 = isMSIE && (ver.indexOf('msie 6.') > -1); // IE6
+	var isIE7 = isMSIE && (ver.indexOf('msie 7.') > -1); // IE7
+	var isIE8 = isMSIE && (ver.indexOf('msie 8.') > -1); // IE8
+	var isIE9 = isMSIE && (ver.indexOf('msie 9.') > -1); // IE9
+	var isIE10 = isMSIE && (ver.indexOf('msie 10.') > -1); // IE10
+	var isIE11 = (ua.indexOf('trident/7') > -1); // IE11
+	var isIE = isMSIE || isIE11; // IE
+	var isEdge = (ua.indexOf('edge') > -1); // Edge
+
+	var isChrome = (ua.indexOf('chrome') > -1) && (ua.indexOf('edge') == -1); // Google Chrome
+	var isFirefox = (ua.indexOf('firefox') > -1); //Firefox
+	var isSafari = (ua.indexOf('safari') > -1) && (ua.indexOf('chrome') == -1); // Safari
+	var isOpera = (ua.indexOf('opera') > -1); // Opera
+	 
+	// 使用例
+	if(isIE) alert('IE');
+	if(isIE6) alert('IE6');
+	if(isIE7) alert('IE7');
+	if(isIE8) alert('IE8');
+	if(isIE9) alert('IE9');
+	if(isIE10) alert('IE10');
+	if(isIE11) alert('IE11');
+	if(isEdge) alert('Edge');
+	if(isChrome) alert('Google Chrome');
+	if(isFirefox) alert('Firefox');
+	if(isSafari) alert('Safari');
+	if(isOpera) alert('Opera');
+}
