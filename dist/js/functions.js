@@ -1,8 +1,8 @@
 ;(function($,window,undefind) {
 
 	var $window = $(window);
-	var $pageTop = $(".btnPagetop");
-	var is_pagetop = false;
+	var $pageTop = $(".btnPageTop");
+	var is_pageTop = false;
 
 	setUA();
 
@@ -64,8 +64,8 @@
 		 * ページトップの表示/非表示
 		 * ----------------------------------------------- */
 		if (_sTop <= 50) {
-			if (!is_pagetop) return;
-			is_pagetop = false;
+			if (!is_pageTop) return;
+			is_pageTop = false;
 			$pageTop
 				.stop()
 				.animate({
@@ -76,9 +76,9 @@
 				});
 		} else if (_sTop > 50) {
 
-			if (is_pagetop) return;
+			if (is_pageTop) return;
 
-			is_pagetop = true;
+			is_pageTop = true;
 			$pageTop
 				.stop()
 				.css({
@@ -100,11 +100,11 @@
 	/* -----------------------------------------------
 	 * ページトップ　スクロール
 	 * ----------------------------------------------- */
-	$pagetop.on('click', function(e){
+	$pageTop.on('click', function(e){
 
 		e.preventDefault();
 
-		TweenLite.to(window, 0.8, {ease:Circ, scrollTo:0});
+		TweenLite.to(window, 0.8, {ease:Circ, scrollTop:0});
 
 	});
 

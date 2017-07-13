@@ -5,6 +5,7 @@ var gulp = require("gulp"),
 	pleeease = require("gulp-pleeease"),
 	uglify = require("gulp-uglify"),
 	notify = require("gulp-notify"),
+	changed = require("gulp-changed"),
 	browserSync = require("browser-sync"),
 	plumber = require("gulp-plumber"),
 	runSequence = require("run-sequence");
@@ -36,11 +37,10 @@ gulp.task("sass", function() {
 			}
 		}))
 		.pipe(gulp.dest("dist/css"))
-		// .pipe(browserSync.stream())
+		.pipe(browserSync.stream())
 		.pipe(notify({
 			message: 'sassをコンパイルしたで',
-			title: 'sassマン',
-			// sound: 'Glass'
+			title: 'sassマン'
 		}));
 });
 
@@ -51,8 +51,9 @@ gulp.task("jade", function() {
 		.pipe(jade({
 			pretty: true
 		}))
+		.pipe(changed("dist", {extension: '.html'}))
 		.pipe(gulp.dest("dist/"))
-		// .pipe(browserSync.stream())
+		.pipe(browserSync.stream())
 		.pipe(notify({
 			message: 'jadeをコンパイルしたで',
 			title: 'jadeマン'
@@ -60,19 +61,18 @@ gulp.task("jade", function() {
 });
 
 //js
-gulp.task("js", function() {
-	gulp.src(["dist/js/*.js"])
-        .pipe(plumber({errorHandler: notify.onError('<%= error.message %>')}))
-        .pipe(uglify())
-		.pipe(gulp.dest("dist/js/min"))
-		// .pipe(browserSync.stream())
-		.pipe(notify({
-			message: 'jsを圧縮したで',
-			title: 'jsマン'
-		}));
-});
+// gulp.task("js", function() {
+// 	gulp.src(["dist/js/*.js"])
+//         .pipe(plumber({errorHandler: notify.onError('<%= error.message %>')}))
+//         .pipe(uglify())
+// 		.pipe(gulp.dest("dist/js/min"))
+// 		.pipe(notify({
+// 			message: 'jsを圧縮したで',
+// 			title: 'jsマン'
+// 		}));
+// });
 
-//ブラウザリロード
+// ブラウザリロード
 gulp.task('reload', function () {
     browserSync.reload();
 });
@@ -86,11 +86,11 @@ gulp.task("watch", function() {
         server: {
             baseDir: "./dist"
         },
-		port: 5236
+		port: 8888
 	});
-    gulp.watch('src/jade/**/*.jade', ["jade","reload"]);
-    gulp.watch("src/sass/**/*.+(scss|sass)",["sass","reload"]);
-	gulp.watch("dist/js/**/*.js",["js","reload"]);
+    gulp.watch(['src/jade/**/*.jade','src/jade/**/_*.jade'], ["jade"]);
+    gulp.watch("src/sass/**/*.+(scss|sass)",["sass"]);
+	// gulp.watch("dist/js/**/*.js",["js","reload"]);
 });
 
 gulp.task('default', function(callback){
