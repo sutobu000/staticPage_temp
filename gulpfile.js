@@ -38,26 +38,42 @@ gulp.task("sass", function() {
 		}))
 		.pipe(gulp.dest("dist/css"))
 		.pipe(browserSync.stream())
-		.pipe(notify({
-			message: 'sassをコンパイルしたで',
-			title: 'sassマン'
-		}));
+		// .pipe(notify({
+		// 	message: 'sassをコンパイルしたで',
+		// 	title: 'sassマン',
+		// 	// sound: 'Glass'
+		// }));
 });
 
 //jade
 gulp.task("jade", function() {
-	gulp.src(["src/jade/**/*.jade", "!src/jade/**/_*.jade"])
+	gulp.src(["src/jade/**/*.jade","!src/jade/**/_*.jade"])
         .pipe(plumber({errorHandler: notify.onError('<%= error.message %>')}))
 		.pipe(jade({
 			pretty: true
 		}))
 		.pipe(changed("dist", {extension: '.html'}))
 		.pipe(gulp.dest("dist/"))
-		.pipe(browserSync.stream())
-		.pipe(notify({
-			message: 'jadeをコンパイルしたで',
-			title: 'jadeマン'
-		}));
+		// .pipe(browserSync.stream())
+		// .pipe(notify({
+		// 	message: 'jadeをコンパイルしたで',
+		// 	title: 'jadeマン'
+		// }));
+});
+
+//jade (_*.jadeの場合)
+gulp.task("jade2", function() {
+	gulp.src(["src/jade/**/*.jade","!src/jade/**/_*.jade"])
+        .pipe(plumber({errorHandler: notify.onError('<%= error.message %>')}))
+		.pipe(jade({
+			pretty: true
+		}))
+		.pipe(gulp.dest("dist/"))
+		// .pipe(browserSync.stream())
+		// .pipe(notify({
+		// 	message: 'jadeをコンパイルしたで',
+		// 	title: 'jadeマン'
+		// }));
 });
 
 //js
@@ -66,10 +82,11 @@ gulp.task("jade", function() {
 //         .pipe(plumber({errorHandler: notify.onError('<%= error.message %>')}))
 //         .pipe(uglify())
 // 		.pipe(gulp.dest("dist/js/min"))
-// 		.pipe(notify({
-// 			message: 'jsを圧縮したで',
-// 			title: 'jsマン'
-// 		}));
+// 		// .pipe(browserSync.stream())
+// 		// .pipe(notify({
+// 		// 	message: 'jsを圧縮したで',
+// 		// 	title: 'jsマン'
+// 		// }));
 // });
 
 // ブラウザリロード
@@ -80,15 +97,18 @@ gulp.task('reload', function () {
 //監視開始
 gulp.task("watch", function() {
 	browserSync.init({
+		online: true,
+		ui: false,
 		// proxy: {
 		//     target: "http://test.dev",
 		// }
         server: {
-            baseDir: "./dist"
+            baseDir: "./dist",
         },
-		port: 8888
+		port: 7040
 	});
-    gulp.watch(['src/jade/**/*.jade','src/jade/**/_*.jade'], ["jade"]);
+    gulp.watch(['src/jade/**/*.jade','!src/jade/**/_*.jade'], ["jade","reload"]);
+    gulp.watch(['src/jade/**/_*.jade'], ["jade2","reload"]);
     gulp.watch("src/sass/**/*.+(scss|sass)",["sass"]);
 	// gulp.watch("dist/js/**/*.js",["js","reload"]);
 });
