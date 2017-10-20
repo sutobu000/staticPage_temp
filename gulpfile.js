@@ -4,6 +4,7 @@ var gulp = require("gulp"),
 	sass = require("gulp-sass"),
 	pleeease = require("gulp-pleeease"),
 	uglify = require("gulp-uglify"),
+	rename = require("gulp-rename"),
 	notify = require("gulp-notify"),
 	changed = require("gulp-changed"),
 	browserSync = require("browser-sync"),
@@ -76,18 +77,19 @@ gulp.task("jade2", function() {
 		// }));
 });
 
-//js
-// gulp.task("js", function() {
-// 	gulp.src(["dist/js/*.js"])
-//         .pipe(plumber({errorHandler: notify.onError('<%= error.message %>')}))
-//         .pipe(uglify())
-// 		.pipe(gulp.dest("dist/js/min"))
-// 		// .pipe(browserSync.stream())
-// 		// .pipe(notify({
-// 		// 	message: 'jsを圧縮したで',
-// 		// 	title: 'jsマン'
-// 		// }));
-// });
+// js
+gulp.task("js", function() {
+	gulp.src(["dist/js/*.js","!dist/js/*.min.js"])
+        .pipe(plumber({errorHandler: notify.onError('<%= error.message %>')}))
+        .pipe(uglify({output:{comments: 'some'}}))
+        .pipe(rename({extname: ".min.js"}))
+		.pipe(gulp.dest("dist/js"))
+		// .pipe(browserSync.stream())
+		// .pipe(notify({
+		// 	message: 'jsを圧縮したで',
+		// 	title: 'jsマン'
+		// }));
+});
 
 // ブラウザリロード
 gulp.task('reload', function () {
@@ -105,12 +107,12 @@ gulp.task("watch", function() {
         server: {
             baseDir: "./dist",
         },
-		port: 7040
+		port: 3597
 	});
     gulp.watch(['src/jade/**/*.jade','!src/jade/**/_*.jade'], ["jade","reload"]);
     gulp.watch(['src/jade/**/_*.jade'], ["jade2","reload"]);
     gulp.watch("src/sass/**/*.+(scss|sass)",["sass"]);
-	// gulp.watch("dist/js/**/*.js",["js","reload"]);
+	gulp.watch(["dist/js/*.js","!dist/js/*.min.js"],["js"]);
 });
 
 gulp.task('default', function(callback){
