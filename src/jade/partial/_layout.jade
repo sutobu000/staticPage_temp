@@ -35,48 +35,48 @@ html(lang='ja')
 		// GEneric icon
 		link(rel='shortcut icon', href='/favicon.ico')
 		// CSS Setting
-		//- //-link(href='http://fonts.googleapis.com/css?family=Roboto:900', rel='stylesheet', type='text/css')
+		//- link(href='http://fonts.googleapis.com/css?family=Roboto', rel='stylesheet', type='text/css')
 		link(rel='stylesheet', href='#{DIR_CSS}master.css')
 			
 		block link
 
 	body(id="#{_page_id}")
-			//
-				==============================================
-				ヘッダー
-				==============================================
-			//
-			header
+		//
+			==============================================
+			ヘッダー
+			==============================================
+		//
+		header
 
 
-						//
-							==============================================
-							グローバル
-							==============================================
-						//
-						//-
-							ページ毎にカレントを用意する場合の分岐
-						nav
-							ul
-								if(_page_category == "home")
-									li
-								else
-									li
 			//
 				==============================================
-				コンテンツ
+				グローバル
 				==============================================
 			//
-			main
-				block body
+			//-
+				ページ毎にカレントを用意する場合の分岐
+			nav
+				ul
+					if(_page_category == "home")
+						li
+					else
+						li
+		//
+			==============================================
+			コンテンツ
+			==============================================
+		//
+		main
+			block body
 
-			//
-				==============================================
-				フッター
-				==============================================
-			//
-			footer
-		//- 全体共通のjs
-		script(src='#{DIR_JS}libs.min.js')
-		script(src='#{DIR_JS}functions.min.js')
-	block script
+		//
+			==============================================
+			フッター
+			==============================================
+		//
+		footer
+	//- 全体共通のjs
+	script(src='#{DIR_JS}libs.min.js')
+	script(src='#{DIR_JS}functions.min.js')
+block script
