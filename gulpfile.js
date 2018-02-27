@@ -40,7 +40,7 @@ gulp.task("sass", function() {
 		.pipe(gulp.dest("dist/css"))
 		.pipe(browserSync.stream())
 		// .pipe(notify({
-		// 	message: 'sassをコンパイルしたで',
+		// 	message: 'sassをコンパイル',
 		// 	title: 'sassマン',
 		// 	// sound: 'Glass'
 		// }));
@@ -57,7 +57,7 @@ gulp.task("jade", function() {
 		.pipe(gulp.dest("dist/"))
 		// .pipe(browserSync.stream())
 		// .pipe(notify({
-		// 	message: 'jadeをコンパイルしたで',
+		// 	message: 'jadeをコンパイル',
 		// 	title: 'jadeマン'
 		// }));
 });
@@ -72,7 +72,7 @@ gulp.task("jade2", function() {
 		.pipe(gulp.dest("dist/"))
 		// .pipe(browserSync.stream())
 		// .pipe(notify({
-		// 	message: 'jadeをコンパイルしたで',
+		// 	message: 'jadeをコンパイル',
 		// 	title: 'jadeマン'
 		// }));
 });
@@ -86,7 +86,7 @@ gulp.task("js", function() {
 		.pipe(gulp.dest("dist/js"))
 		// .pipe(browserSync.stream())
 		// .pipe(notify({
-		// 	message: 'jsを圧縮したで',
+		// 	message: 'jsを圧縮',
 		// 	title: 'jsマン'
 		// }));
 });

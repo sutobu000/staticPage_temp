@@ -1,5 +1,5 @@
-- var BASE_DOMAIN = "";
-- var DIR_IMG = "";
+- var BASE_DOMAIN = "/";
+- var DIR_IMG = "/img/";
 - var DIR_IMG_CMN = "/img/common/"; // イメージへのリンク
 - var DIR_CSS = "/css/";
 - var DIR_JS = "/js/";
@@ -14,16 +14,16 @@ html(lang='ja')
 		meta(name='description', content='#{_desc_str}')
 		meta(name='keywords', content='#{_keys_str}')
 		//- // OG
-		meta(property="og:title", content="")
+		meta(property="og:title", content="#{_title_str}")
 		//- meta(property="og:type", content="website")
 		meta(property="og:type", content="article")
-		meta(property="og:description", content="")
-		meta(property="og:url", content="")
+		meta(property="og:description", content="#{_desc_str}")
+		meta(property="og:url", content="#{BASE_DOMAIN}")
 		meta(property="og:image", content="#{DIR_IMG_CMN}og_image.jpg")
 		meta(name="twitter:card", content="summary_large_image")
-		meta(name="twitter:site", content="")
-		meta(name="twitter:title", content="")
-		meta(name="twitter:description", content="")
+		meta(name="twitter:site", content="@")
+		meta(name="twitter:title", content="#{_title_str}")
+		meta(name="twitter:description", content="#{_desc_str}")
 		meta(name="twitter:image", content="#{DIR_IMG_CMN}og_image.jpg")
 		// ViewPort Setting
 		meta(name='viewport', content='width=device-width,user-scalable=yes')
@@ -79,4 +79,4 @@ html(lang='ja')
 	//- 全体共通のjs
 	script(src='#{DIR_JS}libs.min.js')
 	script(src='#{DIR_JS}functions.min.js')
-block script
+	block script
