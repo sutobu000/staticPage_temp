@@ -18,7 +18,7 @@ sourceComments: false
 };
 
 var autoprefixerOptions = {
-browsers: ["last 3 version", "ie >= 9", "Android >= 4.0"]
+browsers: ["last 3 version", "ie >= 10", "Android >= 4.0"]
 };
 
 // キャッシュをクリア
@@ -39,11 +39,6 @@ gulp.task("sass", function() {
 		}))
 		.pipe(gulp.dest("dist/css"))
 		.pipe(browserSync.stream())
-		// .pipe(notify({
-		// 	message: 'sassをコンパイル',
-		// 	title: 'sassマン',
-		// 	// sound: 'Glass'
-		// }));
 });
 
 //jade
@@ -55,11 +50,6 @@ gulp.task("jade", function() {
 		}))
 		.pipe(changed("dist", {extension: '.html'}))
 		.pipe(gulp.dest("dist/"))
-		// .pipe(browserSync.stream())
-		// .pipe(notify({
-		// 	message: 'jadeをコンパイル',
-		// 	title: 'jadeマン'
-		// }));
 });
 
 //jade (_*.jadeの場合)
@@ -70,11 +60,6 @@ gulp.task("jade2", function() {
 			pretty: true
 		}))
 		.pipe(gulp.dest("dist/"))
-		// .pipe(browserSync.stream())
-		// .pipe(notify({
-		// 	message: 'jadeをコンパイル',
-		// 	title: 'jadeマン'
-		// }));
 });
 
 // js
@@ -84,11 +69,6 @@ gulp.task("js", function() {
         .pipe(uglify({output:{comments: 'some'}}))
         .pipe(rename({extname: ".min.js"}))
 		.pipe(gulp.dest("dist/js"))
-		// .pipe(browserSync.stream())
-		// .pipe(notify({
-		// 	message: 'jsを圧縮',
-		// 	title: 'jsマン'
-		// }));
 });
 
 // ブラウザリロード

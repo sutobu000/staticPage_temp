@@ -1,4 +1,4 @@
-;(function($,window,undefind) {
+$(function() {
 
 	var $window = $(window);
 	var $pageTop = $(".btnPageTop");
@@ -125,7 +125,7 @@
 	    });
 	}
 
-})(jQuery,window);
+});
 
 /* -----------------------------------------------
  * オートスクロール
