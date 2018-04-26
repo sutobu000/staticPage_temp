@@ -2,7 +2,10 @@ var gulp = require("gulp"),
 	cache = require("gulp-cache"),
 	jade = require("gulp-jade"),
 	sass = require("gulp-sass"),
-	pleeease = require("gulp-pleeease"),
+	// pleeease = require("gulp-pleeease"),
+	postcss = require("gulp-postcss"),
+	// autoprefixer = require("gulp-autoprefixer"),
+	autoprefixer = require("autoprefixer"),
 	uglify = require("gulp-uglify"),
 	rename = require("gulp-rename"),
 	notify = require("gulp-notify"),
@@ -31,12 +34,13 @@ gulp.task("sass", function() {
 	gulp.src("src/sass/**/*.+(scss|sass)")
 		.pipe(plumber({errorHandler: notify.onError('<%= error.message %>')}))
 		.pipe(sass(options))
-		.pipe(pleeease({
-			minifier: false,
-			fallbacks: {
-				autoprefixer: autoprefixerOptions
-			}
-		}))
+		.pipe(postcss([autoprefixer({autoprefixerOptions})]))
+		// .pipe(pleeease({
+		// 	minifier: false,
+		// 	fallbacks: {
+		// 		autoprefixer: autoprefixerOptions
+		// 	}
+		// }))
 		.pipe(gulp.dest("dist/css"))
 		.pipe(browserSync.stream())
 });

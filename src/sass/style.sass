@@ -1,7 +1,5 @@
 @charset 'utf-8'
 
-$base_w: 750
-
 // ===================================================
 // 開発用
 // =================================================== */
@@ -14,6 +12,6 @@ $base_w: 750
 @import import/_style
 
 // スマートフォン
-@media screen and (max-width: 750px)
+@media screen and (max-width: #{$break_point}px)
   @import import/_style_sp
 
