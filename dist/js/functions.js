@@ -1,7 +1,9 @@
 $(function() {
 
-	const $window = $(window);
-	const $html = $("html, body");
+	var $window = $(window);
+	var $htmlbody = $("html, body");
+	var $html = $("html");
+	var $body = $("body");
 
 	/* --- Common variable --- */
 	var $wrapper = $(".container");
@@ -334,7 +336,7 @@ $(function() {
 				t_hash = target.offset().top - 40;
 			}
 		}
-		$html.animate({scrollTop: t_hash}, $speed, "swing");
+		$htmlbody.animate({scrollTop: t_hash}, $speed, "swing");
 	}
 
 	/* -----------------------------------------------
@@ -495,7 +497,7 @@ $(function() {
 	$pageTop.on('click', function(){
 		if (!is_pageTop) {
 			is_pageTop = true;
-			$html.velocity("scroll", {duration:800, easing:"ease-in-out", complete:function(){is_pageTop = false;}});
+			$htmlbody.velocity("scroll", {duration:800, easing:"ease-in-out", complete:function(){is_pageTop = false;}});
 		}
 	});
 
