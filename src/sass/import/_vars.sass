@@ -12,10 +12,16 @@ $DIR_IMG_CMN: "/img/common/"
 // webfont
 // $WEBFONT_NotoSansRegular: 'NotoSans-Regular', sans-serif
 
+$FONT_KAKU: "ヒラギノ角ゴ ProN W3", Hiragino Kaku Gothic ProN, "Helvetica Neue", "Yu Gothic", YuGothic, Arial, "メイリオ", Meiryo, sans-serif
+$FONT_MIN: "ヒラギノ明朝 ProN W6", "HiraMinProN-W6", "HG明朝E", "ＭＳ Ｐ明朝", "MS PMincho", "MS 明朝", serif;
+
 // カラー
 $COL_BASE: #000
 $COL_NAV: #ccc
 $COL_BTN: #1c1c1c
+
+
+$DE_FONT: 16
 
 // VW基準横幅
 $base_vw: 640
@@ -23,6 +29,12 @@ $break_point: 750
 
 // $BREAK_POINT_PC_WIDE: 1296px
 
-$FONT_KAKU: "ヒラギノ角ゴ ProN W3", Hiragino Kaku Gothic ProN, "Helvetica Neue", "Yu Gothic", YuGothic, Arial, "メイリオ", Meiryo, sans-serif
-$FONT_MIN: "ヒラギノ明朝 ProN W6", "HiraMinProN-W6", "HG明朝E", "ＭＳ Ｐ明朝", "MS PMincho", "MS 明朝", serif;
+// mixin 設定
+=MIX_REM($size)
+	font-size: $size + px
+	font-size: $size / 16 + rem
+
+=MIX_FONT_VW($size)
+	font-size: $size + px
+	font-size: $size / $base_vw * 100 + vw
 
