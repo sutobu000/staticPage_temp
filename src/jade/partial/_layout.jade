@@ -35,47 +35,58 @@ html(lang='ja')
 		// GEneric icon
 		link(rel='shortcut icon', href='/favicon.ico')
 		// CSS Setting
-		//- link(href='http://fonts.googleapis.com/css?family=Roboto', rel='stylesheet', type='text/css')
+		link(href='http://fonts.googleapis.com/css?family=Roboto', rel='stylesheet', type='text/css')
 		link(rel='stylesheet', href='#{DIR_CSS}master.css')
 			
 		block link
 
 	body(id="#{_page_id}")
-		//
-			==============================================
-			ヘッダー
-			==============================================
-		//
-		header
-
+		.wrapper
+			.wrapper__bg
+			//
+				==============================================
+				ヘッダー
+				==============================================
+			//
+			header.header
+				.header__wrapper
+					.header__menubtnWrap
+						button(type="button").header__menubtn
+							span.header__menubtn__bar
+							span.header__menubtn__bar
+							span.header__menubtn__bar
+					.gnav
+						.gnav__inner
+							.gnav__lists.js-staggerSlide
+								.gnav__item: a(href="/"): span HOME
+								.gnav__item: a(href="/about"): span ABOUT
+								.gnav__item: a(href="/works"): span WORKS
+								.gnav__item: a(href="contact"): span CONTACT
 
 			//
 				==============================================
-				グローバル
+				コンテンツ
 				==============================================
 			//
-			//-
-				ページ毎にカレントを用意する場合の分岐
-			nav
-				ul
-					if(_page_category == "home")
-						li
-					else
-						li
-		//
-			==============================================
-			コンテンツ
-			==============================================
-		//
-		main
-			block body
+			main.main
+				.container
+					block body
 
-		//
-			==============================================
-			フッター
-			==============================================
-		//
-		footer
+
+				.pagetop.js-hover
+					.pagetop__inner
+						.pagetop__obj
+							span PAGE TOP
+			//
+				==============================================
+				フッター
+				==============================================
+			//
+			footer.footer
+				.footer__wrapper
+					.footer__copylight: small &copy; 2018 Corporation
+
+
 	//- 全体共通のjs
 	script(src='#{DIR_JS}libs.min.js')
 	script(src='#{DIR_JS}functions.min.js')

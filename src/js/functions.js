@@ -1,4 +1,5 @@
 $(function() {
+	console.log("js start");
 
 	var $window = $(window);
 	var $htmlbody = $("html, body");
@@ -6,22 +7,31 @@ $(function() {
 	var $body = $("body");
 
 	/* --- Common variable --- */
-	var $wrapper = $(".container");
-	var $wrapper_bg = $(".wrapper_bg");
+	var $wrapper = $(".wrapper");
+	var $wrapper_bg = $(".wrapper__bg");
 	var ww = $window.width();
 	var wh = $window.height();
+	var w_breakPoint = 767;
 
 	var s_top = $window.scrollTop();
+	var _sTop;
+	var mousewheelevent = 'onwheel' in document ? 'wheel' : 'onmousewheel' in document ? 'mousewheel' : 'DOMMouseScroll';
 
-	/* --- Header, Gnavi --- */
+	/* --- Header, Gnavi, Footer --- */
 	var $header = $(".header");
-	var h_wh = wh - $header.height();
-	var $gnavItem = $(".gnav_item");
+	var $gnav = $(".gnav");
+	var $footer = $(".footer");
 
 	/* --- 画像preload --- */
-	var allImage = $("main img");
+	var is_ready = false;
+	var is_cssImg = false;
+	var allImage = $(".main img");
 	var allImageCount = allImage.length;
 	var completeImageCount = 0;
+
+	var cssImgResults = [];
+	var cssSheets = document.styleSheets;
+	var completecssImageCount = 0;
 
 	/* --- スライドフェードイン --- */
 	var $slideIn = $(".js-slideIn");
@@ -36,45 +46,29 @@ $(function() {
 	var staggerSlideTopArr = [];
 	$staggerSlide.children("*").css('opacity', 0);
 
-	/* --- スクロール --- */
-	var $visualScroll = $(".topVisual_scroll");
-	var $visual = $(".topVisual");
-	var is_scroll = false;
-
-	/* --- スクロール current --- */
-	var $scrollAnc = $(".js-scrollAnc");
-	var scrollAncArr = [];
-	var scrollAncTopArr = [];
-
-	/* -- First View Scroll -- */
-	var top_flag = false;
-	var scroll_flag = true;
-	var mousewheelevent = 'onwheel' in document ? 'wheel' : 'onmousewheel' in document ? 'mousewheel' : 'DOMMouseScroll';
-	var _sTop;
-
 	/* --- SPメニュー --- */
-	var $menuBtn = new $(".header_hum");
-	var $gnav = $(".header_block");
+	var $menuBtn = new $(".header__menubtn");
 	var is_gnav = false;
 	var is_open = false;
 
-	/* --- モーダル --- */
-	var $modal = $(".modal");
-	var $modal_close = $(".modal_close");
-	var $modal_player = $(".modal_player");
-	var $modal_player_obj = $(".modal_player_obj");
+	/* --- モーダル - Youtube - --- */
+	var $yt_modal = $(".yt_modal");
+	var $yt_modal_close = $(".yt_modal_close");
+	var $yt_modal_player = $(".yt_modal_player");
+	var $yt_modal_player_obj = $(".yt_modal_player_obj");
 	var ratio_type = 0;
-	var $list_block = $(".videoBox");
-	var modal_flag = false;
+	var $yt_list_block = $(".videoBox");
+	var yt_modal_flag = false;
 	var m_width = 0;
 	var m_height = 0;
+
 
 	/* --- pageTop --- */
 	var $pageTop = $(".pageTop");
 	var is_pageTop = false;
 
 	var _SP = false;
-	if (ww > 767) {
+	if (ww > w_breakPoint) {
 		_SP = false;
 	} else {
 		_SP = true;
@@ -83,13 +77,13 @@ $(function() {
 	$window.resize(function(e) {
 		ww = $window.width();
 		wh = $window.height();
-		if (ww > 767) {
+		if (ww > w_breakPoint) {
 			_SP = false;
 		} else {
 			_SP = true;
 		}
 
-		movieResize(ww,wh);
+		ytMovieResize(ww,wh);
 	});
 
 	setUA();
@@ -97,73 +91,111 @@ $(function() {
 	/* -----------------------------------------------
 	 * Ready
 	 * ----------------------------------------------- */
+	/* -- Ready イベント -- */
 	$(document).ready(function() {
-		_sTop = parseInt( $window.scrollTop());
-		if (!_SP) {
-			if(_sTop === 0) {
-				no_scroll();
-			} else {
-				top_flag = true;
-			}
-		}
-		if (allImageCount < 1) {
-			readyInit();
-			setUA();
-		} else {
-			for(var i = 0; i < allImageCount; i++){
-				var image = new Image();
-				var $src = $(allImage[i]).attr('src');
-				image.src = $src;
-
-				var $new = $('<img src="" >');
-				$(allImage[i]).css('opacity', '0');
-
-				if (!$src || image.width == 0) {
-					completeImageCount++;
+		// console.log("ready");
+		var tags = document.getElementsByTagName("*");
+		try{
+			if (Array.from) {
+				var classesEle = Array.from(document.querySelectorAll('[class]')); // 全要素からクラス名を持つ要素を取得
+				var classes = [];
+				for (var i = 0; i < classesEle.length; i++) {
+					classes.push(Array.from(classesEle[i].classList));
+				}
+				var flatten = Array.prototype.concat.apply([], classes);
+				var set = new Set(flatten);
+				var arrSet = Array.from(set); // 開いているHTMLから全クラス名を取得
+				var cssStyle = [];
+				for (var i = 0; i < arrSet.length; i++) {
+					var block = document.getElementsByClassName(arrSet[i]);
+					if (window.getComputedStyle(block[0]).getPropertyValue("background-image") !== "none") {
+						cssStyle.push(window.getComputedStyle(block[0]).getPropertyValue("background-image"));
+					}else if (window.getComputedStyle(block[0], "::after").getPropertyValue("background-image") !== "none") {
+						cssStyle.push(window.getComputedStyle(block[0], "::after").getPropertyValue("background-image"));
+					}else if (window.getComputedStyle(block[0], "::before").getPropertyValue("background-image") !== "none") {
+						cssStyle.push(window.getComputedStyle(block[0], "::before").getPropertyValue("background-image"));
+					}
 				}
 
-				$new.on("load", function() {
-					completeImageCount++;
-					if (allImageCount == completeImageCount){
-						allImage.removeAttr('style');
-						setTimeout(function(){
-							readyInit();
-							setUA();
-						},200);
+				if (cssStyle.length === 0) {
 					is_ready = true;
+					readySection();
+				}else{
+					for(var j = 0; j < cssStyle.length; j++){
+						var img = new Image();
+						var $cssnew = $('<img src="" >');
+						// var imgurl = cssStyle[j].slice(5).slice(0, -2);
+						var imgurl = cssStyle[j].replace(/"/g, '');
+						imgurl = imgurl.slice(4).slice(0, -1);
+						$cssnew.attr("src", imgurl); 
+						$cssnew.on("load", function(response, status, xhr) {
+							completecssImageCount++;
+							if (completecssImageCount == cssStyle.length){
+								is_ready = true;
+								readySection();
+							}
+						});
 					}
-				})
-			$new.attr("src",$(allImage[i]).attr('src'));
+				}
+			}else{
+				is_ready = true;
+				readySection();
 			}
+		}catch(e){
+			// console.log("try");
+			is_ready = true;
+			readySection();
 		}
 	});
 
-	// deSVG($obj, true); // deSVG適用
-
-	function readyInit() {
-		/* SP時のfirstviewの高さ */
-		if (_SP) {
-			$visual.height(h_wh);
+	/* -- imgタグ参照 -- */
+	function readySection() {
+		// console.log("section start");
+		if (is_ready) {
+			if (allImageCount < 1) {
+				readyInit();
+			}else{
+				for(var i = 0; i < allImageCount; i++){
+					var image = new Image();
+					var $src = $(allImage[i]).attr('src');
+					image.src = $src;
+					var $new = $('<img src="" >');
+					$(allImage[i]).css('opacity', '0');
+					if (!$src || image.width == 0) {
+						completeImageCount++;
+					}else{
+						$new.on("load", function() {
+							completeImageCount++;
+							if (allImageCount == completeImageCount){
+								allImage.removeAttr('style');
+								setTimeout(function(){
+									readyInit();
+								},100);
+							}
+						})
+					}
+				$new.attr("src",$(allImage[i]).attr('src'));
+				}
+			}
 		}
+	}
 
+	/* -- Ready init -- */
+	function readyInit() {
+		// console.log("init start");
 		/* ホワイトバック */
 		$wrapper_bg.velocity({opacity: 0},{duration:500, easing:"ease-out", complete:function(){
 			$wrapper_bg.remove();
 			scroll_flag = false;
 		}});
 
-		/* firstview */
-		logoAnime(false);
-		TweenMax.fromTo($visualScroll, .8, {y: -30, opacity: 0}, {ease: Cubic.easeOut, y: 0, opacity: 1, delay:.8});
-
-
-		/* スクロール　アニメ */
+		/* slideIn */
 		var wscroll = $window.scrollTop() + wh;
 		for (var i = 0; i < slideInTopArr.length; i++) {
 			if (slideInTopArr[i] <= wscroll) { slideInFlagArr[i] = true; slideInAnime(slideInArr[i]); }
 		}
-		for (var i = 0; i < scaleInTopArr.length; i++) {
-			if (scaleInTopArr[i] <= wscroll) { scaleInFlagArr[i] = true; scaleInAnime(scaleInArr[i]); }
+		for (var i = 0; i < staggerSlideTopArr.length; i++) {
+			if (staggerSlideTopArr[i] <= wscroll) { staggerSlideFlagArr[i] = true; staggerSlideInAnime(staggerSlideArr[i].children()); }
 		}
 
 	}
@@ -178,171 +210,27 @@ $(function() {
 		wh = $window.height();
 		var _sMdl = _sTop + wh / 2;
 		var _sBtm = _sTop + wh;
+		var diffVal = 100
 
-		/* スクロール　アニメ */
+		/* slideIn */
 		for (var i = 0; i < slideInArr.length; i++) {
-			if (!slideInFlagArr[i] && slideInTopArr[i] <= _sBtm - 100) {
+			if (!slideInFlagArr[i] && slideInTopArr[i] <= _sBtm - diffVal) {
 				slideInFlagArr[i] = true;
 				slideInAnime(slideInArr[i]);
 			}
 		}
-
 		for (var i = 0; i < staggerSlideArr.length; i++) {
-			if (!staggerSlideFlagArr[i] && staggerSlideTopArr[i] <= _sBtm - 100) {
+			if (!staggerSlideFlagArr[i] && staggerSlideTopArr[i] <= _sBtm - diffVal) {
 				staggerSlideFlagArr[i] = true;
 				staggerSlideInAnime(staggerSlideArr[i].children());
 			}
 		}
 
-		/* スクロール gnav */
-		var scrollAncNum = -1;
-		for (var i = 0; i < scrollAncArr.length; i++) {
-			$gnavItem.eq(i).removeClass('is-current');
-			if (scrollAncTopArr[i] <= _sBtm) {
-				scrollAncNum++;
-			}
-			if (scrollAncNum === i) {
-				$gnavItem.removeClass('is-current');
-				$gnavItem.eq(i).addClass('is-current');
-			}
-		}
-
-		/* pagetop */
-		if (_sTop > 100) {
-			$pageTop.addClass('is-active');
-		} else {
-			$pageTop.removeClass('is-active');
-		}
-
-		/* main view */
-		if (!_SP) {
-			if ($mainAirSX.offset().top <= _sBtm) {
-				mainAnime();
-			}
-		} else {
-			if ($mainAirSX.offset().top <= _sBtm - 100) {
-				mainAirSXAnime();
-			}
-			if ($mainVText.offset().top <= _sBtm - 100) {
-				mainVTextAnime();
-			}
-		}
-
-		/* spec */
-		if ($specInner.offset().top <= _sBtm - 100) {
-			specAnime();
-		}
 	});
-
-	/* -----------------------------------------------
-	 * First View Scroll
-	 * ----------------------------------------------- */
-	$window.on(mousewheelevent,function(e){
-		if (!_SP) {
-			if(!scroll_flag) {
-				if(_sTop === 0&&!top_flag) {
-					if(e.originalEvent.deltaY) {
-						var delta = e.originalEvent.deltaY;
-						if(delta > 10) {
-							logoAnime(true);
-							scroll_flag = true;
-						}
-					} else {
-						var delta = e.originalEvent.wheelDelta;
-						if(delta < -10) {
-							logoAnime(true);
-							scroll_flag = true;
-						}
-					}
-				}
-			}
-		}
-	});
-
-	/* -----------------------------------------------
-	 * First View Click
-	 * ----------------------------------------------- */
-	/* --- スクロール --- */
-	$visualScroll.on('click', function(e) {
-		if(scroll_flag) {
-			if (!is_scroll) {
-				var visualScrollTo = $visual.height() - $header.height();
-				is_scroll = true;
-				no_scroll();
-				$visual.stop().velocity("scroll", {duration:1200, offset:visualScrollTo, easing:"ease-in-out", complete:function(){
-					is_scroll = false;
-					return_scroll();
-				}});
-			}
-		} else {
-			logoAnime(true);
-			scroll_flag = true;
-		}
-	});
-
-
-	/* -----------------------------------------------
-	 * Main View Animation
-	 * ----------------------------------------------- */
-	function mainAnime() {
-		if (!mainAnimeFlag) {
-			mainAnimeFlag = true;
-			TweenMax.staggerFromTo($mainVText.children(), .7, {x:20,opacity:0},{x:0,opacity:1,delay:.5},.3);
-			TweenMax.staggerFromTo($mainAirSX.children(), .7, {x:20,opacity:0},{x:0,opacity:1,delay:1},.15);
-		}
-	}
-	function mainAirSXAnime() {
-		if (!mainAirSXAnimeFlag) {
-			mainAirSXAnimeFlag = true;
-			TweenMax.staggerFromTo($mainAirSX.children(), .7, {y:20,opacity:0},{y:0,opacity:1,delay:.3},.15);
-		}
-	}
-	function mainVTextAnime() {
-		if (!mainVTextAnimeFlag) {
-			mainVTextAnimeFlag = true;
-			TweenMax.staggerFromTo($mainVText.children(), .7, {x:20,opacity:0},{x:0,opacity:1,delay:.3},.15);
-		}
-	}
-
-
-	/* -----------------------------------------------
-	 * アンカークリック
-	 * ----------------------------------------------- */
-	$gnavItem.find("a").on("click", function(e) {
-		e.preventDefault();
-		if(_SP){
-			$wrapper.removeAttr('style');
-			$window.scrollTop(s_top);
-			is_open = false;
-			is_gnav = true;
-			$menuBtn.removeClass("is-open");
-			$gnav.velocity({height:0},{duration:300, easing:"ease-in-out", complete:function(){is_gnav = false;}});
-		}
-		scrollAnc($(this).attr('href'), 800);
-		// return false;
-	});
-	function  scrollAnc($object, $speed) {
-		var hash = $object;
-		var target;
-		var t_hash;
-		var headerHeight;
-		if(hash==="#") {
-			t_hash = 0;
-		} else {
-			target = $(hash);
-			if (!_SP) {
-				t_hash = target.offset().top - 90;
-			} else {
-				t_hash = target.offset().top - 40;
-			}
-		}
-		$htmlbody.animate({scrollTop: t_hash}, $speed, "swing");
-	}
 
 	/* -----------------------------------------------
 	 * slideIn
 	 * ----------------------------------------------- */
-
 	/* 下から上へ */
 	$slideIn.each(function(i, ele) {
 		var $this = $(ele);
@@ -353,12 +241,12 @@ $(function() {
 	function slideInAnime($obj){
 		TweenMax.killTweensOf($obj);
 		TweenMax.fromTo($obj, .7, {y:20,opacity:0},{y:0,opacity:1,delay:.3,onComplete: function(){
-			// $obj.removeAttr('style');
+			$obj.removeAttr('style');
 			$obj.removeClass('js-slideIn');
 		}});
 	}
 
-	/* 連続した左から右 */
+	/* 連続した下から右 */
 	$staggerSlide.children().css("opacity","0");
 	$staggerSlide.each(function(i, ele) {
 		var $this = $(ele);
@@ -367,31 +255,20 @@ $(function() {
 		staggerSlideTopArr[i] = $this.offset().top;
 	});
 	function staggerSlideInAnime($obj){
-		TweenMax.staggerFromTo($obj, .7, {x:20,opacity:0},{x:0,opacity:1,delay:.3},.15);
+		TweenMax.staggerFromTo($obj, .7, {x:20,opacity:0},{x:0,opacity:1,delay:.3},.15, function(){
+      $obj.removeAttr('style');
+      $obj.parent().removeClass('js-staggerSlide');
+    });
 	}
-
-
-	/* -----------------------------------------------
-	 * scrollAnc Current
-	 * ----------------------------------------------- */
-	$scrollAnc.each(function(i, ele) {
-		var $this = $(ele);
-		scrollAncArr[i] = $this;
-		scrollAncTopArr[i] = $this.offset().top;
-	});
-
 
 	/* -----------------------------------------------
 	 * SP メニュー
 	 * ----------------------------------------------- */
 	$menuBtn.on('click', function(e) {
-		// var h_header = $header.height();
-		// var h_gnav = Number($window.outerHeight() - h_header);
 		var h_gnav = Number($window.outerHeight());
 		if (!is_gnav) {
 			if (!is_open) {
 				s_top = $window.scrollTop();
-				// console.log(s_top);
 				is_open = true;
 				is_gnav = true;
 				$menuBtn.addClass("is-open");
@@ -412,11 +289,11 @@ $(function() {
 		}
 	});
 
+
 	/* -----------------------------------------------
 	 * モーダル - Youtube -
 	 * ----------------------------------------------- */
-
-	$list_block.on("click", function(e) {
+	$yt_list_block.on("click", function(e) {
 		var $this = $(this);
 
 		// youtube
@@ -424,61 +301,58 @@ $(function() {
 		var mURL_stop = "//www.youtube.com/embed/" + $this.attr('rel') + "?autoplay=0&controls=0&loop=1&modestbranding=1&rel=0&showinfo=0&start=1&enablejsapi=1";
 		// https://www.youtube.com/watch?v=rjPCvTdOG0M&feature=youtu.be
 		var mURL_watch = "//www.youtube.com/watch?v=" + $this.attr('rel') + "&feature=youtu.be";
-		$modal_player.html("<iframe src='" + mURL + "' width='100%' height='100%'></iframe>");
-		$modal_player.find("iframe").addClass("modal_player_obj");
-		$modal_player_obj = $(".modal_player_obj");
+		$yt_modal_player.html("<iframe src='" + mURL + "' width='100%' height='100%'></iframe>");
+		$yt_modal_player.find("iframe").addClass("yt_modal_player_obj");
+		$yt_modal_player_obj = $(".yt_modal_player_obj");
 		setTimeout(function(){
-			movieResize(ww,wh);
+			ytMovieResize(ww,wh);
 		}, 200);
 
-		// modal
+		// yt_modal
 		s_top = $window.scrollTop();
 		$wrapper.css({
 			"position": "fixed",
 			"top" : -(s_top),
 			"left" : 0,
-			"z-index" : "1000",
+			"z-index" : "9999",
 			"overflow-y": "scroll"
 		});
-		$modal.addClass('is-open');
-		$modal.velocity({opacity: 1},{duration:300, easing:"ease-in-out"});
+		$yt_modal.addClass('is-open');
+		$yt_modal.velocity({opacity: 1},{duration:300, easing:"ease-in-out"});
 	});
-	$(".modal_close, .modal_bg").on("click", function(e){
+	$(".yt_modal_close, .yt_modal_bg").on("click", function(e){
 		e.preventDefault();
-		var $p_modal = $(this).parents(".modal");
-		if ($p_modal.hasClass('is-open')) {
-			$p_modal.velocity({opacity: 0},{duration:300, easing:"ease-in-out", complete:function(){
-				$p_modal.removeClass('is-open');
+		var $p_yt_modal = $(this).parents(".yt_modal");
+		if ($p_yt_modal.hasClass('is-open')) {
+			$p_yt_modal.velocity({opacity: 0},{duration:300, easing:"ease-in-out", complete:function(){
+				$p_yt_modal.removeClass('is-open');
 				$wrapper.removeAttr('style');
 				$window.scrollTop(s_top);
-				$modal_player.empty();
-		}});
+				$yt_modal_player.empty();
+			}});
 		}
-
 	});
-
 	/* -------------------------------------------------------
-	 モーダルYoutubeのリサイズ
+	 モーダルYoutubeのリサイズ -
 	 ------------------------------------------------------- */
-	function movieResize(mw, mh){
-		var f_ratio = mw / mh;
-		if (f_ratio < 16/9) {
+	function ytMovieResize(mw, mh){
+		var yt_ratio = mw / mh;
+		if (yt_ratio < 16/9) {
 			var f_mh = mw/16*9;
-			$modal_player_obj.height(f_mh);
-			$modal_player_obj.width(mw);
+			$yt_modal_player_obj.height(f_mh);
+			$yt_modal_player_obj.width(mw);
 		} else {
 			var f_mw = mh/9*16;
-			$modal_player_obj.width(f_mw);
-			$modal_player_obj.height(wh);
+			$yt_modal_player_obj.width(f_mw);
+			$yt_modal_player_obj.height(wh);
 		}
 	}
-
 
 	/* -----------------------------------------------
 	 * マウスオーバー - フェード
 	 * ----------------------------------------------- */
 	if (!_SP) {
-		$('.is-hover').hover(
+		$('.js-hover').hover(
 			function(){
 				$(this)
 					.stop()
@@ -494,21 +368,40 @@ $(function() {
 	/* -----------------------------------------------
 	 * ページトップ　スクロール
 	 * ----------------------------------------------- */
-	$pageTop.on('click', function(){
+	$pageTop.on('click', function(e){
+		e.preventDefault();
 		if (!is_pageTop) {
 			is_pageTop = true;
 			$htmlbody.velocity("scroll", {duration:800, easing:"ease-in-out", complete:function(){is_pageTop = false;}});
 		}
 	});
-
-
+	/* -----------------------------------------------
+	 * アンカークリック
+	 * ----------------------------------------------- */
+	$("a[href^='#']").on("click", function(e){
+		e.preventDefault();
+		var href = $(this).attr("href");
+		scrollAnc(href, 500);
+	})
+	function scrollAnc($object, $speed) {
+		var hash = $object;
+		var target;
+		var t_hash;
+		var headerHeight;
+		var h_h = $(".header").outerHeight();
+		if(hash==="#") {
+			t_hash = 0;
+		} else {
+			target = $(hash);
+		}
+		target.stop().velocity("scroll", {duration: $speed, offset: -h_h, easing: "ease-in-out" });
+	}
 	/* -----------------------------------------------
 	 * cookie取得
 	 * ----------------------------------------------- */
 	function getQuery() {
 		$.cookie('is_cookie','1',{ path: "/shop/by/data/special/2018spring" }); // cookieを発行するディレクトリを指定
 	}
-
 	/* -----------------------------------------------
 	 * cookieリセット
 	 * ----------------------------------------------- */
@@ -523,24 +416,46 @@ $(function() {
 	if(l_href.indexOf(k_word) != -1) {
 		resetQuery();
 	}
+	/* -----------------------------------------------
+	 * スクロール禁止用関数
+	 * ----------------------------------------------- */
+	function no_scroll(){
+		var scroll_event = mousewheelevent;
+		$(document).on(scroll_event,function(e){e.preventDefault();});
+	}
+	/* -----------------------------------------------
+	 * スクロール復活用関数
+	 * ----------------------------------------------- */
+	function return_scroll(){
+		var scroll_event = mousewheelevent;
+		$(document).off(scroll_event);
+	}
+	/* -----------------------------------------------
+	 * ユーザーエージェントを取得
+	 * ----------------------------------------------- */
+	function setUA() {
+		var ua = navigator.userAgent.toLowerCase();  //エージェント取得
+		var ver = navigator.appVersion.toLowerCase(); //バージョンを取得
 
+		var isMSIE = (ua.indexOf('msie') > -1) && (ua.indexOf('opera') == -1); // IE(11以外)
+		var isIE6 = isMSIE && (ver.indexOf('msie 6.') > -1); // IE6
+		var isIE7 = isMSIE && (ver.indexOf('msie 7.') > -1); // IE7
+		var isIE8 = isMSIE && (ver.indexOf('msie 8.') > -1); // IE8
+		var isIE9 = isMSIE && (ver.indexOf('msie 9.') > -1); // IE9
+		var isIE10 = isMSIE && (ver.indexOf('msie 10.') > -1); // IE10
+		var isIE11 = (ua.indexOf('trident/7') > -1); // IE11
+		var isIE = isMSIE || isIE11; // IE
+		var isEdge = (ua.indexOf('edge') > -1); // Edge
+
+		var isChrome = (ua.indexOf('chrome') > -1) && (ua.indexOf('edge') == -1); // Google Chrome
+		var isFirefox = (ua.indexOf('firefox') > -1); //Firefox
+		var isSafari = (ua.indexOf('safari') > -1) && (ua.indexOf('chrome') == -1); // Safari
+		var isOpera = (ua.indexOf('opera') > -1); // Opera
+		 
+	}
 
 });
 
-/* -----------------------------------------------
- * スクロール禁止用関数
- * ----------------------------------------------- */
-function no_scroll(){
-	var scroll_event = 'onwheel' in document ? 'wheel' : 'onmousewheel' in document ? 'mousewheel' : 'DOMMouseScroll';
-	$(document).on(scroll_event,function(e){e.preventDefault();});
-}
-/* -----------------------------------------------
- * スクロール復活用関数
- * ----------------------------------------------- */
-function return_scroll(){
-	var scroll_event = 'onwheel' in document ? 'wheel' : 'onmousewheel' in document ? 'mousewheel' : 'DOMMouseScroll';
-	$(document).off(scroll_event);
-}
 
 /* -----------------------------------------------
  * FastClick.js
@@ -549,29 +464,4 @@ if ('addEventListener' in document) {
 	document.addEventListener('DOMContentLoaded', function() {
 		FastClick.attach(document.body);
 	}, false);
-}
-
-
-/* -----------------------------------------------
- * ユーザーエージェントを取得
- * ----------------------------------------------- */
-function setUA() {
-	var ua = navigator.userAgent.toLowerCase();  //エージェント取得
-	var ver = navigator.appVersion.toLowerCase(); //バージョンを取得
-
-	var isMSIE = (ua.indexOf('msie') > -1) && (ua.indexOf('opera') == -1); // IE(11以外)
-	var isIE6 = isMSIE && (ver.indexOf('msie 6.') > -1); // IE6
-	var isIE7 = isMSIE && (ver.indexOf('msie 7.') > -1); // IE7
-	var isIE8 = isMSIE && (ver.indexOf('msie 8.') > -1); // IE8
-	var isIE9 = isMSIE && (ver.indexOf('msie 9.') > -1); // IE9
-	var isIE10 = isMSIE && (ver.indexOf('msie 10.') > -1); // IE10
-	var isIE11 = (ua.indexOf('trident/7') > -1); // IE11
-	var isIE = isMSIE || isIE11; // IE
-	var isEdge = (ua.indexOf('edge') > -1); // Edge
-
-	var isChrome = (ua.indexOf('chrome') > -1) && (ua.indexOf('edge') == -1); // Google Chrome
-	var isFirefox = (ua.indexOf('firefox') > -1); //Firefox
-	var isSafari = (ua.indexOf('safari') > -1) && (ua.indexOf('chrome') == -1); // Safari
-	var isOpera = (ua.indexOf('opera') > -1); // Opera
-	 
 }

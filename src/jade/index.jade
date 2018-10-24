@@ -2,11 +2,11 @@ block vars
 	- var _title_str = '株式会社'; // タイトルタグ
 	- var _desc_str = 'でぃすくりぷしょん'; // descriptions
 	- var _keys_str = 'きーわーど'; // keywords
-	- var _page_category = 'home'; // ページのカテゴリー
+	- var _page_category = 'top'; // ページのカテゴリー
 	- var _page_id = _page_category + '-page'; // ページカテゴリーの後ろに付与してIDとして使う
 	- var DIR_IMG_PAGE = "/img/" + _page_category; // イメージへのリンク
-	- var DIR_CSS = "/css/"; // cssのリンク
-	- var DIR_JS = "/js/"; // jsのリンク
+	//- var DIR_CSS = "/css/"; // cssのリンク
+	//- var DIR_JS = "/js/"; // jsのリンク
 	- var _page_name = ''; // ページ名
 //- snipet
 //- img(src="/#{DIR_IMG_PAGE}***.png",width="750",height="410",alt="")
@@ -14,25 +14,28 @@ block vars
 extends partial/_layout
 block link
 	//-link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Cinzel+Decorative')
-	link(rel='stylesheet', href='#{DIR_CSS}home.css')
+	link(rel='stylesheet', href='#{DIR_CSS}top.css')
 block body
-	article
-		//- 画像パス 読み込みテスト
+	section.mainVisual
+		#p5Canvas.mainVisual__inner
+			.mainVisual__node
+				h1.mainVisual__node__title.js-slideIn: span Corporation
 
-		//
-			==============================================
-			セクション
-			==============================================
-		section#section-id
-			.outer
-				.inner
-					// ここにコンテンツ
-					p test
-				// /.inner
-			// /.outer
-		// /section
+	section.section.section-lead
+		.section__inner
+			h2.section__lead.js-slideIn: p.section__lead__txt
+				| Be beans, Be Nuts
 
+	section.section.section-content
+		.section__inner
+			.section__lists.js-staggerSlide
+				- for (var i = 0; i < 9; i++) {
+					.section__item: a(href="")
+						.section__item__inner
+							.section__item__visual
+							p.section__item__content dummy dummy dummy dummy dummy dummy dummy dummy
+				- }
 
 block script
 	//- ページ固有のjs
-	//- script(src='#{DIR_JS}home.min.js')
+	// script(src='#{DIR_JS}top.min.js')
