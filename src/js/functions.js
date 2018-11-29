@@ -416,20 +416,23 @@ $(function() {
 	if(l_href.indexOf(k_word) != -1) {
 		resetQuery();
 	}
-	/* -----------------------------------------------
-	 * スクロール禁止用関数
-	 * ----------------------------------------------- */
-	function no_scroll(){
-		var scroll_event = mousewheelevent;
-		$(document).on(scroll_event,function(e){e.preventDefault();});
-	}
-	/* -----------------------------------------------
-	 * スクロール復活用関数
-	 * ----------------------------------------------- */
-	function return_scroll(){
-		var scroll_event = mousewheelevent;
-		$(document).off(scroll_event);
-	}
+  /* -----------------------------------------------
+   * スクロール禁止復活用関数
+   * ----------------------------------------------- */
+  var scrolloff = function( event ) {event.preventDefault();}
+  var scroll_event = 'onwheel' in document ? 'wheel' : 'onmousewheel' in document ? 'mousewheel' : 'DOMMouseScroll';
+  function no_scroll(){
+    $(document).on(scroll_event,scrolloff);
+    // $(document).on('touchmove.noScroll', function(e) {e.preventDefault();});
+    window.addEventListener( 'touchmove', scrolloff, {passive: false} );
+  }
+  function return_scroll(){
+    $(document).off(scroll_event);
+    // $(document).off('.noScroll');
+    window.removeEventListener( 'touchmove', scrolloff, {passive: false} );
+  }
+
+
 	/* -----------------------------------------------
 	 * ユーザーエージェントを取得
 	 * ----------------------------------------------- */

@@ -18,6 +18,9 @@ block link
 block body
 	section.mainVisual
 		#p5Canvas.mainVisual__inner
+			//- svg.mainVisual__bezier(viewBox="0 0 200 120")
+			//- 	//- path(stroke="black", fill="none",d="M 0,0 L 1000,1000")
+			//- 	//- 	animateMotion(dur="3s",repeatCount="indefinite")
 			.mainVisual__node
 				h1.mainVisual__node__title.js-slideIn: span Corporation
 
@@ -38,4 +41,4 @@ block body
 
 block script
 	//- ページ固有のjs
-	// script(src='#{DIR_JS}top.min.js')
+	script(src='#{DIR_JS}top.min.js')
