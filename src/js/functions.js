@@ -39,7 +39,7 @@ $(function() {
 	var slideInFlagArr = [];
 	var slideInTopArr = [];
 	$slideIn.css('opacity', 0);
-		
+
 	var $staggerSlide = $(".js-staggerSlide");
 	var staggerSlideArr = [];
 	var staggerSlideFlagArr = [];
