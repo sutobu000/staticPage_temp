@@ -4,23 +4,17 @@ block vars
 	- var _keys_str = 'きーわーど'; // keywords
 	- var _page_category = 'top'; // ページのカテゴリー
 	- var _page_id = _page_category + '-page'; // ページカテゴリーの後ろに付与してIDとして使う
-	- var DIR_IMG_PAGE = "/img/" + _page_category; // イメージへのリンク
+	- var DIR_IMG_PAGE = "/img/" + _page_category + "/"; // イメージへのリンク
 	//- var DIR_CSS = "/css/"; // cssのリンク
 	//- var DIR_JS = "/js/"; // jsのリンク
 	- var _page_name = ''; // ページ名
-//- snipet
-//- img(src="/#{DIR_IMG_PAGE}***.png",width="750",height="410",alt="")
-//- a(href="/")
+
 extends partial/_layout
 block link
-	//-link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Cinzel+Decorative')
-	link(rel='stylesheet', href='#{DIR_CSS}top.css')
+	link(rel='stylesheet', href='#{DIR_CSS}#{_page_category}.css')
 block body
 	section.mainVisual
-		#p5Canvas.mainVisual__inner
-			//- svg.mainVisual__bezier(viewBox="0 0 200 120")
-			//- 	//- path(stroke="black", fill="none",d="M 0,0 L 1000,1000")
-			//- 	//- 	animateMotion(dur="3s",repeatCount="indefinite")
+		.mainVisual__inner
 			.mainVisual__node
 				h1.mainVisual__node__title.js-slideIn: span Corporation
 
@@ -41,4 +35,4 @@ block body
 
 block script
 	//- ページ固有のjs
-	script(src='#{DIR_JS}top.min.js')
+	//- script(src='#{DIR_JS}#{_page_category}.min.js')

@@ -16,13 +16,14 @@ var gulp = require("gulp"),
 	runSequence = require("run-sequence");
 
 var options = {
-outputStyle: "expanded",
+// outputStyle: "expanded",
+outputStyle: "compressed",
 sourceMap: true,
 sourceComments: false
 };
 
 var autoprefixerOptions = {
-browsers: ["last 3 version", "ie >= 10", "Android >= 4.0"]
+browsers: ["last 2 version", "ie >= 11", "Android >= 4.0"]
 };
 
 // キャッシュをクリア
