@@ -1,55 +1,55 @@
 $(function() {
 	console.log("js start");
 
-	var $window = $(window);
-	var $htmlbody = $("html, body");
-	var $html = $("html");
-	var $body = $("body");
+	let $window = $(window);
+	let $htmlbody = $("html, body");
+	let $html = $("html");
+	let $body = $("body");
 
-	/* --- Common variable --- */
-	var $wrapper = $(".wrapper");
-	var $wrapper_bg = $(".wrapper__bg");
-	var ww = $window.width();
-	var wh = $window.height();
-	var w_breakPoint = 767;
+	/* --- Common letiable --- */
+	let $wrapper = $(".wrapper");
+	let $wrapper_bg = $(".wrapper__bg");
+	let ww = $window.width();
+	let wh = $window.height();
+	let w_breakPoint = 767;
 
-	var s_top = $window.scrollTop();
-	var _sTop;
-	var mousewheelevent = 'onwheel' in document ? 'wheel' : 'onmousewheel' in document ? 'mousewheel' : 'DOMMouseScroll';
+	let s_top = $window.scrollTop();
+	let _sTop;
+	let mousewheelevent = 'onwheel' in document ? 'wheel' : 'onmousewheel' in document ? 'mousewheel' : 'DOMMouseScroll';
 
 	/* --- Header, Gnavi, Footer --- */
-	var $header = $(".header");
-	var $gnav = $(".gnav");
-	var $footer = $(".footer");
+	let $header = $(".header");
+	let $gnav = $(".gnav");
+	let $footer = $(".footer");
 
 	/* --- 画像preload --- */
-	var is_ready = false;
-	var is_cssImg = false;
-	var allImage = $(".main img");
-	var allImageCount = allImage.length;
-	var completeImageCount = 0;
+	let is_ready = false;
+	let is_cssImg = false;
+	let allImage = $(".main img");
+	let allImageCount = allImage.length;
+	let completeImageCount = 0;
 
-	var cssImgResults = [];
-	var cssSheets = document.styleSheets;
-	var completecssImageCount = 0;
+	let cssImgResults = [];
+	let cssSheets = document.styleSheets;
+	let completecssImageCount = 0;
 
 	/* --- スライドフェードイン --- */
-	var $slideIn = $(".js-slideIn");
-	var slideInArr = [];
-	var slideInFlagArr = [];
-	var slideInTopArr = [];
+	let $slideIn = $(".js-slideIn");
+	let slideInArr = [];
+	let slideInFlagArr = [];
+	let slideInTopArr = [];
 	$slideIn.css('opacity', 0);
 
-	var $staggerSlide = $(".js-staggerSlide");
-	var staggerSlideArr = [];
-	var staggerSlideFlagArr = [];
-	var staggerSlideTopArr = [];
+	let $staggerSlide = $(".js-staggerSlide");
+	let staggerSlideArr = [];
+	let staggerSlideFlagArr = [];
+	let staggerSlideTopArr = [];
 	$staggerSlide.children("*").css('opacity', 0);
 
 	/* --- SPメニュー --- */
-	var $menuBtn = new $(".header__menubtn");
-	var is_gnav = false;
-	var is_open = false;
+	let $menuBtn = new $(".header__menubtn");
+	let is_gnav = false;
+	let is_open = false;
 
 
 

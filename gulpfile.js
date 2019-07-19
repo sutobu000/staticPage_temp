@@ -1,4 +1,4 @@
-var gulp = require("gulp"),
+const gulp = require("gulp"),
 	cache = require("gulp-cache"),
 	jade = require("gulp-jade"),
 	sass = require("gulp-sass"),
@@ -13,16 +13,17 @@ var gulp = require("gulp"),
 	changed = require("gulp-changed"),
 	browserSync = require("browser-sync"),
 	plumber = require("gulp-plumber"),
+	babel = require("gulp-babel"),
 	runSequence = require("run-sequence");
 
-var options = {
+const options = {
 // outputStyle: "expanded",
 outputStyle: "compressed",
 sourceMap: true,
 sourceComments: false
 };
 
-var autoprefixerOptions = {
+const autoprefixerOptions = {
 browsers: ["last 2 version", "ie >= 11", "Android >= 4.0"]
 };
 
@@ -73,6 +74,7 @@ gulp.task("jade2", () => {
 // js
 gulp.task("js", () => {
 	return gulp.src(["src/js/*.js","!src/js/*.min.js"])
+		.pipe(babel({presets: ['env']}))
         .pipe(plumber({errorHandler: notify.onError('<%= error.message %>')}))
         .pipe(terser())
         .pipe(rename({extname: ".min.js"}))
