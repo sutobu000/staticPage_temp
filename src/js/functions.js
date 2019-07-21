@@ -1,4 +1,4 @@
-console.log("js start");
+// console.log("js start");
 
 let $html = document.getElementsByTagName("html");
 let $body = document.getElementsByTagName("body");
@@ -8,7 +8,7 @@ let $wrapper = document.querySelector(".wrapper");
 let $wrapper_bg = document.querySelector(".wrapper__bg");
 let ww = window.innerWidth;
 let wh = window.innerHeight;
-let w_breakPoint = 767;
+let w_breakPoint = 768;
 
 let _sTop = document.documentElement.scrollTop || document.body.scrollTop;
 let mousewheelevent = 'onwheel' in document ? 'wheel' : 'onmousewheel' in document ? 'mousewheel' : 'DOMMouseScroll';
@@ -77,15 +77,15 @@ window.addEventListener("resize", function(e) {
 	}
 });
 
-setUA();
+// setUA();
 
 /* -----------------------------------------------
  * Ready
  * ----------------------------------------------- */
 /* -- Ready イベント -- */
-document.addEventListener("ready", function() {
-	// console.log("ready");
-	let tags = document.getElementsByTagName("*");
+document.addEventListener("DOMContentLoaded", function() {
+	console.log("ready");
+	// let tags = document.getElementsByTagName("*");
 	try{
 		if (Array.from) {
 			let classesEle = Array.from(document.querySelectorAll('[class]')); // 全要素からクラス名を持つ要素を取得
@@ -113,12 +113,12 @@ document.addEventListener("ready", function() {
 				readySection();
 			}else{
 				for(let j = 0; j < cssStyle.length; j++){
-					let img = new Image();
+					// let img = new Image();
 					let $imgnew = document.createElement("img");
 					// let imgurl = cssStyle[j].slice(5).slice(0, -2);
 					let imgurl = cssStyle[j].replace(/"/g, '');
 					imgurl = imgurl.slice(4).slice(0, -1);
-					$imgnew.attr("src", imgurl);
+					$imgnew.setAttribute("src", imgurl);
 					$imgnew.addEventListener("load", function(response, status, xhr) {
 						completecssImageCount++;
 						if (completecssImageCount == cssStyle.length){
@@ -148,24 +148,26 @@ function readySection() {
 		}else{
 			for(let i = 0; i < allImageCount; i++){
 				let image = new Image();
-				let $src = $($allImage[i]).attr('src');
+				let $src = $allImage[i].getAttribute('src');
 				image.src = $src;
-				let $new = $('<img src="" >');
-				$($allImage[i]).css('opacity', '0');
+				let $new = document.createElement("img");
+				$allImage[i].style.opacity = 0;
 				if (!$src || image.width == 0) {
 					completeImageCount++;
 				}else{
-					$new.on("load", function() {
+					$new.addEventListener("load", function() {
 						completeImageCount++;
 						if (allImageCount == completeImageCount){
-							$allImage.removeAttr('style');
+							for(let j = 0; j < $allImage.length; j++){
+								$allImage[j].removeAttribute('style');
+							}
 							setTimeout(function(){
 								readyInit();
 							},100);
 						}
 					})
 				}
-			$new.attr("src",$($allImage[i]).attr('src'));
+			$new.setAttribute("src",$allImage[i].getAttribute('src'));
 			}
 		}
 	}
@@ -175,18 +177,18 @@ function readySection() {
 function readyInit() {
 	// console.log("init start");
 	/* ホワイトバック */
-	$wrapper_bg.velocity({opacity: 0},{duration:500, easing:"ease-out", complete:function(){
-		$wrapper_bg.remove();
-		scroll_flag = false;
+	TweenMax.to($wrapper_bg, .6, {opacity:0, onComplete: function(){
+		$wrapper_bg.parentNode.removeChild($wrapper_bg);
+		// scroll_flag = false;
 	}});
 
 	/* slideIn */
-	let wscroll = window.scrollTop() + wh;
+	let wscroll = _sTop + wh;
 	for (let i = 0; i < slideInTopArr.length; i++) {
 		if (slideInTopArr[i] <= wscroll) { slideInFlagArr[i] = true; slideInAnime(slideInArr[i]); }
 	}
 	for (let i = 0; i < staggerSlideTopArr.length; i++) {
-		if (staggerSlideTopArr[i] <= wscroll) { staggerSlideFlagArr[i] = true; staggerSlideInAnime(staggerSlideArr[i].children()); }
+		if (staggerSlideTopArr[i] <= wscroll) { staggerSlideFlagArr[i] = true; staggerSlideInAnime(staggerSlideArr[i]); }
 	}
 
 }
@@ -214,7 +216,7 @@ window.addEventListener('scroll', function (e) {
 	for (let i = 0; i < staggerSlideArr.length; i++) {
 		if (!staggerSlideFlagArr[i] && staggerSlideTopArr[i] <= _sBtm - diffVal) {
 			staggerSlideFlagArr[i] = true;
-			staggerSlideInAnime(staggerSlideArr[i].children());
+			staggerSlideInAnime(staggerSlideArr[i]);
 		}
 	}
 
@@ -232,30 +234,30 @@ for(let slideInCount = 0; slideInCount < $slideIn.length; slideInCount++) {
 }
 function slideInAnime($obj){
 	TweenMax.killTweensOf($obj);
-	if($obj.hasClass('js-slideIn-left')){
+	if($obj.classList.contains('js-slideIn-left')){
 		TweenMax.fromTo($obj, .7, {x:-20,opacity:0},{x:0,opacity:1,delay:.3,onComplete: function(){
-			$obj.removeAttr('style');
-			$obj.removeClass('js-slideIn').removeClass("js-slideIn-left");
+			$obj.removeAttribute('style');
+			$obj.classList.remove('js-slideIn', 'js-slideIn-left');
 		}});
-	}else if($obj.hasClass('js-slideIn-right')){
+	}else if($obj.classList.contains('js-slideIn-right')){
 		TweenMax.fromTo($obj, .7, {x:20,opacity:0},{x:0,opacity:1,delay:.3,onComplete: function(){
-			$obj.removeAttr('style');
-			$obj.removeClass('js-slideIn').removeClass("js-slideIn-right");
+			$obj.removeAttribute('style');
+			$obj.classList.remove('js-slideIn', 'js-slideIn-right');
 		}});
-	}else if($obj.hasClass('js-slideIn-top')){
+	}else if($obj.classList.contains('js-slideIn-top')){
 		TweenMax.fromTo($obj, .7, {y:-20,opacity:0},{y:0,opacity:1,delay:.3,onComplete: function(){
-			$obj.removeAttr('style');
-			$obj.removeClass('js-slideIn').removeClass("js-slideIn-top");
+			$obj.removeAttribute('style');
+			$obj.classList.remove('js-slideIn', 'js-slideIn-top');
 		}});
-	}else if($obj.hasClass('js-slideIn-bottom')){
+	}else if($obj.classList.contains('js-slideIn-bottom')){
 		TweenMax.fromTo($obj, .7, {y:20,opacity:0},{y:0,opacity:1,delay:.3,onComplete: function(){
-			$obj.removeAttr('style');
-			$obj.removeClass('js-slideIn').removeClass("js-slideIn-bottom");
+			$obj.removeAttribute('style');
+			$obj.classList.remove('js-slideIn', 'js-slideIn-bottom');
 		}});
 	}else{
 		TweenMax.fromTo($obj, .7, {y:20,opacity:0},{y:0,opacity:1,delay:.3,onComplete: function(){
-			$obj.removeAttr('style');
-			$obj.removeClass('js-slideIn');
+			$obj.removeAttribute('style');
+			$obj.classList.remove('js-slideIn');
 		}});
 	}
 }
@@ -268,30 +270,32 @@ for (let staggerSlideCount = 0; staggerSlideCount < $staggerSlide.length; stagge
   staggerSlideTopArr[staggerSlideCount] = $this.getBoundingClientRect().top;
 }
 function staggerSlideInAnime($obj){
-	if($obj.parent().hasClass('js-staggerSlide-left')){
-		TweenMax.staggerFromTo($obj, .7, {x:-20,opacity:0},{x:0,opacity:1,delay:.3},.15, function(){
-			$obj.removeAttr('style');
-			$obj.parent().removeClass('js-staggerSlide').removeClass('js-staggerSlide-left');
+	if($obj.classList.contains('js-staggerSlide-left')){
+		TweenMax.staggerFromTo($obj.children, .7, {x:-20,opacity:0},{x:0,opacity:1,delay:.3},.15, function(){
+			$obj.children.removeAttribute('style');
+			$obj.classList.remove('js-staggerSlide', 'js-staggerSlide-left');
 		});
-	}else if($obj.parent().hasClass('js-staggerSlide-right')){
-		TweenMax.staggerFromTo($obj, .7, {x:20,opacity:0},{x:0,opacity:1,delay:.3},.15, function(){
-			$obj.removeAttr('style');
-			$obj.parent().removeClass('js-staggerSlide').removeClass('js-staggerSlide-right');
+	}else if($obj.classList.contains('js-staggerSlide-right')){
+		TweenMax.staggerFromTo($obj.children, .7, {x:20,opacity:0},{x:0,opacity:1,delay:.3},.15, function(){
+			$obj.children.removeAttribute('style');
+			$obj.classList.remove('js-staggerSlide', 'js-staggerSlide-right');
 		});
-	}else if($obj.parent().hasClass('js-staggerSlide-top')){
-		TweenMax.staggerFromTo($obj, .7, {y:-20,opacity:0},{y:0,opacity:1,delay:.3},.15, function(){
-			$obj.removeAttr('style');
-			$obj.parent().removeClass('js-staggerSlide').removeClass('js-staggerSlide-top');
+	}else if($obj.classList.contains('js-staggerSlide-top')){
+		TweenMax.staggerFromTo($obj.children, .7, {y:-20,opacity:0},{y:0,opacity:1,delay:.3},.15, function(){
+			$obj.children.removeAttribute('style');
+			$obj.classList.remove('js-staggerSlide', 'js-staggerSlide-top');
 		});
-	}else if($obj.parent().hasClass('js-staggerSlide-bottom')){
-		TweenMax.staggerFromTo($obj, .7, {y:20,opacity:0},{y:0,opacity:1,delay:.3},.15, function(){
-			$obj.removeAttr('style');
-			$obj.parent().removeClass('js-staggerSlide').removeClass('js-staggerSlide-bottom');
+	}else if($obj.classList.contains('js-staggerSlide-bottom')){
+		TweenMax.staggerFromTo($obj.children, .7, {y:20,opacity:0},{y:0,opacity:1,delay:.3},.15, function(){
+			$obj.children.removeAttribute('style');
+			$obj.classList.remove('js-staggerSlide', 'js-staggerSlide-bottom');
 		});
 	}else{
-		TweenMax.staggerFromTo($obj, .7, {y:20,opacity:0},{y:0,opacity:1,delay:.3},.15, function(){
-			$obj.removeAttr('style');
-			$obj.parent().removeClass('js-staggerSlide');
+		TweenMax.staggerFromTo($obj.children, .7, {y:20,opacity:0},{y:0,opacity:1,delay:.3},.15, function(){
+			for(let i = 0; i < $obj.children.length; i++){
+				$obj.children[i].removeAttribute('style');
+			}
+			$obj.classList.remove('js-staggerSlide');
 		});
 	}
 }
@@ -300,26 +304,24 @@ function staggerSlideInAnime($obj){
  * SP メニュー
  * ----------------------------------------------- */
 $menuBtn.addEventListener	('click', function(e) {
-	let h_gnav = Number(window.outerHeight());
+	let h_gnav = Number(window.innerHeight);
 	if (!is_gnav) {
 		if (!is_open) {
-			_sTop = window.scrollTop();
+			_sTop = document.documentElement.scrollTop || document.body.scrollTop;
 			is_open = true;
 			is_gnav = true;
-			$menuBtn.addClass("is-open");
-			$wrapper.css({
-				"position": "fixed",
-				"top" : -(_sTop),
-				"left" : 0
-			});
-			$gnav.velocity({height:h_gnav},{duration:300, easing:"ease-in-out", complete:function(){is_gnav = false;}});
+			$menuBtn.classList.add("is-open");
+			$wrapper.style.position = "fixed";
+			$wrapper.style.top = -(_sTop);
+			$wrapper.style.left = 0;
+			TweenMax.to($gnav, .3, {height:h_gnav, onComplete: function(){is_gnav = false;}});
 		} else {
-			$wrapper.removeAttr('style');
-			window.scrollTop(_sTop);
+			$wrapper.removeAttribute('style');
+			window.scrollTo(0, _sTop);
 			is_open = false;
 			is_gnav = true;
-			$menuBtn.removeClass("is-open");
-			$gnav.velocity({height:0},{duration:300, easing:"ease-in-out", complete:function(){is_gnav = false;}});
+			$menuBtn.classList.remove("is-open");
+			TweenMax.to($gnav, .3, {height:0, onComplete: function(){is_gnav = false;}});
 		}
 	}
 });
@@ -330,17 +332,12 @@ $menuBtn.addEventListener	('click', function(e) {
  * ----------------------------------------------- */
 if (!_SP) {
 	for(let hoverCount = 0; hoverCount < $hover.length; hoverCount++){
-		$hover[hoverCount].addEventListener("hover",
-			function(){
-				$(this)
-					.stop()
-					.animate({opacity: 0.5},{duration: 200});
-			},function(){
-				$(this)
-					.stop()
-					.animate({opacity: 1},{duration: 200});
-			}
-		);
+		$hover[hoverCount].addEventListener("mouseover",function(){
+			TweenMax.to(this,.2,{opacity: .5});
+		});
+		$hover[hoverCount].addEventListener("mouseout",function(){
+			TweenMax.to(this,.2,{opacity: 1, onComplete: function(){$hover[hoverCount].removeAttribute("style");}});
+		});
 	}
 }
 
@@ -351,7 +348,7 @@ $pageTop.addEventListener('click', function(e){
 	e.preventDefault();
 	if (!is_pageTop) {
 		is_pageTop = true;
-		$html.velocity("scroll", {duration:800, easing:"ease-in-out", complete:function(){is_pageTop = false;}});
+		TweenMax.to(window,.8,{scrollTo: 0 , onComplete: function(){is_pageTop = false;}});
 	}
 });
 /* -----------------------------------------------
@@ -360,22 +357,22 @@ $pageTop.addEventListener('click', function(e){
 for (var ancCount = 0; ancCount < $ancLink.length; ancCount++) {
 	$ancLink[ancCount].addEventListener("click", function(e){
 		e.preventDefault();
-		let href = $(this).attr("href");
-		scrollAnc(href, 500);
+		let href = this.getAttribute("href");
+		scrollAnc(href, .5);
 	})
 }
 function scrollAnc($object, $speed) {
 	let hash = $object;
-	let target;
+	let $target;
 	let t_hash;
-	let headerHeight;
-	let h_h = $(".header").outerHeight();
+	let h_h = document.querySelector(".header").clientHeight;
 	if(hash==="#") {
 		t_hash = 0;
 	} else {
-		target = $(hash);
+		$target = document.querySelector(hash);
+		t_hash = $target.getBoundingClientRect().top - h_h;
 	}
-	target.stop().velocity("scroll", {duration: $speed, offset: -h_h, easing: "ease-in-out" });
+	TweenMax.to(window,$speed,{scrollTo: t_hash});
 }
 /* -----------------------------------------------
  * cookie取得
@@ -403,39 +400,37 @@ if(l_href.indexOf(k_word) != -1) {
 let scrolloff = function( event ) {event.preventDefault();}
 let scroll_event = 'onwheel' in document ? 'wheel' : 'onmousewheel' in document ? 'mousewheel' : 'DOMMouseScroll';
 function no_scroll(){
-$(document).on(scroll_event,scrolloff);
-// $(document).on('touchmove.noScroll', function(e) {e.preventDefault();});
-window.addEventListener( 'touchmove', scrolloff, {passive: false} );
+	document.addEventListener.on(scroll_event,scrolloff);
+	window.addEventListener('touchmove', scrolloff, {passive: false} );
 }
 function return_scroll(){
-$(document).off(scroll_event);
-// $(document).off('.noScroll');
-window.removeEventListener( 'touchmove', scrolloff, {passive: false} );
+	document.removeEventListener(scroll_event);
+	window.removeEventListener('touchmove', scrolloff, {passive: false} );
 }
 
 
-/* -----------------------------------------------
- * ユーザーエージェントを取得
- * ----------------------------------------------- */
-function setUA() {
-	let ua = navigator.userAgent.toLowerCase();  //エージェント取得
-	let ver = navigator.appVersion.toLowerCase(); //バージョンを取得
+// /* -----------------------------------------------
+//  * ユーザーエージェントを取得
+//  * ----------------------------------------------- */
+// function setUA() {
+// 	let ua = navigator.userAgent.toLowerCase();  //エージェント取得
+// 	let ver = navigator.appVersion.toLowerCase(); //バージョンを取得
 
-	let isMSIE = (ua.indexOf('msie') > -1) && (ua.indexOf('opera') == -1); // IE(11以外)
-	let isIE6 = isMSIE && (ver.indexOf('msie 6.') > -1); // IE6
-	let isIE7 = isMSIE && (ver.indexOf('msie 7.') > -1); // IE7
-	let isIE8 = isMSIE && (ver.indexOf('msie 8.') > -1); // IE8
-	let isIE9 = isMSIE && (ver.indexOf('msie 9.') > -1); // IE9
-	let isIE10 = isMSIE && (ver.indexOf('msie 10.') > -1); // IE10
-	let isIE11 = (ua.indexOf('trident/7') > -1); // IE11
-	let isIE = isMSIE || isIE11; // IE
-	let isEdge = (ua.indexOf('edge') > -1); // Edge
+// 	let isMSIE = (ua.indexOf('msie') > -1) && (ua.indexOf('opera') == -1); // IE(11以外)
+// 	let isIE6 = isMSIE && (ver.indexOf('msie 6.') > -1); // IE6
+// 	let isIE7 = isMSIE && (ver.indexOf('msie 7.') > -1); // IE7
+// 	let isIE8 = isMSIE && (ver.indexOf('msie 8.') > -1); // IE8
+// 	let isIE9 = isMSIE && (ver.indexOf('msie 9.') > -1); // IE9
+// 	let isIE10 = isMSIE && (ver.indexOf('msie 10.') > -1); // IE10
+// 	let isIE11 = (ua.indexOf('trident/7') > -1); // IE11
+// 	let isIE = isMSIE || isIE11; // IE
+// 	let isEdge = (ua.indexOf('edge') > -1); // Edge
 
-	let isChrome = (ua.indexOf('chrome') > -1) && (ua.indexOf('edge') == -1); // Google Chrome
-	let isFirefox = (ua.indexOf('firefox') > -1); //Firefox
-	let isSafari = (ua.indexOf('safari') > -1) && (ua.indexOf('chrome') == -1); // Safari
-	let isOpera = (ua.indexOf('opera') > -1); // Opera
-}
+// 	let isChrome = (ua.indexOf('chrome') > -1) && (ua.indexOf('edge') == -1); // Google Chrome
+// 	let isFirefox = (ua.indexOf('firefox') > -1); //Firefox
+// 	let isSafari = (ua.indexOf('safari') > -1) && (ua.indexOf('chrome') == -1); // Safari
+// 	let isOpera = (ua.indexOf('opera') > -1); // Opera
+// }
 
 
 // /* -----------------------------------------------

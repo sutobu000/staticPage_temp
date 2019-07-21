@@ -23,13 +23,13 @@ block body
 			h2.section__lead.js-slideIn: p.section__lead__txt
 				| Be beans, Be Nuts
 
-	section.section.section-content
+	section.section.section-content#content
 		.section__inner
 			.section__lists.js-staggerSlide
 				- for (var i = 0; i < 9; i++) {
-					.section__item: a(href="")
+					.section__item: a.js-hover(href="")
 						.section__item__inner
-							.section__item__visual
+							.section__item__visual: img(src="https://placehold.jp/300x150.png", alt="test")
 							p.section__item__content dummy dummy dummy dummy dummy dummy dummy dummy
 				- }
 
