@@ -1,14 +1,15 @@
 /*!
- * VERSION: 1.20.0
- * DATE: 2017-06-27
+ * VERSION: 2.1.3
+ * DATE: 2019-05-17
  * UPDATES AND DOCS AT: http://greensock.com
  *
- * @license Copyright (c) 2008-2017, GreenSock. All rights reserved.
+ * @license Copyright (c) 2008-2019, GreenSock. All rights reserved.
  * This work is subject to the terms at http://greensock.com/standard-license or for
  * Club GreenSock members, the software agreement that was issued with your membership.
  * 
  * @author: Jack Doyle, jack@greensock.com
  */
+/* eslint-disable */
 var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(global) !== "undefined") ? global : this || window; //helps ensure compatibility with AMD/RequireJS and CommonJS/Node
 (_gsScope._gsQueue || (_gsScope._gsQueue = [])).push( function() {
 
@@ -21,10 +22,10 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 				this._repeat = this.vars.repeat || 0;
 				this._repeatDelay = this.vars.repeatDelay || 0;
 				this._cycle = 0;
-				this._yoyo = (this.vars.yoyo === true);
+				this._yoyo = !!this.vars.yoyo;
 				this._dirty = true;
 			},
-			_tinyNum = 0.0000000001,
+			_tinyNum = 0.00000001,
 			TweenLiteInternals = TweenLite._internals,
 			_lazyTweens = TweenLiteInternals.lazyTweens,
 			_lazyRender = TweenLiteInternals.lazyRender,
@@ -34,10 +35,10 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 			
 		p.constructor = TimelineMax;
 		p.kill()._gc = false;
-		TimelineMax.version = "1.20.0";
+		TimelineMax.version = "2.1.3";
 		
 		p.invalidate = function() {
-			this._yoyo = (this.vars.yoyo === true);
+			this._yoyo = !!this.vars.yoyo;
 			this._repeat = this.vars.repeat || 0;
 			this._repeatDelay = this.vars.repeatDelay || 0;
 			this._uncache(true);
@@ -69,10 +70,10 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 		p.removePause = function(position) {
 			return this.removeCallback(TimelineLite._internals.pauseCallback, position);
 		};
-		
+
 		p.tweenTo = function(position, vars) {
 			vars = vars || {};
-			var copy = {ease:_easeNone, useFrames:this.usesFrames(), immediateRender:false},
+			var copy = {ease:_easeNone, useFrames:this.usesFrames(), immediateRender:false, lazy:false},
 				Engine = (vars.repeat && _globals.TweenMax) || TweenLite,
 				duration, p, t;
 			for (p in vars) {
@@ -83,8 +84,8 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 			t = new Engine(this, duration, copy);
 			copy.onStart = function() {
 				t.target.paused(true);
-				if (t.vars.time !== t.target.time() && duration === t.duration()) { //don't make the duration zero - if it's supposed to be zero, don't worry because it's already initting the tween and will complete immediately, effectively making the duration zero anyway. If we make duration zero, the tween won't run at all.
-					t.duration( Math.abs( t.vars.time - t.target.time()) / t.target._timeScale );
+				if (t.vars.time !== t.target.time() && duration === t.duration() && !t.isFromTo) { //don't make the duration zero - if it's supposed to be zero, don't worry because it's already initting the tween and will complete immediately, effectively making the duration zero anyway. If we make duration zero, the tween won't run at all.
+					t.duration( Math.abs( t.vars.time - t.target.time()) / t.target._timeScale ).render(t.time(), true, true); //render() right away to ensure that things look right, especially in the case of .tweenTo(0).
 				}
 				if (vars.onStart) { //in case the user had an onStart in the vars - we don't want to overwrite it.
 					vars.onStart.apply(vars.onStartScope || vars.callbackScope || t, vars.onStartParams || []); //don't use t._callback("onStart") or it'll point to the copy.onStart and we'll get a recursion error.
@@ -92,13 +93,14 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 			};
 			return t;
 		};
-		
+
 		p.tweenFromTo = function(fromPosition, toPosition, vars) {
 			vars = vars || {};
 			fromPosition = this._parseTimeOrLabel(fromPosition);
 			vars.startAt = {onComplete:this.seek, onCompleteParams:[fromPosition], callbackScope:this};
 			vars.immediateRender = (vars.immediateRender !== false);
 			var t = this.tweenTo(toPosition, vars);
+			t.isFromTo = 1; //to ensure we don't mess with the duration in the onStart (we've got the start and end values here, so lock it in)
 			return t.duration((Math.abs( t.vars.time - fromPosition) / this._timeScale) || 0.001);
 		};
 		
@@ -106,62 +108,69 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 			if (this._gc) {
 				this._enabled(true, false);
 			}
-			var totalDur = (!this._dirty) ? this._totalDuration : this.totalDuration(),
-				dur = this._duration,
-				prevTime = this._time, 
-				prevTotalTime = this._totalTime, 
-				prevStart = this._startTime, 
-				prevTimeScale = this._timeScale, 
-				prevRawPrevTime = this._rawPrevTime,
-				prevPaused = this._paused, 
-				prevCycle = this._cycle, 
-				tween, isComplete, next, callback, internalForce, cycleDuration, pauseTween, curTime;
-			if (time >= totalDur - 0.0000001 && time >= 0) { //to work around occasional floating point math artifacts.
-				if (!this._locked) {
-					this._totalTime = totalDur;
-					this._cycle = this._repeat;
+			var self = this,
+				prevTime = self._time,
+				totalDur = (!self._dirty) ? self._totalDuration : self.totalDuration(),
+				dur = self._duration,
+				prevTotalTime = self._totalTime,
+				prevStart = self._startTime,
+				prevTimeScale = self._timeScale,
+				prevRawPrevTime = self._rawPrevTime,
+				prevPaused = self._paused,
+				prevCycle = self._cycle,
+				tween, isComplete, next, callback, internalForce, cycleDuration, pauseTween, curTime, pauseTime;
+			if (prevTime !== self._time) { //if totalDuration() finds a child with a negative startTime and smoothChildTiming is true, things get shifted around internally so we need to adjust the time accordingly. For example, if a tween starts at -30 we must shift EVERYTHING forward 30 seconds and move this timeline's startTime backward by 30 seconds so that things align with the playhead (no jump).
+				time += self._time - prevTime;
+			}
+			if (time >= totalDur - _tinyNum && time >= 0) { //to work around occasional floating point math artifacts.
+				if (!self._locked) {
+					self._totalTime = totalDur;
+					self._cycle = self._repeat;
 				}
-				if (!this._reversed) if (!this._hasPausedChild()) {
+				if (!self._reversed) if (!self._hasPausedChild()) {
 					isComplete = true;
 					callback = "onComplete";
-					internalForce = !!this._timeline.autoRemoveChildren; //otherwise, if the animation is unpaused/activated after it's already finished, it doesn't get removed from the parent timeline.
-					if (this._duration === 0) if ((time <= 0 && time >= -0.0000001) || prevRawPrevTime < 0 || prevRawPrevTime === _tinyNum) if (prevRawPrevTime !== time && this._first) {
+					internalForce = !!self._timeline.autoRemoveChildren; //otherwise, if the animation is unpaused/activated after it's already finished, it doesn't get removed from the parent timeline.
+					if (self._duration === 0) if ((time <= 0 && time >= -_tinyNum) || prevRawPrevTime < 0 || prevRawPrevTime === _tinyNum) if (prevRawPrevTime !== time && self._first) {
 						internalForce = true;
 						if (prevRawPrevTime > _tinyNum) {
 							callback = "onReverseComplete";
 						}
 					}
 				}
-				this._rawPrevTime = (this._duration || !suppressEvents || time || this._rawPrevTime === time) ? time : _tinyNum; //when the playhead arrives at EXACTLY time 0 (right on top) of a zero-duration timeline or tween, we need to discern if events are suppressed so that when the playhead moves again (next time), it'll trigger the callback. If events are NOT suppressed, obviously the callback would be triggered in this render. Basically, the callback should fire either when the playhead ARRIVES or LEAVES this exact spot, not both. Imagine doing a timeline.seek(0) and there's a callback that sits at 0. Since events are suppressed on that seek() by default, nothing will fire, but when the playhead moves off of that position, the callback should fire. This behavior is what people intuitively expect. We set the _rawPrevTime to be a precise tiny number to indicate this scenario rather than using another property/variable which would increase memory usage. This technique is less readable, but more efficient.
-				if (this._yoyo && (this._cycle & 1) !== 0) {
-					this._time = time = 0;
+				self._rawPrevTime = (self._duration || !suppressEvents || time || self._rawPrevTime === time) ? time : _tinyNum; //when the playhead arrives at EXACTLY time 0 (right on top) of a zero-duration timeline or tween, we need to discern if events are suppressed so that when the playhead moves again (next time), it'll trigger the callback. If events are NOT suppressed, obviously the callback would be triggered in this render. Basically, the callback should fire either when the playhead ARRIVES or LEAVES this exact spot, not both. Imagine doing a timeline.seek(0) and there's a callback that sits at 0. Since events are suppressed on that seek() by default, nothing will fire, but when the playhead moves off of that position, the callback should fire. This behavior is what people intuitively expect. We set the _rawPrevTime to be a precise tiny number to indicate this scenario rather than using another property/variable which would increase memory usage. This technique is less readable, but more efficient.
+				if (self._yoyo && (self._cycle & 1)) {
+					self._time = time = 0;
 				} else {
-					this._time = dur;
+					self._time = dur;
 					time = dur + 0.0001; //to avoid occasional floating point rounding errors - sometimes child tweens/timelines were not being fully completed (their progress might be 0.999999999999998 instead of 1 because when _time - tween._startTime is performed, floating point errors would return a value that was SLIGHTLY off). Try (999999999999.7 - 999999999999) * 1 = 0.699951171875 instead of 0.7. We cannot do less then 0.0001 because the same issue can occur when the duration is extremely large like 999999999999 in which case adding 0.00000001, for example, causes it to act like nothing was added.
 				}
 				
-			} else if (time < 0.0000001) { //to work around occasional floating point math artifacts, round super small values to 0.
-				if (!this._locked) {
-					this._totalTime = this._cycle = 0;
+			} else if (time < _tinyNum) { //to work around occasional floating point math artifacts, round super small values to 0.
+				if (!self._locked) {
+					self._totalTime = self._cycle = 0;
 				}
-				this._time = 0;
-				if (prevTime !== 0 || (dur === 0 && prevRawPrevTime !== _tinyNum && (prevRawPrevTime > 0 || (time < 0 && prevRawPrevTime >= 0)) && !this._locked)) { //edge case for checking time < 0 && prevRawPrevTime >= 0: a zero-duration fromTo() tween inside a zero-duration timeline (yeah, very rare)
+				self._time = 0;
+				if (time > -_tinyNum) {
+					time = 0;
+				}
+				if (prevTime !== 0 || (dur === 0 && prevRawPrevTime !== _tinyNum && (prevRawPrevTime > 0 || (time < 0 && prevRawPrevTime >= 0)) && !self._locked)) { //edge case for checking time < 0 && prevRawPrevTime >= 0: a zero-duration fromTo() tween inside a zero-duration timeline (yeah, very rare)
 					callback = "onReverseComplete";
-					isComplete = this._reversed;
+					isComplete = self._reversed;
 				}
 				if (time < 0) {
-					this._active = false;
-					if (this._timeline.autoRemoveChildren && this._reversed) {
+					self._active = false;
+					if (self._timeline.autoRemoveChildren && self._reversed) {
 						internalForce = isComplete = true;
 						callback = "onReverseComplete";
-					} else if (prevRawPrevTime >= 0 && this._first) { //when going back beyond the start, force a render so that zero-duration tweens that sit at the very beginning render their start values properly. Otherwise, if the parent timeline's playhead lands exactly at this timeline's startTime, and then moves backwards, the zero-duration tweens at the beginning would still be at their end state.
+					} else if (prevRawPrevTime >= 0 && self._first) { //when going back beyond the start, force a render so that zero-duration tweens that sit at the very beginning render their start values properly. Otherwise, if the parent timeline's playhead lands exactly at this timeline's startTime, and then moves backwards, the zero-duration tweens at the beginning would still be at their end state.
 						internalForce = true;
 					}
-					this._rawPrevTime = time;
+					self._rawPrevTime = time;
 				} else {
-					this._rawPrevTime = (dur || !suppressEvents || time || this._rawPrevTime === time) ? time : _tinyNum; //when the playhead arrives at EXACTLY time 0 (right on top) of a zero-duration timeline or tween, we need to discern if events are suppressed so that when the playhead moves again (next time), it'll trigger the callback. If events are NOT suppressed, obviously the callback would be triggered in this render. Basically, the callback should fire either when the playhead ARRIVES or LEAVES this exact spot, not both. Imagine doing a timeline.seek(0) and there's a callback that sits at 0. Since events are suppressed on that seek() by default, nothing will fire, but when the playhead moves off of that position, the callback should fire. This behavior is what people intuitively expect. We set the _rawPrevTime to be a precise tiny number to indicate this scenario rather than using another property/variable which would increase memory usage. This technique is less readable, but more efficient.
+					self._rawPrevTime = (dur || !suppressEvents || time || self._rawPrevTime === time) ? time : _tinyNum; //when the playhead arrives at EXACTLY time 0 (right on top) of a zero-duration timeline or tween, we need to discern if events are suppressed so that when the playhead moves again (next time), it'll trigger the callback. If events are NOT suppressed, obviously the callback would be triggered in this render. Basically, the callback should fire either when the playhead ARRIVES or LEAVES this exact spot, not both. Imagine doing a timeline.seek(0) and there's a callback that sits at 0. Since events are suppressed on that seek() by default, nothing will fire, but when the playhead moves off of that position, the callback should fire. This behavior is what people intuitively expect. We set the _rawPrevTime to be a precise tiny number to indicate this scenario rather than using another property/variable which would increase memory usage. This technique is less readable, but more efficient.
 					if (time === 0 && isComplete) { //if there's a zero-duration tween at the very beginning of a timeline and the playhead lands EXACTLY at time 0, that tween will correctly render its end values, but we need to keep the timeline alive for one more render so that the beginning values render properly as the parent's playhead keeps moving beyond the begining. Imagine obj.x starts at 0 and then we do tl.set(obj, {x:100}).to(obj, 1, {x:200}) and then later we tl.reverse()...the goal is to have obj.x revert to 0. If the playhead happens to land on exactly 0, without this chunk of code, it'd complete the timeline and remove it from the rendering queue (not good).
-						tween = this._first;
+						tween = self._first;
 						while (tween && tween._startTime === 0) {
 							if (!tween._duration) {
 								isComplete = false;
@@ -170,7 +179,7 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 						}
 					}
 					time = 0; //to avoid occasional floating point rounding errors (could cause problems especially with zero-duration tweens at the very beginning of the timeline)
-					if (!this._initted) {
+					if (!self._initted) {
 						internalForce = true;
 					}
 				}
@@ -179,139 +188,142 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 				if (dur === 0 && prevRawPrevTime < 0) { //without this, zero-duration repeating timelines (like with a simple callback nested at the very beginning and a repeatDelay) wouldn't render the first time through.
 					internalForce = true;
 				}
-				this._time = this._rawPrevTime = time;
-				if (!this._locked) {
-					this._totalTime = time;
-					if (this._repeat !== 0) {
-						cycleDuration = dur + this._repeatDelay;
-						this._cycle = (this._totalTime / cycleDuration) >> 0; //originally _totalTime % cycleDuration but floating point errors caused problems, so I normalized it. (4 % 0.8 should be 0 but it gets reported as 0.79999999!)
-						if (this._cycle !== 0) if (this._cycle === this._totalTime / cycleDuration && prevTotalTime <= time) {
-							this._cycle--; //otherwise when rendered exactly at the end time, it will act as though it is repeating (at the beginning)
+				self._time = self._rawPrevTime = time;
+				if (!self._locked) {
+					self._totalTime = time;
+					if (self._repeat !== 0) {
+						cycleDuration = dur + self._repeatDelay;
+						self._cycle = (self._totalTime / cycleDuration) >> 0; //originally _totalTime % cycleDuration but floating point errors caused problems, so I normalized it. (4 % 0.8 should be 0 but it gets reported as 0.79999999!)
+						if (self._cycle) if (self._cycle === self._totalTime / cycleDuration && prevTotalTime <= time) {
+							self._cycle--; //otherwise when rendered exactly at the end time, it will act as though it is repeating (at the beginning)
 						}
-						this._time = this._totalTime - (this._cycle * cycleDuration);
-						if (this._yoyo) if ((this._cycle & 1) !== 0) {
-							this._time = dur - this._time;
+						self._time = self._totalTime - (self._cycle * cycleDuration);
+						if (self._yoyo) if (self._cycle & 1) {
+							self._time = dur - self._time;
 						}
-						if (this._time > dur) {
-							this._time = dur;
+						if (self._time > dur) {
+							self._time = dur;
 							time = dur + 0.0001; //to avoid occasional floating point rounding error
-						} else if (this._time < 0) {
-							this._time = time = 0;
+						} else if (self._time < 0) {
+							self._time = time = 0;
 						} else {
-							time = this._time;
+							time = self._time;
 						}
 					}
 				}
+			}
 
-				if (this._hasPause && !this._forcingPlayhead && !suppressEvents && time < dur) {
-					time = this._time;
-					if (time >= prevTime || (this._repeat && prevCycle !== this._cycle)) {
-						tween = this._first;
-						while (tween && tween._startTime <= time && !pauseTween) {
-							if (!tween._duration) if (tween.data === "isPause" && !tween.ratio && !(tween._startTime === 0 && this._rawPrevTime === 0)) {
-								pauseTween = tween;
-							}
-							tween = tween._next;
+			if (self._hasPause && !self._forcingPlayhead && !suppressEvents) {
+				time = self._time;
+				if (time > prevTime || (self._repeat && prevCycle !== self._cycle)) {
+					tween = self._first;
+					while (tween && tween._startTime <= time && !pauseTween) {
+						if (!tween._duration) if (tween.data === "isPause" && !tween.ratio && !(tween._startTime === 0 && self._rawPrevTime === 0)) {
+							pauseTween = tween;
 						}
-					} else {
-						tween = this._last;
-						while (tween && tween._startTime >= time && !pauseTween) {
-							if (!tween._duration) if (tween.data === "isPause" && tween._rawPrevTime > 0) {
-								pauseTween = tween;
-							}
-							tween = tween._prev;
-						}
+						tween = tween._next;
 					}
-					if (pauseTween) {
-						this._time = time = pauseTween._startTime;
-						this._totalTime = time + (this._cycle * (this._totalDuration + this._repeatDelay));
+				} else {
+					tween = self._last;
+					while (tween && tween._startTime >= time && !pauseTween) {
+						if (!tween._duration) if (tween.data === "isPause" && tween._rawPrevTime > 0) {
+							pauseTween = tween;
+						}
+						tween = tween._prev;
 					}
 				}
-
+				if (pauseTween) {
+					pauseTime = self._startTime + (self._reversed ? self._duration - pauseTween._startTime : pauseTween._startTime) / self._timeScale;
+					if (pauseTween._startTime < dur) {
+						self._time = self._rawPrevTime = time = pauseTween._startTime;
+						self._totalTime = time + (self._cycle * (self._totalDuration + self._repeatDelay));
+					}
+				}
 			}
 			
-			if (this._cycle !== prevCycle) if (!this._locked) {
+			if (self._cycle !== prevCycle) if (!self._locked) {
 				/*
 				make sure children at the end/beginning of the timeline are rendered properly. If, for example, 
 				a 3-second long timeline rendered at 2.9 seconds previously, and now renders at 3.2 seconds (which
-				would get transated to 2.8 seconds if the timeline yoyos or 0.2 seconds if it just repeats), there
+				would get translated to 2.8 seconds if the timeline yoyos or 0.2 seconds if it just repeats), there
 				could be a callback or a short tween that's at 2.95 or 3 seconds in which wouldn't render. So 
 				we need to push the timeline to the end (and/or beginning depending on its yoyo value). Also we must
 				ensure that zero-duration tweens at the very beginning or end of the TimelineMax work. 
 				*/
-				var backwards = (this._yoyo && (prevCycle & 1) !== 0),
-					wrap = (backwards === (this._yoyo && (this._cycle & 1) !== 0)),
-					recTotalTime = this._totalTime,
-					recCycle = this._cycle,
-					recRawPrevTime = this._rawPrevTime,
-					recTime = this._time;
-				
-				this._totalTime = prevCycle * dur;
-				if (this._cycle < prevCycle) {
+				var backwards = (self._yoyo && (prevCycle & 1) !== 0),
+					wrap = (backwards === (self._yoyo && (self._cycle & 1) !== 0)),
+					recTotalTime = self._totalTime,
+					recCycle = self._cycle,
+					recRawPrevTime = self._rawPrevTime,
+					recTime = self._time;
+
+				self._totalTime = prevCycle * dur;
+				if (self._cycle < prevCycle) {
 					backwards = !backwards;
 				} else {
-					this._totalTime += dur;
+					self._totalTime += dur;
 				}
-				this._time = prevTime; //temporarily revert _time so that render() renders the children in the correct order. Without this, tweens won't rewind correctly. We could arhictect things in a "cleaner" way by splitting out the rendering queue into a separate method but for performance reasons, we kept it all inside this method.
-				
-				this._rawPrevTime = (dur === 0) ? prevRawPrevTime - 0.0001 : prevRawPrevTime;
-				this._cycle = prevCycle;
-				this._locked = true; //prevents changes to totalTime and skips repeat/yoyo behavior when we recursively call render()
+				self._time = prevTime; //temporarily revert _time so that render() renders the children in the correct order. Without this, tweens won't rewind correctly. We could arhictect things in a "cleaner" way by splitting out the rendering queue into a separate method but for performance reasons, we kept it all inside this method.
+
+				self._rawPrevTime = (dur === 0) ? prevRawPrevTime - 0.0001 : prevRawPrevTime;
+				self._cycle = prevCycle;
+				self._locked = true; //prevents changes to totalTime and skips repeat/yoyo behavior when we recursively call render()
 				prevTime = (backwards) ? 0 : dur;
-				this.render(prevTime, suppressEvents, (dur === 0));
-				if (!suppressEvents) if (!this._gc) {
-					if (this.vars.onRepeat) {
-						this._cycle = recCycle; //in case the onRepeat alters the playhead or invalidates(), we shouldn't stay locked or use the previous cycle.
-						this._locked = false;
-						this._callback("onRepeat");
+				self.render(prevTime, suppressEvents, (dur === 0));
+				if (!suppressEvents) if (!self._gc) {
+					if (self.vars.onRepeat) {
+						self._cycle = recCycle; //in case the onRepeat alters the playhead or invalidates(), we shouldn't stay locked or use the previous cycle.
+						self._locked = false;
+						self._callback("onRepeat");
 					}
 				}
-				if (prevTime !== this._time) { //in case there's a callback like onComplete in a nested tween/timeline that changes the playhead position, like via seek(), we should just abort.
+				if (prevTime !== self._time) { //in case there's a callback like onComplete in a nested tween/timeline that changes the playhead position, like via seek(), we should just abort.
 					return;
 				}
 				if (wrap) {
-					this._cycle = prevCycle; //if there's an onRepeat, we reverted this above, so make sure it's set properly again. We also unlocked in that scenario, so reset that too.
-					this._locked = true;
+					self._cycle = prevCycle; //if there's an onRepeat, we reverted this above, so make sure it's set properly again. We also unlocked in that scenario, so reset that too.
+					self._locked = true;
 					prevTime = (backwards) ? dur + 0.0001 : -0.0001;
-					this.render(prevTime, true, false);
+					self.render(prevTime, true, false);
 				}
-				this._locked = false;
-				if (this._paused && !prevPaused) { //if the render() triggered callback that paused this timeline, we should abort (very rare, but possible)
+				self._locked = false;
+				if (self._paused && !prevPaused) { //if the render() triggered callback that paused this timeline, we should abort (very rare, but possible)
 					return;
 				}
-				this._time = recTime;
-				this._totalTime = recTotalTime;
-				this._cycle = recCycle;
-				this._rawPrevTime = recRawPrevTime;
+				self._time = recTime;
+				self._totalTime = recTotalTime;
+				self._cycle = recCycle;
+				self._rawPrevTime = recRawPrevTime;
 			}
 
-			if ((this._time === prevTime || !this._first) && !force && !internalForce && !pauseTween) {
-				if (prevTotalTime !== this._totalTime) if (this._onUpdate) if (!suppressEvents) { //so that onUpdate fires even during the repeatDelay - as long as the totalTime changed, we should trigger onUpdate.
-					this._callback("onUpdate");
+			if ((self._time === prevTime || !self._first) && !force && !internalForce && !pauseTween) {
+				if (prevTotalTime !== self._totalTime) if (self._onUpdate) if (!suppressEvents) { //so that onUpdate fires even during the repeatDelay - as long as the totalTime changed, we should trigger onUpdate.
+					self._callback("onUpdate");
 				}
 				return;
-			} else if (!this._initted) {
-				this._initted = true;
+			} else if (!self._initted) {
+				self._initted = true;
 			}
 
-			if (!this._active) if (!this._paused && this._totalTime !== prevTotalTime && time > 0) {
-				this._active = true;  //so that if the user renders the timeline (as opposed to the parent timeline rendering it), it is forced to re-render and align it with the proper time/frame on the next rendering cycle. Maybe the timeline already finished but the user manually re-renders it as halfway done, for example.
+			if (!self._active) if (!self._paused && self._totalTime !== prevTotalTime && time > 0) {
+				self._active = true;  //so that if the user renders the timeline (as opposed to the parent timeline rendering it), it is forced to re-render and align it with the proper time/frame on the next rendering cycle. Maybe the timeline already finished but the user manually re-renders it as halfway done, for example.
 			}
 			
-			if (prevTotalTime === 0) if (this.vars.onStart) if (this._totalTime !== 0 || !this._totalDuration) if (!suppressEvents) {
-				this._callback("onStart");
+			if (prevTotalTime === 0) if (self.vars.onStart) if (self._totalTime !== 0 || !self._totalDuration) if (!suppressEvents) {
+				self._callback("onStart");
 			}
 
-			curTime = this._time;
+			curTime = self._time;
 			if (curTime >= prevTime) {
-				tween = this._first;
+				tween = self._first;
 				while (tween) {
 					next = tween._next; //record it here because the value could change after rendering...
-					if (curTime !== this._time || (this._paused && !prevPaused)) { //in case a tween pauses or seeks the timeline when rendering, like inside of an onUpdate/onComplete
+					if (curTime !== self._time || (self._paused && !prevPaused)) { //in case a tween pauses or seeks the timeline when rendering, like inside of an onUpdate/onComplete
 						break;
-					} else if (tween._active || (tween._startTime <= this._time && !tween._paused && !tween._gc)) {
+					} else if (tween._active || (tween._startTime <= self._time && !tween._paused && !tween._gc)) {
 						if (pauseTween === tween) {
-							this.pause();
+							self.pause();
+							self._pauseTime = pauseTime; //so that when we resume(), it's starting from exactly the right spot (the pause() method uses the rawTime for the parent, but that may be a bit too far ahead)
 						}
 						if (!tween._reversed) {
 							tween.render((time - tween._startTime) * tween._timeScale, suppressEvents, force);
@@ -322,20 +334,21 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 					tween = next;
 				}
 			} else {
-				tween = this._last;
+				tween = self._last;
 				while (tween) {
 					next = tween._prev; //record it here because the value could change after rendering...
-					if (curTime !== this._time || (this._paused && !prevPaused)) { //in case a tween pauses or seeks the timeline when rendering, like inside of an onUpdate/onComplete
+					if (curTime !== self._time || (self._paused && !prevPaused)) { //in case a tween pauses or seeks the timeline when rendering, like inside of an onUpdate/onComplete
 						break;
 					} else if (tween._active || (tween._startTime <= prevTime && !tween._paused && !tween._gc)) {
 						if (pauseTween === tween) {
 							pauseTween = tween._prev; //the linked list is organized by _startTime, thus it's possible that a tween could start BEFORE the pause and end after it, in which case it would be positioned before the pause tween in the linked list, but we should render it before we pause() the timeline and cease rendering. This is only a concern when going in reverse.
-							while (pauseTween && pauseTween.endTime() > this._time) {
+							while (pauseTween && pauseTween.endTime() > self._time) {
 								pauseTween.render( (pauseTween._reversed ? pauseTween.totalDuration() - ((time - pauseTween._startTime) * pauseTween._timeScale) : (time - pauseTween._startTime) * pauseTween._timeScale), suppressEvents, force);
 								pauseTween = pauseTween._prev;
 							}
 							pauseTween = null;
-							this.pause();
+							self.pause();
+							self._pauseTime = pauseTime; //so that when we resume(), it's starting from exactly the right spot (the pause() method uses the rawTime for the parent, but that may be a bit too far ahead)
 						}
 						if (!tween._reversed) {
 							tween.render((time - tween._startTime) * tween._timeScale, suppressEvents, force);
@@ -347,40 +360,31 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 				}
 			}
 			
-			if (this._onUpdate) if (!suppressEvents) {
+			if (self._onUpdate) if (!suppressEvents) {
 				if (_lazyTweens.length) { //in case rendering caused any tweens to lazy-init, we should render them because typically when a timeline finishes, users expect things to have rendered fully. Imagine an onUpdate on a timeline that reports/checks tweened values.
 					_lazyRender();
 				}
-				this._callback("onUpdate");
+				self._callback("onUpdate");
 			}
-			if (callback) if (!this._locked) if (!this._gc) if (prevStart === this._startTime || prevTimeScale !== this._timeScale) if (this._time === 0 || totalDur >= this.totalDuration()) { //if one of the tweens that was rendered altered this timeline's startTime (like if an onComplete reversed the timeline), it probably isn't complete. If it is, don't worry, because whatever call altered the startTime would complete if it was necessary at the new time. The only exception is the timeScale property. Also check _gc because there's a chance that kill() could be called in an onUpdate
+			if (callback) if (!self._locked) if (!self._gc) if (prevStart === self._startTime || prevTimeScale !== self._timeScale) if (self._time === 0 || totalDur >= self.totalDuration()) { //if one of the tweens that was rendered altered this timeline's startTime (like if an onComplete reversed the timeline), it probably isn't complete. If it is, don't worry, because whatever call altered the startTime would complete if it was necessary at the new time. The only exception is the timeScale property. Also check _gc because there's a chance that kill() could be called in an onUpdate
 				if (isComplete) {
 					if (_lazyTweens.length) { //in case rendering caused any tweens to lazy-init, we should render them because typically when a timeline finishes, users expect things to have rendered fully. Imagine an onComplete on a timeline that reports/checks tweened values.
 						_lazyRender();
 					}
-					if (this._timeline.autoRemoveChildren) {
-						this._enabled(false, false);
+					if (self._timeline.autoRemoveChildren) {
+						self._enabled(false, false);
 					}
-					this._active = false;
+					self._active = false;
 				}
-				if (!suppressEvents && this.vars[callback]) {
-					this._callback(callback);
+				if (!suppressEvents && self.vars[callback]) {
+					self._callback(callback);
 				}
 			}
 		};
 		
 		p.getActive = function(nested, tweens, timelines) {
-			if (nested == null) {
-				nested = true;
-			}
-			if (tweens == null) {
-				tweens = true;
-			}
-			if (timelines == null) {
-				timelines = false;
-			}
 			var a = [], 
-				all = this.getChildren(nested, tweens, timelines), 
+				all = this.getChildren(nested || (nested == null), tweens || (nested == null), !!timelines),
 				cnt = 0, 
 				l = all.length,
 				i, tween;
@@ -471,15 +475,13 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 			if (this._dirty) {
 				this.totalDuration();
 			}
-			if (value > this._duration) {
-				value = this._duration;
+			var duration = this._duration,
+				cycle = this._cycle,
+				cycleDur = cycle * (duration + this._repeatDelay);
+			if (value > duration) {
+				value = duration;
 			}
-			if (this._yoyo && (this._cycle & 1) !== 0) {
-				value = (this._duration - value) + (this._cycle * (this._duration + this._repeatDelay));
-			} else if (this._repeat !== 0) {
-				value += this._cycle * (this._duration + this._repeatDelay);
-			}
-			return this.totalTime(value, suppressEvents);
+			return this.totalTime((this._yoyo && (cycle & 1)) ? duration - value + cycleDur : this._repeat ? value + cycleDur : value, suppressEvents);
 		};
 		
 		p.repeat = function(value) {
@@ -508,7 +510,7 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 		
 		p.currentLabel = function(value) {
 			if (!arguments.length) {
-				return this.getLabelBefore(this._time + 0.00000001);
+				return this.getLabelBefore(this._time + _tinyNum);
 			}
 			return this.seek(value, true);
 		};
@@ -533,24 +535,25 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 
 		var TimelineLite = function(vars) {
 				SimpleTimeline.call(this, vars);
-				this._labels = {};
-				this.autoRemoveChildren = (this.vars.autoRemoveChildren === true);
-				this.smoothChildTiming = (this.vars.smoothChildTiming === true);
-				this._sortChildren = true;
-				this._onUpdate = this.vars.onUpdate;
-				var v = this.vars,
+				var self = this,
+					v = self.vars,
 					val, p;
+				self._labels = {};
+				self.autoRemoveChildren = !!v.autoRemoveChildren;
+				self.smoothChildTiming = !!v.smoothChildTiming;
+				self._sortChildren = true;
+				self._onUpdate = v.onUpdate;
 				for (p in v) {
 					val = v[p];
 					if (_isArray(val)) if (val.join("").indexOf("{self}") !== -1) {
-						v[p] = this._swapSelfInParams(val);
+						v[p] = self._swapSelfInParams(val);
 					}
 				}
 				if (_isArray(v.tweens)) {
-					this.add(v.tweens, 0, v.align, v.stagger);
+					self.add(v.tweens, 0, v.align, v.stagger);
 				}
 			},
-			_tinyNum = 0.0000000001,
+			_tinyNum = 0.00000001,
 			TweenLiteInternals = TweenLite._internals,
 			_internals = TimelineLite._internals = {},
 			_isSelector = TweenLiteInternals.isSelector,
@@ -570,7 +573,7 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 					p, val;
 				for (p in alt) {
 					val = alt[p];
-					vars[p] = (typeof(val) === "function") ? val(i, targets[i]) : val[i % val.length];
+					vars[p] = (typeof(val) === "function") ? val(i, targets[i], targets) : val[i % val.length];
 				}
 				delete vars.cycle;
 			},
@@ -582,9 +585,66 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 				for (i = 0; i !== l; b.push(a[i++]));
 				return b;
 			},
+			_defaultImmediateRender = function(tl, toVars, fromVars, defaultFalse) { //default to immediateRender:true unless otherwise set in toVars, fromVars or if defaultFalse is passed in as true
+				var ir = "immediateRender";
+				if (!(ir in toVars)) {
+					toVars[ir] = !((fromVars && fromVars[ir] === false) || defaultFalse);
+				}
+				return toVars;
+			},
+			//for distributing values across an array. Can accept a number, a function or (most commonly) a function which can contain the following properties: {base, amount, from, ease, grid, axis, length, each}. Returns a function that expects the following parameters: index, target, array. Recognizes the following
+			_distribute = function(v) {
+				if (typeof(v) === "function") {
+					return v;
+				}
+				var vars = (typeof(v) === "object") ? v : {each:v}, //n:1 is just to indicate v was a number; we leverage that later to set v according to the length we get. If a number is passed in, we treat it like the old stagger value where 0.1, for example, would mean that things would be distributed with 0.1 between each element in the array rather than a total "amount" that's chunked out among them all.
+					ease = vars.ease,
+					from = vars.from || 0,
+					base = vars.base || 0,
+					cache = {},
+					isFromKeyword = isNaN(from),
+					axis = vars.axis,
+					ratio = {center:0.5, end:1}[from] || 0;
+				return function(i, target, a) {
+					var l = (a || vars).length,
+						distances = cache[l],
+						originX, originY, x, y, d, j, max, min, wrap;
+					if (!distances) {
+						wrap = (vars.grid === "auto") ? 0 : (vars.grid || [Infinity])[0];
+						if (!wrap) {
+							max = -Infinity;
+							while (max < (max = a[wrap++].getBoundingClientRect().left) && wrap < l) { }
+							wrap--;
+						}
+						distances = cache[l] = [];
+						originX = isFromKeyword ? (Math.min(wrap, l) * ratio) - 0.5 : from % wrap;
+						originY = isFromKeyword ? l * ratio / wrap - 0.5 : (from / wrap) | 0;
+						max = 0;
+						min = Infinity;
+						for (j = 0; j < l; j++) {
+							x = (j % wrap) - originX;
+							y = originY - ((j / wrap) | 0);
+							distances[j] = d = !axis ? Math.sqrt(x * x + y * y) : Math.abs((axis === "y") ? y : x);
+							if (d > max) {
+								max = d;
+							}
+							if (d < min) {
+								min = d;
+							}
+						}
+						distances.max = max - min;
+						distances.min = min;
+						distances.v = l = vars.amount || (vars.each * (wrap > l ? l - 1 : !axis ? Math.max(wrap, l / wrap) : axis === "y" ? l / wrap : wrap)) || 0;
+						distances.b = (l < 0) ? base - l : base;
+					}
+					l = (distances[i] - distances.min) / distances.max;
+					return distances.b + (ease ? ease.getRatio(l) : l) * distances.v;
+				};
+			},
 			p = TimelineLite.prototype = new SimpleTimeline();
 
-		TimelineLite.version = "1.20.0";
+		TimelineLite.version = "2.1.3";
+		TimelineLite.distribute = _distribute;
 		p.constructor = TimelineLite;
 		p.kill()._gc = p._forcingPlayhead = p._hasPause = false;
 
@@ -616,36 +676,33 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 		};
 
 		p.from = function(target, duration, vars, position) {
-			return this.add( ((vars.repeat && _globals.TweenMax) || TweenLite).from(target, duration, vars), position);
+			return this.add( ((vars.repeat && _globals.TweenMax) || TweenLite).from(target, duration, _defaultImmediateRender(this, vars)), position);
 		};
 
 		p.fromTo = function(target, duration, fromVars, toVars, position) {
 			var Engine = (toVars.repeat && _globals.TweenMax) || TweenLite;
+			toVars = _defaultImmediateRender(this, toVars, fromVars);
 			return duration ? this.add( Engine.fromTo(target, duration, fromVars, toVars), position) : this.set(target, toVars, position);
 		};
 
 		p.staggerTo = function(targets, duration, vars, stagger, position, onCompleteAll, onCompleteAllParams, onCompleteAllScope) {
 			var tl = new TimelineLite({onComplete:onCompleteAll, onCompleteParams:onCompleteAllParams, callbackScope:onCompleteAllScope, smoothChildTiming:this.smoothChildTiming}),
+				staggerFunc = _distribute(vars.stagger || stagger),
+				startAt = vars.startAt,
 				cycle = vars.cycle,
 				copy, i;
 			if (typeof(targets) === "string") {
 				targets = TweenLite.selector(targets) || targets;
 			}
 			targets = targets || [];
-			if (_isSelector(targets)) { //senses if the targets object is a selector. If it is, we should translate it into an array.
+			if (_isSelector(targets)) { //if the targets object is a selector, translate it into an array.
 				targets = _slice(targets);
-			}
-			stagger = stagger || 0;
-			if (stagger < 0) {
-				targets = _slice(targets);
-				targets.reverse();
-				stagger *= -1;
 			}
 			for (i = 0; i < targets.length; i++) {
 				copy = _copy(vars);
-				if (copy.startAt) {
-					copy.startAt = _copy(copy.startAt);
-					if (copy.startAt.cycle) {
+				if (startAt) {
+					copy.startAt = _copy(startAt);
+					if (startAt.cycle) {
 						_applyCycle(copy.startAt, targets, i);
 					}
 				}
@@ -656,21 +713,19 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 						delete copy.duration;
 					}
 				}
-				tl.to(targets[i], duration, copy, i * stagger);
+				tl.to(targets[i], duration, copy, staggerFunc(i, targets[i], targets));
 			}
 			return this.add(tl, position);
 		};
 
 		p.staggerFrom = function(targets, duration, vars, stagger, position, onCompleteAll, onCompleteAllParams, onCompleteAllScope) {
-			vars.immediateRender = (vars.immediateRender != false);
 			vars.runBackwards = true;
-			return this.staggerTo(targets, duration, vars, stagger, position, onCompleteAll, onCompleteAllParams, onCompleteAllScope);
+			return this.staggerTo(targets, duration, _defaultImmediateRender(this, vars), stagger, position, onCompleteAll, onCompleteAllParams, onCompleteAllScope);
 		};
 
 		p.staggerFromTo = function(targets, duration, fromVars, toVars, stagger, position, onCompleteAll, onCompleteAllParams, onCompleteAllScope) {
 			toVars.startAt = fromVars;
-			toVars.immediateRender = (toVars.immediateRender != false && fromVars.immediateRender != false);
-			return this.staggerTo(targets, duration, toVars, stagger, position, onCompleteAll, onCompleteAllParams, onCompleteAllScope);
+			return this.staggerTo(targets, duration, _defaultImmediateRender(this, toVars, fromVars), stagger, position, onCompleteAll, onCompleteAllParams, onCompleteAllScope);
 		};
 
 		p.call = function(callback, params, scope, position) {
@@ -678,11 +733,7 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 		};
 
 		p.set = function(target, vars, position) {
-			position = this._parseTimeOrLabel(position, 0, true);
-			if (vars.immediateRender == null) {
-				vars.immediateRender = (position === this._time && !this._paused);
-			}
-			return this.add( new TweenLite(target, 0, vars), position);
+			return this.add( new TweenLite(target, 0, _defaultImmediateRender(this, vars, null, true)), position);
 		};
 
 		TimelineLite.exportRoot = function(vars, ignoreDelayedCalls) {
@@ -692,7 +743,7 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 			}
 			var tl = new TimelineLite(vars),
 				root = tl._timeline,
-				tween, next;
+				hasNegativeStart, time,	tween, next;
 			if (ignoreDelayedCalls == null) {
 				ignoreDelayedCalls = true;
 			}
@@ -703,18 +754,26 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 			while (tween) {
 				next = tween._next;
 				if (!ignoreDelayedCalls || !(tween instanceof TweenLite && tween.target === tween.vars.onComplete)) {
-					tl.add(tween, tween._startTime - tween._delay);
+					time = tween._startTime - tween._delay;
+					if (time < 0) {
+						hasNegativeStart = 1;
+					}
+					tl.add(tween, time);
 				}
 				tween = next;
 			}
 			root.add(tl, 0);
+			if (hasNegativeStart) { //calling totalDuration() will force the adjustment necessary to shift the children forward so none of them start before zero, and moves the timeline backwards the same amount, so the playhead is still aligned where it should be globally, but the timeline doesn't have illegal children that start before zero.
+				tl.totalDuration();
+			}
 			return tl;
 		};
 
 		p.add = function(value, position, align, stagger) {
-			var curTime, l, i, child, tl, beforeRawTime;
+			var self = this,
+				curTime, l, i, child, tl, beforeRawTime;
 			if (typeof(position) !== "number") {
-				position = this._parseTimeOrLabel(position, 0, true, value);
+				position = self._parseTimeOrLabel(position, 0, true, value);
 			}
 			if (!(value instanceof Animation)) {
 				if ((value instanceof Array) || (value && value.push && _isArray(value))) {
@@ -726,7 +785,7 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 						if (_isArray(child = value[i])) {
 							child = new TimelineLite({tweens:child});
 						}
-						this.add(child, curTime);
+						self.add(child, curTime);
 						if (typeof(child) !== "string" && typeof(child) !== "function") {
 							if (align === "sequence") {
 								curTime = child._startTime + (child.totalDuration() / child._timeScale);
@@ -736,9 +795,9 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 						}
 						curTime += stagger;
 					}
-					return this._uncache(true);
+					return self._uncache(true);
 				} else if (typeof(value) === "string") {
-					return this.addLabel(value, position);
+					return self.addLabel(value, position);
 				} else if (typeof(value) === "function") {
 					value = TweenLite.delayedCall(0, value);
 				} else {
@@ -746,16 +805,19 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 				}
 			}
 
-			SimpleTimeline.prototype.add.call(this, value, position);
+			SimpleTimeline.prototype.add.call(self, value, position);
 
-			if (value._time) { //in case, for example, the _startTime is moved on a tween that has already rendered. Imagine it's at its end state, then the startTime is moved WAY later (after the end of this timeline), it should render at its beginning.
-				value.render((this.rawTime() - value._startTime) * value._timeScale, false, false);
+			if (value._time || (!value._duration && value._initted)) { //in case, for example, the _startTime is moved on a tween that has already rendered. Imagine it's at its end state, then the startTime is moved WAY later (after the end of this timeline), it should render at its beginning.
+				curTime = (self.rawTime() - value._startTime) * value._timeScale;
+				if (!value._duration || Math.abs(Math.max(0, Math.min(value.totalDuration(), curTime))) - value._totalTime > 0.00001) {
+					value.render(curTime, false, false);
+				}
 			}
 
 			//if the timeline has already ended but the inserted tween/timeline extends the duration, we should enable this timeline again so that it renders properly. We should also align the playhead with the parent timeline's when appropriate.
-			if (this._gc || this._time === this._duration) if (!this._paused) if (this._duration < this.duration()) {
+			if (self._gc || self._time === self._duration) if (!self._paused) if (self._duration < self.duration()) {
 				//in case any of the ancestors had completed but should now be enabled...
-				tl = this;
+				tl = self;
 				beforeRawTime = (tl.rawTime() > value._startTime); //if the tween is placed on the timeline so that it starts BEFORE the current rawTime, we should align the playhead (move the timeline). This is because sometimes users will create a timeline, let it finish, and much later append a tween and expect it to run instead of jumping to its end state. While technically one could argue that it should jump to its end state, that's not what users intuitively expect.
 				while (tl._timeline) {
 					if (beforeRawTime && tl._timeline.smoothChildTiming) {
@@ -767,7 +829,7 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 				}
 			}
 
-			return this;
+			return self;
 		};
 
 		p.remove = function(value) {
@@ -847,7 +909,7 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 					}
 				}
 			}
-			clippedDuration = (this.duration() > 99999999999) ? this.recent().endTime(false) : this._duration; //in case there's a child that infinitely repeats, users almost never intend for the insertion point of a new child to be based on a SUPER long value like that so we clip it and assume the most recently-added child's endTime should be used instead.
+			clippedDuration = (typeof(timeOrLabel) === "number" && !offsetOrLabel) ? 0 : (this.duration() > 99999999999) ? this.recent().endTime(false) : this._duration; //in case there's a child that infinitely repeats, users almost never intend for the insertion point of a new child to be based on a SUPER long value like that so we clip it and assume the most recently-added child's endTime should be used instead.
 			if (typeof(offsetOrLabel) === "string") {
 				return this._parseTimeOrLabel(offsetOrLabel, (appendIfAbsent && typeof(timeOrLabel) === "number" && this._labels[offsetOrLabel] == null) ? timeOrLabel - clippedDuration : 0, appendIfAbsent);
 			}
@@ -888,47 +950,77 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 			if (this._gc) {
 				this._enabled(true, false);
 			}
-			var totalDur = (!this._dirty) ? this._totalDuration : this.totalDuration(),
-				prevTime = this._time,
-				prevStart = this._startTime,
-				prevTimeScale = this._timeScale,
-				prevPaused = this._paused,
-				tween, isComplete, next, callback, internalForce, pauseTween, curTime;
-			if (time >= totalDur - 0.0000001 && time >= 0) { //to work around occasional floating point math artifacts.
-				this._totalTime = this._time = totalDur;
-				if (!this._reversed) if (!this._hasPausedChild()) {
+			var self = this,
+				prevTime = self._time,
+				totalDur = (!self._dirty) ? self._totalDuration : self.totalDuration(),
+				prevStart = self._startTime,
+				prevTimeScale = self._timeScale,
+				prevPaused = self._paused,
+				tween, isComplete, next, callback, internalForce, pauseTween, curTime, pauseTime;
+			if (prevTime !== self._time) { //if totalDuration() finds a child with a negative startTime and smoothChildTiming is true, things get shifted around internally so we need to adjust the time accordingly. For example, if a tween starts at -30 we must shift EVERYTHING forward 30 seconds and move this timeline's startTime backward by 30 seconds so that things align with the playhead (no jump).
+				time += self._time - prevTime;
+			}
+			if (self._hasPause && !self._forcingPlayhead && !suppressEvents) {
+				if (time > prevTime) {
+					tween = self._first;
+					while (tween && tween._startTime <= time && !pauseTween) {
+						if (!tween._duration) if (tween.data === "isPause" && !tween.ratio && !(tween._startTime === 0 && self._rawPrevTime === 0)) {
+							pauseTween = tween;
+						}
+						tween = tween._next;
+					}
+				} else {
+					tween = self._last;
+					while (tween && tween._startTime >= time && !pauseTween) {
+						if (!tween._duration) if (tween.data === "isPause" && tween._rawPrevTime > 0) {
+							pauseTween = tween;
+						}
+						tween = tween._prev;
+					}
+				}
+				if (pauseTween) {
+					self._time = self._totalTime = time = pauseTween._startTime;
+					pauseTime = self._startTime + (self._reversed ? self._duration - time : time) / self._timeScale;
+				}
+			}
+			if (time >= totalDur - _tinyNum && time >= 0) { //to work around occasional floating point math artifacts.
+				self._totalTime = self._time = totalDur;
+				if (!self._reversed) if (!self._hasPausedChild()) {
 					isComplete = true;
 					callback = "onComplete";
-					internalForce = !!this._timeline.autoRemoveChildren; //otherwise, if the animation is unpaused/activated after it's already finished, it doesn't get removed from the parent timeline.
-					if (this._duration === 0) if ((time <= 0 && time >= -0.0000001) || this._rawPrevTime < 0 || this._rawPrevTime === _tinyNum) if (this._rawPrevTime !== time && this._first) {
+					internalForce = !!self._timeline.autoRemoveChildren; //otherwise, if the animation is unpaused/activated after it's already finished, it doesn't get removed from the parent timeline.
+					if (self._duration === 0) if ((time <= 0 && time >= -_tinyNum) || self._rawPrevTime < 0 || self._rawPrevTime === _tinyNum) if (self._rawPrevTime !== time && self._first) {
 						internalForce = true;
-						if (this._rawPrevTime > _tinyNum) {
+						if (self._rawPrevTime > _tinyNum) {
 							callback = "onReverseComplete";
 						}
 					}
 				}
-				this._rawPrevTime = (this._duration || !suppressEvents || time || this._rawPrevTime === time) ? time : _tinyNum; //when the playhead arrives at EXACTLY time 0 (right on top) of a zero-duration timeline or tween, we need to discern if events are suppressed so that when the playhead moves again (next time), it'll trigger the callback. If events are NOT suppressed, obviously the callback would be triggered in this render. Basically, the callback should fire either when the playhead ARRIVES or LEAVES this exact spot, not both. Imagine doing a timeline.seek(0) and there's a callback that sits at 0. Since events are suppressed on that seek() by default, nothing will fire, but when the playhead moves off of that position, the callback should fire. This behavior is what people intuitively expect. We set the _rawPrevTime to be a precise tiny number to indicate this scenario rather than using another property/variable which would increase memory usage. This technique is less readable, but more efficient.
+				self._rawPrevTime = (self._duration || !suppressEvents || time || self._rawPrevTime === time) ? time : _tinyNum; //when the playhead arrives at EXACTLY time 0 (right on top) of a zero-duration timeline or tween, we need to discern if events are suppressed so that when the playhead moves again (next time), it'll trigger the callback. If events are NOT suppressed, obviously the callback would be triggered in this render. Basically, the callback should fire either when the playhead ARRIVES or LEAVES this exact spot, not both. Imagine doing a timeline.seek(0) and there's a callback that sits at 0. Since events are suppressed on that seek() by default, nothing will fire, but when the playhead moves off of that position, the callback should fire. This behavior is what people intuitively expect. We set the _rawPrevTime to be a precise tiny number to indicate this scenario rather than using another property/variable which would increase memory usage. This technique is less readable, but more efficient.
 				time = totalDur + 0.0001; //to avoid occasional floating point rounding errors - sometimes child tweens/timelines were not being fully completed (their progress might be 0.999999999999998 instead of 1 because when _time - tween._startTime is performed, floating point errors would return a value that was SLIGHTLY off). Try (999999999999.7 - 999999999999) * 1 = 0.699951171875 instead of 0.7.
 
-			} else if (time < 0.0000001) { //to work around occasional floating point math artifacts, round super small values to 0.
-				this._totalTime = this._time = 0;
-				if (prevTime !== 0 || (this._duration === 0 && this._rawPrevTime !== _tinyNum && (this._rawPrevTime > 0 || (time < 0 && this._rawPrevTime >= 0)))) {
+			} else if (time < _tinyNum) { //to work around occasional floating point math artifacts, round super small values to 0.
+				self._totalTime = self._time = 0;
+				if (time > -_tinyNum) {
+					time = 0;
+				}
+				if (prevTime !== 0 || (self._duration === 0 && self._rawPrevTime !== _tinyNum && (self._rawPrevTime > 0 || (time < 0 && self._rawPrevTime >= 0)))) {
 					callback = "onReverseComplete";
-					isComplete = this._reversed;
+					isComplete = self._reversed;
 				}
 				if (time < 0) {
-					this._active = false;
-					if (this._timeline.autoRemoveChildren && this._reversed) { //ensures proper GC if a timeline is resumed after it's finished reversing.
+					self._active = false;
+					if (self._timeline.autoRemoveChildren && self._reversed) { //ensures proper GC if a timeline is resumed after it's finished reversing.
 						internalForce = isComplete = true;
 						callback = "onReverseComplete";
-					} else if (this._rawPrevTime >= 0 && this._first) { //when going back beyond the start, force a render so that zero-duration tweens that sit at the very beginning render their start values properly. Otherwise, if the parent timeline's playhead lands exactly at this timeline's startTime, and then moves backwards, the zero-duration tweens at the beginning would still be at their end state.
+					} else if (self._rawPrevTime >= 0 && self._first) { //when going back beyond the start, force a render so that zero-duration tweens that sit at the very beginning render their start values properly. Otherwise, if the parent timeline's playhead lands exactly at this timeline's startTime, and then moves backwards, the zero-duration tweens at the beginning would still be at their end state.
 						internalForce = true;
 					}
-					this._rawPrevTime = time;
+					self._rawPrevTime = time;
 				} else {
-					this._rawPrevTime = (this._duration || !suppressEvents || time || this._rawPrevTime === time) ? time : _tinyNum; //when the playhead arrives at EXACTLY time 0 (right on top) of a zero-duration timeline or tween, we need to discern if events are suppressed so that when the playhead moves again (next time), it'll trigger the callback. If events are NOT suppressed, obviously the callback would be triggered in this render. Basically, the callback should fire either when the playhead ARRIVES or LEAVES this exact spot, not both. Imagine doing a timeline.seek(0) and there's a callback that sits at 0. Since events are suppressed on that seek() by default, nothing will fire, but when the playhead moves off of that position, the callback should fire. This behavior is what people intuitively expect. We set the _rawPrevTime to be a precise tiny number to indicate this scenario rather than using another property/variable which would increase memory usage. This technique is less readable, but more efficient.
+					self._rawPrevTime = (self._duration || !suppressEvents || time || self._rawPrevTime === time) ? time : _tinyNum; //when the playhead arrives at EXACTLY time 0 (right on top) of a zero-duration timeline or tween, we need to discern if events are suppressed so that when the playhead moves again (next time), it'll trigger the callback. If events are NOT suppressed, obviously the callback would be triggered in this render. Basically, the callback should fire either when the playhead ARRIVES or LEAVES this exact spot, not both. Imagine doing a timeline.seek(0) and there's a callback that sits at 0. Since events are suppressed on that seek() by default, nothing will fire, but when the playhead moves off of that position, the callback should fire. This behavior is what people intuitively expect. We set the _rawPrevTime to be a precise tiny number to indicate this scenario rather than using another property/variable which would increase memory usage. This technique is less readable, but more efficient.
 					if (time === 0 && isComplete) { //if there's a zero-duration tween at the very beginning of a timeline and the playhead lands EXACTLY at time 0, that tween will correctly render its end values, but we need to keep the timeline alive for one more render so that the beginning values render properly as the parent's playhead keeps moving beyond the begining. Imagine obj.x starts at 0 and then we do tl.set(obj, {x:100}).to(obj, 1, {x:200}) and then later we tl.reverse()...the goal is to have obj.x revert to 0. If the playhead happens to land on exactly 0, without this chunk of code, it'd complete the timeline and remove it from the rendering queue (not good).
-						tween = this._first;
+						tween = self._first;
 						while (tween && tween._startTime === 0) {
 							if (!tween._duration) {
 								isComplete = false;
@@ -937,63 +1029,39 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 						}
 					}
 					time = 0; //to avoid occasional floating point rounding errors (could cause problems especially with zero-duration tweens at the very beginning of the timeline)
-					if (!this._initted) {
+					if (!self._initted) {
 						internalForce = true;
 					}
 				}
 
 			} else {
-
-				if (this._hasPause && !this._forcingPlayhead && !suppressEvents) {
-					if (time >= prevTime) {
-						tween = this._first;
-						while (tween && tween._startTime <= time && !pauseTween) {
-							if (!tween._duration) if (tween.data === "isPause" && !tween.ratio && !(tween._startTime === 0 && this._rawPrevTime === 0)) {
-								pauseTween = tween;
-							}
-							tween = tween._next;
-						}
-					} else {
-						tween = this._last;
-						while (tween && tween._startTime >= time && !pauseTween) {
-							if (!tween._duration) if (tween.data === "isPause" && tween._rawPrevTime > 0) {
-								pauseTween = tween;
-							}
-							tween = tween._prev;
-						}
-					}
-					if (pauseTween) {
-						this._time = time = pauseTween._startTime;
-						this._totalTime = time + (this._cycle * (this._totalDuration + this._repeatDelay));
-					}
-				}
-
-				this._totalTime = this._time = this._rawPrevTime = time;
+				self._totalTime = self._time = self._rawPrevTime = time;
 			}
-			if ((this._time === prevTime || !this._first) && !force && !internalForce && !pauseTween) {
+			if ((self._time === prevTime || !self._first) && !force && !internalForce && !pauseTween) {
 				return;
-			} else if (!this._initted) {
-				this._initted = true;
+			} else if (!self._initted) {
+				self._initted = true;
 			}
 
-			if (!this._active) if (!this._paused && this._time !== prevTime && time > 0) {
-				this._active = true;  //so that if the user renders the timeline (as opposed to the parent timeline rendering it), it is forced to re-render and align it with the proper time/frame on the next rendering cycle. Maybe the timeline already finished but the user manually re-renders it as halfway done, for example.
+			if (!self._active) if (!self._paused && self._time !== prevTime && time > 0) {
+				self._active = true;  //so that if the user renders the timeline (as opposed to the parent timeline rendering it), it is forced to re-render and align it with the proper time/frame on the next rendering cycle. Maybe the timeline already finished but the user manually re-renders it as halfway done, for example.
 			}
 
-			if (prevTime === 0) if (this.vars.onStart) if (this._time !== 0 || !this._duration) if (!suppressEvents) {
-				this._callback("onStart");
+			if (prevTime === 0) if (self.vars.onStart) if (self._time !== 0 || !self._duration) if (!suppressEvents) {
+				self._callback("onStart");
 			}
 
-			curTime = this._time;
+			curTime = self._time;
 			if (curTime >= prevTime) {
-				tween = this._first;
+				tween = self._first;
 				while (tween) {
 					next = tween._next; //record it here because the value could change after rendering...
-					if (curTime !== this._time || (this._paused && !prevPaused)) { //in case a tween pauses or seeks the timeline when rendering, like inside of an onUpdate/onComplete
+					if (curTime !== self._time || (self._paused && !prevPaused)) { //in case a tween pauses or seeks the timeline when rendering, like inside of an onUpdate/onComplete
 						break;
 					} else if (tween._active || (tween._startTime <= curTime && !tween._paused && !tween._gc)) {
 						if (pauseTween === tween) {
-							this.pause();
+							self.pause();
+							self._pauseTime = pauseTime; //so that when we resume(), it's starting from exactly the right spot (the pause() method uses the rawTime for the parent, but that may be a bit too far ahead)
 						}
 						if (!tween._reversed) {
 							tween.render((time - tween._startTime) * tween._timeScale, suppressEvents, force);
@@ -1004,20 +1072,21 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 					tween = next;
 				}
 			} else {
-				tween = this._last;
+				tween = self._last;
 				while (tween) {
 					next = tween._prev; //record it here because the value could change after rendering...
-					if (curTime !== this._time || (this._paused && !prevPaused)) { //in case a tween pauses or seeks the timeline when rendering, like inside of an onUpdate/onComplete
+					if (curTime !== self._time || (self._paused && !prevPaused)) { //in case a tween pauses or seeks the timeline when rendering, like inside of an onUpdate/onComplete
 						break;
 					} else if (tween._active || (tween._startTime <= prevTime && !tween._paused && !tween._gc)) {
 						if (pauseTween === tween) {
 							pauseTween = tween._prev; //the linked list is organized by _startTime, thus it's possible that a tween could start BEFORE the pause and end after it, in which case it would be positioned before the pause tween in the linked list, but we should render it before we pause() the timeline and cease rendering. This is only a concern when going in reverse.
-							while (pauseTween && pauseTween.endTime() > this._time) {
+							while (pauseTween && pauseTween.endTime() > self._time) {
 								pauseTween.render( (pauseTween._reversed ? pauseTween.totalDuration() - ((time - pauseTween._startTime) * pauseTween._timeScale) : (time - pauseTween._startTime) * pauseTween._timeScale), suppressEvents, force);
 								pauseTween = pauseTween._prev;
 							}
 							pauseTween = null;
-							this.pause();
+							self.pause();
+							self._pauseTime = pauseTime; //so that when we resume(), it's starting from exactly the right spot (the pause() method uses the rawTime for the parent, but that may be a bit too far ahead)
 						}
 						if (!tween._reversed) {
 							tween.render((time - tween._startTime) * tween._timeScale, suppressEvents, force);
@@ -1029,25 +1098,25 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 				}
 			}
 
-			if (this._onUpdate) if (!suppressEvents) {
+			if (self._onUpdate) if (!suppressEvents) {
 				if (_lazyTweens.length) { //in case rendering caused any tweens to lazy-init, we should render them because typically when a timeline finishes, users expect things to have rendered fully. Imagine an onUpdate on a timeline that reports/checks tweened values.
 					_lazyRender();
 				}
-				this._callback("onUpdate");
+				self._callback("onUpdate");
 			}
 
-			if (callback) if (!this._gc) if (prevStart === this._startTime || prevTimeScale !== this._timeScale) if (this._time === 0 || totalDur >= this.totalDuration()) { //if one of the tweens that was rendered altered this timeline's startTime (like if an onComplete reversed the timeline), it probably isn't complete. If it is, don't worry, because whatever call altered the startTime would complete if it was necessary at the new time. The only exception is the timeScale property. Also check _gc because there's a chance that kill() could be called in an onUpdate
+			if (callback) if (!self._gc) if (prevStart === self._startTime || prevTimeScale !== self._timeScale) if (self._time === 0 || totalDur >= self.totalDuration()) { //if one of the tweens that was rendered altered this timeline's startTime (like if an onComplete reversed the timeline), it probably isn't complete. If it is, don't worry, because whatever call altered the startTime would complete if it was necessary at the new time. The only exception is the timeScale property. Also check _gc because there's a chance that kill() could be called in an onUpdate
 				if (isComplete) {
 					if (_lazyTweens.length) { //in case rendering caused any tweens to lazy-init, we should render them because typically when a timeline finishes, users expect things to have rendered fully. Imagine an onComplete on a timeline that reports/checks tweened values.
 						_lazyRender();
 					}
-					if (this._timeline.autoRemoveChildren) {
-						this._enabled(false, false);
+					if (self._timeline.autoRemoveChildren) {
+						self._enabled(false, false);
 					}
-					this._active = false;
+					self._active = false;
 				}
-				if (!suppressEvents && this.vars[callback]) {
-					this._callback(callback);
+				if (!suppressEvents && self.vars[callback]) {
+					self._callback(callback);
 				}
 			}
 		};
@@ -1218,7 +1287,8 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 			if (!arguments.length) {
 				if (this._dirty) {
 					var max = 0,
-						tween = this._last,
+						self = this,
+						tween = self._last,
 						prevStart = 999999999999,
 						prev, end;
 					while (tween) {
@@ -1226,17 +1296,22 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 						if (tween._dirty) {
 							tween.totalDuration(); //could change the tween._startTime, so make sure the tween's cache is clean before analyzing it.
 						}
-						if (tween._startTime > prevStart && this._sortChildren && !tween._paused) { //in case one of the tweens shifted out of order, it needs to be re-inserted into the correct position in the sequence
-							this.add(tween, tween._startTime - tween._delay);
+						if (tween._startTime > prevStart && self._sortChildren && !tween._paused && !self._calculatingDuration) { //in case one of the tweens shifted out of order, it needs to be re-inserted into the correct position in the sequence
+							self._calculatingDuration = 1; //prevent endless recursive calls - there are methods that get triggered that check duration/totalDuration when we add(), like _parseTimeOrLabel().
+							self.add(tween, tween._startTime - tween._delay);
+							self._calculatingDuration = 0;
 						} else {
 							prevStart = tween._startTime;
 						}
 						if (tween._startTime < 0 && !tween._paused) { //children aren't allowed to have negative startTimes unless smoothChildTiming is true, so adjust here if one is found.
 							max -= tween._startTime;
-							if (this._timeline.smoothChildTiming) {
-								this._startTime += tween._startTime / this._timeScale;
+							if (self._timeline.smoothChildTiming) {
+								self._startTime += tween._startTime / self._timeScale;
+								self._time -= tween._startTime;
+								self._totalTime -= tween._startTime;
+								self._rawPrevTime -= tween._startTime;
 							}
-							this.shiftChildren(-tween._startTime, false, -9999999999);
+							self.shiftChildren(-tween._startTime, false, -9999999999);
 							prevStart = 0;
 						}
 						end = tween._startTime + (tween._totalDuration / tween._timeScale);
@@ -1245,8 +1320,8 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 						}
 						tween = prev;
 					}
-					this._duration = this._totalDuration = max;
-					this._dirty = false;
+					self._duration = self._totalDuration = max;
+					self._dirty = false;
 				}
 				return this._totalDuration;
 			}
@@ -1254,11 +1329,10 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 		};
 
 		p.paused = function(value) {
-			if (!value) { //if there's a pause directly at the spot from where we're unpausing, skip it.
-				var tween = this._first,
-					time = this._time;
+			if (value === false && this._paused) { //if there's a pause directly at the spot from where we're unpausing, skip it.
+				var tween = this._first;
 				while (tween) {
-					if (tween._startTime === time && tween.data === "isPause") {
+					if (tween._startTime === this._time && tween.data === "isPause") {
 						tween._rawPrevTime = 0; //remember, _rawPrevTime is how zero-duration tweens/callbacks sense directionality and determine whether or not to fire. If _rawPrevTime is the same as _startTime on the next render, it won't fire.
 					}
 					tween = tween._next;

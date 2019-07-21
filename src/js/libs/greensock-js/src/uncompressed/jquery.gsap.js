@@ -1,16 +1,17 @@
 /*!
- * VERSION: 0.1.12
- * DATE: 2017-01-17
+ * VERSION: 0.1.13
+ * DATE: 2018-08-27
  * UPDATES AND DOCS AT: http://greensock.com/jquery-gsap-plugin/
  *
  * Requires TweenLite version 1.8.0 or higher and CSSPlugin.
  *
- * @license Copyright (c) 2013-2017, GreenSock. All rights reserved.
+ * @license Copyright (c) 2013-2019, GreenSock. All rights reserved.
  * This work is subject to the terms at http://greensock.com/standard-license or for
  * Club GreenSock members, the software agreement that was issued with your membership.
  *
  * @author: Jack Doyle, jack@greensock.com
  */
+/* eslint-disable */
 (function($) {
 	"use strict";
 
@@ -44,19 +45,17 @@
 		_easeMap = {},
 		_init = function() {
 			var globals = window.GreenSockGlobals || window,
-				version, stale, p;
+				p;
 			TweenLite = globals.TweenMax || globals.TweenLite; //we prioritize TweenMax if it's loaded so that we can accommodate special features like repeat, yoyo, repeatDelay, etc.
 			if (TweenLite) {
-				version = (TweenLite.version + ".0.0").split("."); //in case an old version of TweenLite is used that had a numeric version like 1.68 instead of a string like "1.6.8"
-				stale = !(Number(version[0]) > 0 && Number(version[1]) > 7);
 				globals = globals.com.greensock;
 				CSSPlugin = globals.plugins.CSSPlugin;
 				_easeMap = globals.easing.Ease.map || {}; //don't do just window.Ease or window.CSSPlugin because some other libraries like EaselJS/TweenJS use those same names and there could be a collision.
 			}
-			if (!TweenLite || !CSSPlugin || stale) {
+			if (!TweenLite || !CSSPlugin) {
 				TweenLite = null;
 				if (!_warned && window.console) {
-					window.console.log("The jquery.gsap.js plugin requires the TweenMax (or at least TweenLite and CSSPlugin) JavaScript file(s)." + (stale ? " Version " + version.join(".") + " is too old." : ""));
+					window.console.log("The jquery.gsap.js plugin requires the TweenMax (or at least TweenLite and CSSPlugin) JavaScript file(s).");
 					_warned = true;
 				}
 				return;
@@ -176,7 +175,7 @@
 		enabled:function(value) {
 			_enabled = value;
 		},
-		version:"0.1.12",
+		version:"0.1.13",
 		legacyProps:function(value) {
 			_legacyProps = _defaultLegacyProps + value + ",";
 		}

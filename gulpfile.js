@@ -74,7 +74,7 @@ gulp.task("jade2", () => {
 // js
 gulp.task("js", () => {
 	return gulp.src(["src/js/*.js","!src/js/*.min.js"])
-		.pipe(babel({presets: ['env']}))
+		.pipe(babel({presets: ['@babel/preset-env']}))
         .pipe(plumber({errorHandler: notify.onError('<%= error.message %>')}))
         .pipe(terser())
         .pipe(rename({extname: ".min.js"}))

@@ -1,14 +1,15 @@
 /*!
- * VERSION: beta 1.5.2
- * DATE: 2017-06-19
+ * VERSION: 1.5.3
+ * DATE: 2018-02-15
  * UPDATES AND DOCS AT: http://greensock.com
  *
- * @license Copyright (c) 2008-2017, GreenSock. All rights reserved.
+ * @license Copyright (c) 2008-2019, GreenSock. All rights reserved.
  * This work is subject to the terms at http://greensock.com/standard-license or for
  * Club GreenSock members, the software agreement that was issued with your membership.
  * 
  * @author: Jack Doyle, jack@greensock.com
  **/
+/* eslint-disable */
 var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(global) !== "undefined") ? global : this || window; //helps ensure compatibility with AMD/RequireJS and CommonJS/Node
 (_gsScope._gsQueue || (_gsScope._gsQueue = [])).push( function() {
 
@@ -76,7 +77,7 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 						g = (l <= 0.5) ? l * (s + 1) : l + s - l * s;
 						r = l * 2 - g;
 						if (a.length > 3) {
-							a[3] = Number(v[3]);
+							a[3] = Number(a[3]);
 						}
 						a[0] = _hue(h + 1 / 3, r, g);
 						a[1] = _hue(h, r, g);
@@ -140,7 +141,7 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 
 		ColorPropsPlugin = _gsScope._gsDefine.plugin({
 			propName: "colorProps",
-			version: "1.5.2",
+			version: "1.5.3",
 			priority: -1,
 			API: 2,
 			global: true,

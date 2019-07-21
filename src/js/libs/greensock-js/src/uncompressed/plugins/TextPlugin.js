@@ -1,17 +1,18 @@
 /*!
- * VERSION: 0.6.0
- * DATE: 2017-06-19
+ * VERSION: 0.6.2
+ * DATE: 2018-02-15
  * UPDATES AND DOCS AT: http://greensock.com
  *
- * @license Copyright (c) 2008-2017, GreenSock. All rights reserved.
+ * @license Copyright (c) 2008-2019, GreenSock. All rights reserved.
  * This work is subject to the terms at http://greensock.com/standard-license or for
  * Club GreenSock members, the software agreement that was issued with your membership.
- * 
+ *
  * @author: Jack Doyle, jack@greensock.com
  */
+/* eslint-disable */
 var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(global) !== "undefined") ? global : this || window; //helps ensure compatibility with AMD/RequireJS and CommonJS/Node
 (_gsScope._gsQueue || (_gsScope._gsQueue = [])).push( function() {
-	
+
 	"use strict";
 
 		var _getText = function(e) {
@@ -30,6 +31,13 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 				}
 				return result;
 			},
+			_emoji = "[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2694-\u2697]|\uD83E[\uDD10-\uDD5D]|[\uD800-\uDBFF][\uDC00-\uDFFF]",
+			_emojiExp = new RegExp(_emoji),
+			_emojiAndCharsExp = new RegExp(_emoji + "|.", "g"),
+			_emojiSafeSplit = function(text, delimiter) {
+				return ((delimiter === "" || !delimiter) && _emojiExp.test(text)) ? text.match(_emojiAndCharsExp) : text.split(delimiter || "");
+			},
+			/* //previous emoji-related splitting. New method above is faster and more concise.
 			_emojiStart = 0xD800,
 			_emojiEnd = 0xDBFF,
 			_emojiLowStart = 0xDC00,
@@ -55,14 +63,17 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 						j = ((emojiPair1 >= _emojiRegionStart && emojiPair1 <= _emojiRegionEnd && emojiPair2 >= _emojiRegionStart && emojiPair2 <= _emojiRegionEnd) || (emojiPair2 >= _emojiModStart && emojiPair2 <= _emojiModEnd)) ? 4 : 2;
 						a.push(text.substr(i, j));
 						i += j - 1;
+					} else {
+						a.push(character);
 					}
 				}
 				return a;
 			},
+			*/
 			TextPlugin = _gsScope._gsDefine.plugin({
 				propName: "text",
 				API: 2,
-				version:"0.6.0",
+				version:"0.6.2",
 
 				//called when the tween renders for the first time. This is where initial values should be recorded and any setup routines should run.
 				init: function(target, value, tween, index) {
@@ -141,7 +152,7 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 
 			}),
 			p = TextPlugin.prototype;
-		
+
 		p._newClass = p._oldClass = p._delimiter = "";
 
 }); if (_gsScope._gsDefine) { _gsScope._gsQueue.pop()(); }

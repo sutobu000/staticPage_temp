@@ -1,14 +1,15 @@
 /*!
- * VERSION: 0.6.5
- * DATE: 2017-06-19
+ * VERSION: 0.6.8
+ * DATE: 2018-02-22
  * UPDATES AND DOCS AT: http://greensock.com
  *
- * @license Copyright (c) 2008-2017, GreenSock. All rights reserved.
+ * @license Copyright (c) 2008-2019, GreenSock. All rights reserved.
  * This work is subject to the terms at http://greensock.com/standard-license or for
  * Club GreenSock members, the software agreement that was issued with your membership.
  * 
  * @author: Jack Doyle, jack@greensock.com
  */
+/* eslint-disable */
 var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(global) !== "undefined") ? global : this || window; //helps ensure compatibility with AMD/RequireJS and CommonJS/Node
 (_gsScope._gsQueue || (_gsScope._gsQueue = [])).push( function() {
 
@@ -27,7 +28,7 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 
 		p._propName = "cssRule";
 		p.constructor = CSSRulePlugin;
-		CSSRulePlugin.version = "0.6.5";
+		CSSRulePlugin.version = "0.6.8";
 		CSSRulePlugin.API = 2;
 
 		/**
@@ -39,7 +40,7 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 		 * @return a reference to the style sheet (or an array of them in the case of a pseudo selector). If none was found, null is returned (or an empty array for a pseudo selector)
 		 */
 		CSSRulePlugin.getRule = function(selector) {
-			var ruleProp = _doc.all ? 'rules' : 'cssRules',
+			var ruleProp = _doc.all ? "rules" : "cssRules",
 				ss = _doc.styleSheets,
 				i = ss.length,
 				pseudo = (selector.charAt(0) === ":"),
@@ -93,7 +94,12 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 		// @private gets called every time the tween updates, passing the new ratio (typically a value between 0 and 1, but not always (for example, if an Elastic.easeOut is used, the value can jump above 1 mid-tween). It will always start and 0 and end at 1.
 		p.setRatio = function(v) {
 			_superSetRatio.call(this, v);
-			this._ss.cssText = this._proxy.cssText;
+			var proxy = this._proxy,
+				ss = this._ss,
+				i = proxy.length;
+			while (--i > -1) {
+				ss[proxy[i]] = proxy[proxy[i]];
+			}
 		};
 		
 		

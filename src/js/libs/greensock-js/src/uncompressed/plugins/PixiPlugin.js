@@ -1,14 +1,15 @@
 /*!
- * VERSION: 0.1.1
- * DATE: 2017-06-29
+ * VERSION: 0.3.0
+ * DATE: 2019-05-13
  * UPDATES AND DOCS AT: http://greensock.com
  *
- * @license Copyright (c) 2008-2017, GreenSock. All rights reserved.
+ * @license Copyright (c) 2008-2019, GreenSock. All rights reserved.
  * PixiPlugin is subject to the terms at http://greensock.com/standard-license or for
  * Club GreenSock members, the software agreement that was issued with your membership.
  *
  * @author: Jack Doyle, jack@greensock.com
  */
+/* eslint-disable */
 var _gsScope = (typeof module !== "undefined" && module.exports && typeof global !== "undefined") ? global : this || window;
 (_gsScope._gsQueue || (_gsScope._gsQueue = [])).push(function () {
     "use strict";
@@ -225,9 +226,12 @@ var _gsScope = (typeof module !== "undefined" && module.exports && typeof global
 		_parseColorMatrixFilter = function(t, v, pg) {
 			var filter = _getFilter(t, "ColorMatrixFilter"),
 				cache = t._gsColorMatrixFilter = t._gsColorMatrixFilter || {contrast:1, saturation:1, colorizeAmount:0, colorize:"rgb(255,255,255)", hue:0, brightness:1},
-				combine = v.combineCMF,
+				combine = v.combineCMF && !("colorMatrixFilter" in v && !v.colorMatrixFilter),
 				i, matrix, startMatrix;
 			startMatrix = filter.matrix;
+			if (v.resolution) {
+				filter.resolution = v.resolution;
+			}
 			if (v.matrix && v.matrix.length === startMatrix.length) {
 				matrix = v.matrix;
 				if (cache.contrast !== 1) {
@@ -385,13 +389,14 @@ var _gsScope = (typeof module !== "undefined" && module.exports && typeof global
         priority: 0,
         API: 2,
 		global: true,
-        version: "0.1.1",
+        version: "0.3.0",
 
         init: function (target, values, tween, index) {
             if (!target instanceof _gsScope.PIXI.DisplayObject) {
                 return false;
             }
-            var context, axis, value, colorMatrix, filter, p, padding, colorSetter, i, data;
+            var isV4 =  _gsScope.PIXI.VERSION.charAt(0) === "4",
+	            context, axis, value, colorMatrix, filter, p, padding, colorSetter, i, data, pt;
             for (p in values) {
                 context = _contexts[p];
                 value = values[p];
@@ -427,15 +432,22 @@ var _gsScope = (typeof module !== "undefined" && module.exports && typeof global
 						colorSetter = _buildColorSetter(tween, this);
 					}
 					if ((p === "lineColor" || p === "fillColor") && target instanceof _gsScope.PIXI.Graphics) {
-						data = target.graphicsData;
+						data = (target.geometry || target).graphicsData; //"geometry" was introduced in PIXI version 5
 						i = data.length;
 						while (--i > -1) {
-							_addColorTween(data[i], p, value, colorSetter, this);
+							_addColorTween(isV4 ? data[i] : data[i][p.substr(0, 4) + "Style"], isV4 ? p : "color", value, colorSetter, this);
 						}
-						colorSetter.graphics = target;
+						colorSetter.graphics = target.geometry || target;
 					} else {
 						_addColorTween(target, p, value, colorSetter, this);
 					}
+                } else if (p === "autoAlpha") {
+					this._firstPT = pt = {t: {setRatio:function() { target.visible = !!target.alpha; }}, p: "setRatio", s: 0, c: 1, f: 1, pg: 0, n: "visible", pr: 0, m: 0, _next:this._firstPT};
+					if (pt._next) {
+						pt._next._prev = pt;
+					}
+					this._addTween(target, "alpha", target.alpha, value, "alpha");
+					this._overwriteProps.push("alpha", "visible");
                 } else {
 					this._addTween(target, p, target[p], value, p);
                 }
@@ -449,6 +461,9 @@ var _gsScope = (typeof module !== "undefined" && module.exports && typeof global
 	PixiPlugin.parseColor = _parseColor;
 	PixiPlugin.formatColors = _formatColors;
 	PixiPlugin.colorStringFilter = _colorStringFilter;
+	PixiPlugin.registerPIXI = function(PIXI) {
+		_gsScope.PIXI = PIXI;
+	};
 
 
 }); if (_gsScope._gsDefine) { _gsScope._gsQueue.pop()(); }
