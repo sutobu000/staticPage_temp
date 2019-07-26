@@ -1,5 +1,8 @@
 // console.log("js start");
 
+/* ========================================================================
+ * init
+ * ======================================================================== */
 let $html = document.getElementsByTagName("html");
 let $body = document.getElementsByTagName("body");
 
@@ -31,22 +34,22 @@ let $hover = document.querySelectorAll(".js-hover");
 let $ancLink = document.querySelectorAll("a[href^='#']")
 
 /* --- スライドフェードイン --- */
-let $slideIn = document.querySelectorAll(".js-slideIn");
-let slideInArr = [];
-let slideInFlagArr = [];
-let slideInTopArr = [];
-for(let slideInCount = 0; slideInCount < $slideIn.length; slideInCount++) {
-	$slideIn[slideInCount].style.opacity = 0;
+let $sliSL = document.querySelectorAll(".js-sliSL");
+let sliSLArr = [];
+let sliSLFlagArr = [];
+let sliSLTopArr = [];
+for(let sliSLCount = 0; sliSLCount < $sliSL.length; sliSLCount++) {
+	$sliSL[sliSLCount].style.opacity = 0;
 }
 
-let $staggerSlide = document.querySelectorAll(".js-staggerSlide");
-let staggerSlideArr = [];
-let staggerSlideFlagArr = [];
-let staggerSlideTopArr = [];
-for(let staggerSlideCount = 0; staggerSlideCount < $staggerSlide.length; staggerSlideCount++) {
-	let $staggerSlideChild = $staggerSlide[staggerSlideCount].children;
-	for (let staggerSlideChildCount = 0; staggerSlideChildCount < $staggerSlideChild.length; staggerSlideChildCount++) {
-			$staggerSlideChild[staggerSlideChildCount].style.opacity = 0;
+let $stgSL = document.querySelectorAll(".js-stgSL");
+let stgSLArr = [];
+let stgSLFlagArr = [];
+let stgSLTopArr = [];
+for(let stgSLCount = 0; stgSLCount < $stgSL.length; stgSLCount++) {
+	let $stgSLChild = $stgSL[stgSLCount].children;
+	for (let stgSLChildCount = 0; stgSLChildCount < $stgSLChild.length; stgSLChildCount++) {
+			$stgSLChild[stgSLChildCount].style.opacity = 0;
 	}
 }
 
@@ -67,9 +70,9 @@ if (ww > w_breakPoint) {
 	_SP = true;
 }
 
-window.addEventListener("resize", function(e) {
-	ww = window.width();
-	wh = window.height();
+window.addEventListener("resize", (e) => {
+	ww = window.innerWidth;
+	wh = window.innerHeight;
 	if (ww > w_breakPoint) {
 		_SP = false;
 	} else {
@@ -80,10 +83,9 @@ window.addEventListener("resize", function(e) {
 // setUA();
 
 /* -----------------------------------------------
- * Ready
+ * Ready imageなど遅延ロード
  * ----------------------------------------------- */
-/* -- Ready イベント -- */
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", () => {
 	console.log("ready");
 	// let tags = document.getElementsByTagName("*");
 	try{
@@ -119,7 +121,7 @@ document.addEventListener("DOMContentLoaded", function() {
 					let imgurl = cssStyle[j].replace(/"/g, '');
 					imgurl = imgurl.slice(4).slice(0, -1);
 					$imgnew.setAttribute("src", imgurl);
-					$imgnew.addEventListener("load", function(response, status, xhr) {
+					$imgnew.addEventListener("load", (response, status, xhr) => {
 						completecssImageCount++;
 						if (completecssImageCount == cssStyle.length){
 							is_ready = true;
@@ -140,7 +142,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 /* -- imgタグ参照 -- */
-function readySection() {
+let readySection = () => {
 	// console.log("section start");
 	if (is_ready) {
 		if (allImageCount < 1) {
@@ -155,13 +157,13 @@ function readySection() {
 				if (!$src || image.width == 0) {
 					completeImageCount++;
 				}else{
-					$new.addEventListener("load", function() {
+					$new.addEventListener("load", () => {
 						completeImageCount++;
 						if (allImageCount == completeImageCount){
 							for(let j = 0; j < $allImage.length; j++){
 								$allImage[j].removeAttribute('style');
 							}
-							setTimeout(function(){
+							setTimeout(() => {
 								readyInit();
 							},100);
 						}
@@ -173,31 +175,129 @@ function readySection() {
 	}
 }
 
-/* -- Ready init -- */
-function readyInit() {
+/* -- Ready init (Loadが終わったら) -- */
+let readyInit = () => {
 	// console.log("init start");
 	/* ホワイトバック */
-	TweenMax.to($wrapper_bg, .6, {opacity:0, onComplete: function(){
+	TweenMax.to($wrapper_bg, .6, {opacity:0, onComplete: () => {
 		$wrapper_bg.parentNode.removeChild($wrapper_bg);
 		// scroll_flag = false;
 	}});
 
-	/* slideIn */
+	/* sliSL */
 	let wscroll = _sTop + wh;
-	for (let i = 0; i < slideInTopArr.length; i++) {
-		if (slideInTopArr[i] <= wscroll) { slideInFlagArr[i] = true; slideInAnime(slideInArr[i]); }
+	for (let i = 0; i < sliSLTopArr.length; i++) {
+		if (sliSLTopArr[i] <= wscroll) { sliSLFlagArr[i] = true; sliSLAnime(sliSLArr[i]); }
 	}
-	for (let i = 0; i < staggerSlideTopArr.length; i++) {
-		if (staggerSlideTopArr[i] <= wscroll) { staggerSlideFlagArr[i] = true; staggerSlideInAnime(staggerSlideArr[i]); }
+	for (let i = 0; i < stgSLTopArr.length; i++) {
+		if (stgSLTopArr[i] <= wscroll) { stgSLFlagArr[i] = true; stgSLInAnime(stgSLArr[i]); }
 	}
 
 }
 
+/* -----------------------------------------------
+ * sliSL stgSL
+ * ----------------------------------------------- */
+/* 単発slide */
+for(let sliSLCount = 0; sliSLCount < $sliSL.length; sliSLCount++) {
+	let $this = $sliSL[sliSLCount];
+	sliSLArr[sliSLCount] = $this;
+	sliSLFlagArr[sliSLCount] = false;
+	sliSLTopArr[sliSLCount] = $this.getBoundingClientRect().top;
+}
+let sliSLAnime = ($obj) => {
+	TweenMax.killTweensOf($obj);
+	if($obj.classList.contains('js-sliSL-left')){
+		TweenMax.fromTo($obj, .7, {x:-20,opacity:0},{x:0,opacity:1,delay:.3,onComplete: () => {
+			$obj.removeAttribute('style');
+			$obj.classList.remove('js-sliSL', 'js-sliSL-left');
+		}});
+	}else if($obj.classList.contains('js-sliSL-right')){
+		TweenMax.fromTo($obj, .7, {x:20,opacity:0},{x:0,opacity:1,delay:.3,onComplete: () => {
+			$obj.removeAttribute('style');
+			$obj.classList.remove('js-sliSL', 'js-sliSL-right');
+		}});
+	}else if($obj.classList.contains('js-sliSL-top')){
+		TweenMax.fromTo($obj, .7, {y:-20,opacity:0},{y:0,opacity:1,delay:.3,onComplete: () => {
+			$obj.removeAttribute('style');
+			$obj.classList.remove('js-sliSL', 'js-sliSL-top');
+		}});
+	}else if($obj.classList.contains('js-sliSL-bottom')){
+		TweenMax.fromTo($obj, .7, {y:20,opacity:0},{y:0,opacity:1,delay:.3,onComplete: () => {
+			$obj.removeAttribute('style');
+			$obj.classList.remove('js-sliSL', 'js-sliSL-bottom');
+		}});
+	}else{
+		TweenMax.fromTo($obj, .7, {y:20,opacity:0},{y:0,opacity:1,delay:.3,onComplete: () => {
+			$obj.removeAttribute('style');
+			$obj.classList.remove('js-sliSL');
+		}});
+	}
+}
+
+/* 連続したslide */
+for (let stgSLCount = 0; stgSLCount < $stgSL.length; stgSLCount++) {
+  let $this = $stgSL[stgSLCount];
+  stgSLArr[stgSLCount] = $this;
+  stgSLFlagArr[stgSLCount] = false;
+  stgSLTopArr[stgSLCount] = $this.getBoundingClientRect().top;
+}
+let stgSLInAnime = ($obj) => {
+	if($obj.classList.contains('js-stgSL-left')){
+		TweenMax.staggerFromTo($obj.children, .7, {x:-20,opacity:0},{x:0,opacity:1,delay:.3},.15, () => {
+			$obj.children.removeAttribute('style');
+			$obj.classList.remove('js-stgSL', 'js-stgSL-left');
+		});
+	}else if($obj.classList.contains('js-stgSL-right')){
+		TweenMax.staggerFromTo($obj.children, .7, {x:20,opacity:0},{x:0,opacity:1,delay:.3},.15, () => {
+			$obj.children.removeAttribute('style');
+			$obj.classList.remove('js-stgSL', 'js-stgSL-right');
+		});
+	}else if($obj.classList.contains('js-stgSL-top')){
+		TweenMax.staggerFromTo($obj.children, .7, {y:-20,opacity:0},{y:0,opacity:1,delay:.3},.15, () => {
+			$obj.children.removeAttribute('style');
+			$obj.classList.remove('js-stgSL', 'js-stgSL-top');
+		});
+	}else if($obj.classList.contains('js-stgSL-bottom')){
+		TweenMax.staggerFromTo($obj.children, .7, {y:20,opacity:0},{y:0,opacity:1,delay:.3},.15, () => {
+			$obj.children.removeAttribute('style');
+			$obj.classList.remove('js-stgSL', 'js-stgSL-bottom');
+		});
+	}else{
+		TweenMax.staggerFromTo($obj.children, .7, {y:20,opacity:0},{y:0,opacity:1,delay:.3},.15, () => {
+			for(let i = 0; i < $obj.children.length; i++){
+				$obj.children[i].removeAttribute('style');
+			}
+			$obj.classList.remove('js-stgSL');
+		});
+	}
+}
+
+/* -----------------------------------------------
+* スクロール禁止復活用関数
+* ----------------------------------------------- */
+let scrolloff = ( event ) => {event.preventDefault();}
+let scroll_event = 'onwheel' in document ? 'wheel' : 'onmousewheel' in document ? 'mousewheel' : 'DOMMouseScroll';
+let no_scroll = () => {
+	document.addEventListener.on(scroll_event,scrolloff);
+	window.addEventListener('touchmove', scrolloff, {passive: false} );
+}
+let return_scroll = () => {
+	document.removeEventListener(scroll_event);
+	window.removeEventListener('touchmove', scrolloff, {passive: false} );
+}
+
+
+
+
+/* ========================================================================
+ * Event
+ * ======================================================================== */
 
 /* -----------------------------------------------
  * - スクロール -
  * ----------------------------------------------- */
-window.addEventListener('scroll', function (e) {
+window.addEventListener('scroll', (e) => {
 	e.preventDefault();
 	_sTop = document.body.scrollTop || document.documentElement.scrollTop;
 	wh = window.innerHeight;
@@ -205,105 +305,27 @@ window.addEventListener('scroll', function (e) {
 	let _sBtm = _sTop + wh;
 	let diffVal = 100
 
-	/* slideIn */
-	for (let i = 0; i < slideInArr.length; i++) {
-		if (!slideInFlagArr[i] && slideInTopArr[i] <= _sBtm - diffVal) {
-			slideInFlagArr[i] = true;
-			slideInAnime(slideInArr[i]);
+	/* sliSL */
+	for (let i = 0; i < sliSLArr.length; i++) {
+		if (!sliSLFlagArr[i] && sliSLTopArr[i] <= _sBtm - diffVal) {
+			sliSLFlagArr[i] = true;
+			sliSLAnime(sliSLArr[i]);
 		}
 	}
-	/* staggerSlide */
-	for (let i = 0; i < staggerSlideArr.length; i++) {
-		if (!staggerSlideFlagArr[i] && staggerSlideTopArr[i] <= _sBtm - diffVal) {
-			staggerSlideFlagArr[i] = true;
-			staggerSlideInAnime(staggerSlideArr[i]);
+	/* stgSL */
+	for (let i = 0; i < stgSLArr.length; i++) {
+		if (!stgSLFlagArr[i] && stgSLTopArr[i] <= _sBtm - diffVal) {
+			stgSLFlagArr[i] = true;
+			stgSLInAnime(stgSLArr[i]);
 		}
 	}
 
 });
 
 /* -----------------------------------------------
- * slideIn staggerSlide
- * ----------------------------------------------- */
-/* 単発slide */
-for(let slideInCount = 0; slideInCount < $slideIn.length; slideInCount++) {
-	let $this = $slideIn[slideInCount];
-	slideInArr[slideInCount] = $this;
-	slideInFlagArr[slideInCount] = false;
-	slideInTopArr[slideInCount] = $this.getBoundingClientRect().top;
-}
-function slideInAnime($obj){
-	TweenMax.killTweensOf($obj);
-	if($obj.classList.contains('js-slideIn-left')){
-		TweenMax.fromTo($obj, .7, {x:-20,opacity:0},{x:0,opacity:1,delay:.3,onComplete: function(){
-			$obj.removeAttribute('style');
-			$obj.classList.remove('js-slideIn', 'js-slideIn-left');
-		}});
-	}else if($obj.classList.contains('js-slideIn-right')){
-		TweenMax.fromTo($obj, .7, {x:20,opacity:0},{x:0,opacity:1,delay:.3,onComplete: function(){
-			$obj.removeAttribute('style');
-			$obj.classList.remove('js-slideIn', 'js-slideIn-right');
-		}});
-	}else if($obj.classList.contains('js-slideIn-top')){
-		TweenMax.fromTo($obj, .7, {y:-20,opacity:0},{y:0,opacity:1,delay:.3,onComplete: function(){
-			$obj.removeAttribute('style');
-			$obj.classList.remove('js-slideIn', 'js-slideIn-top');
-		}});
-	}else if($obj.classList.contains('js-slideIn-bottom')){
-		TweenMax.fromTo($obj, .7, {y:20,opacity:0},{y:0,opacity:1,delay:.3,onComplete: function(){
-			$obj.removeAttribute('style');
-			$obj.classList.remove('js-slideIn', 'js-slideIn-bottom');
-		}});
-	}else{
-		TweenMax.fromTo($obj, .7, {y:20,opacity:0},{y:0,opacity:1,delay:.3,onComplete: function(){
-			$obj.removeAttribute('style');
-			$obj.classList.remove('js-slideIn');
-		}});
-	}
-}
-
-/* 連続したslide */
-for (let staggerSlideCount = 0; staggerSlideCount < $staggerSlide.length; staggerSlideCount++) {
-  let $this = $staggerSlide[staggerSlideCount];
-  staggerSlideArr[staggerSlideCount] = $this;
-  staggerSlideFlagArr[staggerSlideCount] = false;
-  staggerSlideTopArr[staggerSlideCount] = $this.getBoundingClientRect().top;
-}
-function staggerSlideInAnime($obj){
-	if($obj.classList.contains('js-staggerSlide-left')){
-		TweenMax.staggerFromTo($obj.children, .7, {x:-20,opacity:0},{x:0,opacity:1,delay:.3},.15, function(){
-			$obj.children.removeAttribute('style');
-			$obj.classList.remove('js-staggerSlide', 'js-staggerSlide-left');
-		});
-	}else if($obj.classList.contains('js-staggerSlide-right')){
-		TweenMax.staggerFromTo($obj.children, .7, {x:20,opacity:0},{x:0,opacity:1,delay:.3},.15, function(){
-			$obj.children.removeAttribute('style');
-			$obj.classList.remove('js-staggerSlide', 'js-staggerSlide-right');
-		});
-	}else if($obj.classList.contains('js-staggerSlide-top')){
-		TweenMax.staggerFromTo($obj.children, .7, {y:-20,opacity:0},{y:0,opacity:1,delay:.3},.15, function(){
-			$obj.children.removeAttribute('style');
-			$obj.classList.remove('js-staggerSlide', 'js-staggerSlide-top');
-		});
-	}else if($obj.classList.contains('js-staggerSlide-bottom')){
-		TweenMax.staggerFromTo($obj.children, .7, {y:20,opacity:0},{y:0,opacity:1,delay:.3},.15, function(){
-			$obj.children.removeAttribute('style');
-			$obj.classList.remove('js-staggerSlide', 'js-staggerSlide-bottom');
-		});
-	}else{
-		TweenMax.staggerFromTo($obj.children, .7, {y:20,opacity:0},{y:0,opacity:1,delay:.3},.15, function(){
-			for(let i = 0; i < $obj.children.length; i++){
-				$obj.children[i].removeAttribute('style');
-			}
-			$obj.classList.remove('js-staggerSlide');
-		});
-	}
-}
-
-/* -----------------------------------------------
  * SP メニュー
  * ----------------------------------------------- */
-$menuBtn.addEventListener	('click', function(e) {
+$menuBtn.addEventListener	('click', (e) => {
 	let h_gnav = Number(window.innerHeight);
 	if (!is_gnav) {
 		if (!is_open) {
@@ -314,14 +336,14 @@ $menuBtn.addEventListener	('click', function(e) {
 			$wrapper.style.position = "fixed";
 			$wrapper.style.top = -(_sTop);
 			$wrapper.style.left = 0;
-			TweenMax.to($gnav, .3, {height:h_gnav, onComplete: function(){is_gnav = false;}});
+			TweenMax.to($gnav, .3, {height:h_gnav, onComplete: () => {is_gnav = false;}});
 		} else {
 			$wrapper.removeAttribute('style');
 			window.scrollTo(0, _sTop);
 			is_open = false;
 			is_gnav = true;
 			$menuBtn.classList.remove("is-open");
-			TweenMax.to($gnav, .3, {height:0, onComplete: function(){is_gnav = false;}});
+			TweenMax.to($gnav, .3, {height:0, onComplete: () => {is_gnav = false;}});
 		}
 	}
 });
@@ -332,11 +354,11 @@ $menuBtn.addEventListener	('click', function(e) {
  * ----------------------------------------------- */
 if (!_SP) {
 	for(let hoverCount = 0; hoverCount < $hover.length; hoverCount++){
-		$hover[hoverCount].addEventListener("mouseover",function(){
+		$hover[hoverCount].addEventListener("mouseover", () => {
 			TweenMax.to(this,.2,{opacity: .5});
 		});
-		$hover[hoverCount].addEventListener("mouseout",function(){
-			TweenMax.to(this,.2,{opacity: 1, onComplete: function(){$hover[hoverCount].removeAttribute("style");}});
+		$hover[hoverCount].addEventListener("mouseout", () => {
+			TweenMax.to(this,.2,{opacity: 1, onComplete: () => {$hover[hoverCount].removeAttribute("style");}});
 		});
 	}
 }
@@ -344,24 +366,28 @@ if (!_SP) {
 /* -----------------------------------------------
  * ページトップ スクロール
  * ----------------------------------------------- */
-$pageTop.addEventListener('click', function(e){
+$pageTop.addEventListener('click', (e) => {
 	e.preventDefault();
 	if (!is_pageTop) {
 		is_pageTop = true;
-		TweenMax.to(window,.8,{scrollTo: 0 , onComplete: function(){is_pageTop = false;}});
+		TweenMax.to(window,.8,{scrollTo: 0 , onComplete: () => {is_pageTop = false;}});
 	}
 });
+
 /* -----------------------------------------------
  * アンカークリック
  * ----------------------------------------------- */
 for (var ancCount = 0; ancCount < $ancLink.length; ancCount++) {
-	$ancLink[ancCount].addEventListener("click", function(e){
+	console.log($ancLink[ancCount]);
+	$ancLink[ancCount].addEventListener("click", (e) => {
 		e.preventDefault();
-		let href = this.getAttribute("href");
+		console.log(e);
+		let href = e.target.getAttribute("href");
+		console.log(href);
 		scrollAnc(href, .5);
 	})
 }
-function scrollAnc($object, $speed) {
+let scrollAnc = ($object, $speed) => {
 	let hash = $object;
 	let $target;
 	let t_hash;
@@ -369,50 +395,20 @@ function scrollAnc($object, $speed) {
 	if(hash==="#") {
 		t_hash = 0;
 	} else {
+		console.log(hash);
 		$target = document.querySelector(hash);
 		t_hash = $target.getBoundingClientRect().top - h_h;
 	}
 	TweenMax.to(window,$speed,{scrollTo: t_hash});
 }
-/* -----------------------------------------------
- * cookie取得
- * ----------------------------------------------- */
-function getQuery() {
-	$.cookie('is_cookie','1',{ path: "/" }); // cookieを発行するディレクトリを指定
-}
-/* -----------------------------------------------
- * cookieリセット
- * ----------------------------------------------- */
-function resetQuery() {
-	$.removeCookie("is_cookie", { path: "/" });
-}
-/* -----------------------------------------------
- * cookieリセット - URLクエリ -
- * ----------------------------------------------- */
-let l_href = location.href;
-let k_word = "?t_reset";
-if(l_href.indexOf(k_word) != -1) {
-	resetQuery();
-}
-/* -----------------------------------------------
-* スクロール禁止復活用関数
-* ----------------------------------------------- */
-let scrolloff = function( event ) {event.preventDefault();}
-let scroll_event = 'onwheel' in document ? 'wheel' : 'onmousewheel' in document ? 'mousewheel' : 'DOMMouseScroll';
-function no_scroll(){
-	document.addEventListener.on(scroll_event,scrolloff);
-	window.addEventListener('touchmove', scrolloff, {passive: false} );
-}
-function return_scroll(){
-	document.removeEventListener(scroll_event);
-	window.removeEventListener('touchmove', scrolloff, {passive: false} );
-}
+
+
 
 
 // /* -----------------------------------------------
 //  * ユーザーエージェントを取得
 //  * ----------------------------------------------- */
-// function setUA() {
+// let setUA = () => {
 // 	let ua = navigator.userAgent.toLowerCase();  //エージェント取得
 // 	let ver = navigator.appVersion.toLowerCase(); //バージョンを取得
 
@@ -437,7 +433,7 @@ function return_scroll(){
 //  * FastClick.js
 //  * ----------------------------------------------- */
 // if ('addEventListener' in document) {
-// 	document.addEventListener('DOMContentLoaded', function() {
+// 	document.addEventListener('DOMContentLoaded', () => {
 // 		FastClick.attach(document.body);
 // 	}, false);
 // }

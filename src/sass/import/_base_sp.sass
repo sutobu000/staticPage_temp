@@ -24,18 +24,24 @@ a
   z-index: 999
 .header__wrapper
   padding: 0
-.header__menubtnWrap
-  position: relative
-  z-index: 10
-  display: block
-  height: 80px
 .header__menubtn
   display: block
-  position: absolute
+  position: fixed
   top: 10px
   right: 10px
+  z-index: 9999
   width: 50px
   height: 50px
+  cursor: pointer
+  &.is-open
+    .header__menubtn__bar
+      top: 20px
+      transform: rotate(45deg)
+      &:nth-child(2)
+        transform: scaleX(0)
+      &:nth-child(3)
+        top: 20px
+        transform: rotate(135deg)
 .header__menubtn__bar
   display: block
   position: absolute
@@ -45,6 +51,7 @@ a
   height: 2px
   background:
     color: $COL_BASE
+  transition: transform .3s, top .2s
   &:nth-child(2)
     top: 25px
   &:nth-child(3)
@@ -60,6 +67,8 @@ a
   overflow: hidden
   background-color: #fff
 .gnav__inner
+  height: 100%
+  overflow: auto
 .gnav__lists
   padding: 25px 0
   padding: #{50/$base_vw*100}vw 0
@@ -70,8 +79,8 @@ a
   margin: 0 auto
   a
     display: block
-    padding: 15px 0
-    padding: #{30/$base_vw*100}vw 0
+    padding: 25px 0
+    padding: #{50/$base_vw*100}vw 0
   span
     color: $COL_BASE
     +MIX_REM(24)
