@@ -1,8 +1,10 @@
+- var DOMAIN = "/";
 - var BASE_DOMAIN = "/";
-- var DIR_IMG = "/img/";
-- var DIR_IMG_CMN = "/img/common/"; // イメージへのリンク
-- var DIR_CSS = "/css/";
-- var DIR_JS = "/js/";
+- var DIR_ASSETS = BASE_DOMAIN + "assets/";
+- var DIR_IMG = DIR_ASSETS + "img/";
+- var DIR_IMG_CMN = DIR_ASSETS + "img/common/"; // イメージへのリンク
+- var DIR_CSS = DIR_ASSETS + "css/";
+- var DIR_JS = DIR_ASSETS + "js/";
 block vars
 doctype html
 html(lang='ja')
@@ -18,7 +20,7 @@ html(lang='ja')
 		//- meta(property="og:type", content="website")
 		meta(property="og:type", content="article")
 		meta(property="og:description", content="#{_desc_str}")
-		meta(property="og:url", content="#{BASE_DOMAIN}")
+		meta(property="og:url", content="#{DOMAIN}")
 		meta(property="og:image", content="#{DIR_IMG_CMN}og_image.jpg")
 		meta(name="twitter:card", content="summary_large_image")
 		meta(name="twitter:site", content="@")
@@ -50,14 +52,11 @@ html(lang='ja')
 			//
 			header.header
 				.header__wrapper
-					button(type="button").header__menubtn
-						span.header__menubtn__bar
-						span.header__menubtn__bar
-						span.header__menubtn__bar
+					button.header__menubtn(type="button")
 					.gnav
 						.gnav__inner
-							.gnav__lists.js-stgSL
-								.gnav__item: a(href="/"): span HOME
+							nav.gnav__lists.js-stgSL
+								.gnav__item.is-current: a(href="/"): span HOME
 								.gnav__item: a(href="#content"): span CONTENT
 								.gnav__item: a(href="/about"): span ABOUT
 								.gnav__item: a(href="/works"): span WORKS

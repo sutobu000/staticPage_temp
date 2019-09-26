@@ -16,15 +16,31 @@ const gulp = require("gulp"),
 	babel = require("gulp-babel"),
 	runSequence = require("run-sequence");
 
-const options = {
-// outputStyle: "expanded",
-outputStyle: "compressed",
-sourceMap: true,
-sourceComments: false
-};
+let baseOption = {
+	baseDir: "dist",
+}
+
+let jadeOption = {
+	pretty: true
+}
+
+let sassOptions = {
+	outputStyle: "expanded",
+	// outputStyle: "compressed",
+	sourceMap: true,
+	sourceComments: false
+}
+
+let jsOptions = {
+	minify: false
+}
+
+let browserOption = {
+	baseDir: "./dist",
+}
 
 const autoprefixerOptions = {
-browsers: ["last 2 version", "ie >= 11", "Android >= 4.0"]
+	browsers: ["last 2 version", "ie >= 11", "Android >= 4.0"]
 };
 
 // キャッシュをクリア
@@ -36,7 +52,7 @@ gulp.task('clear', (done) => {
 gulp.task("sass", () => {
 	return gulp.src("src/sass/**/*.+(scss|sass)")
 		.pipe(plumber({errorHandler: notify.onError('<%= error.message %>')}))
-		.pipe(sass(options))
+		.pipe(sass(sassOptions))
 		.pipe(postcss([autoprefixer({autoprefixerOptions})]))
 		// .pipe(pleeease({
 		// 	minifier: false,
@@ -44,7 +60,7 @@ gulp.task("sass", () => {
 		// 		autoprefixer: autoprefixerOptions
 		// 	}
 		// }))
-		.pipe(gulp.dest("dist/css"))
+		.pipe(gulp.dest(baseOption.baseDir+"/assets/css"))
 		.pipe(browserSync.stream())
 });
 
@@ -52,11 +68,9 @@ gulp.task("sass", () => {
 gulp.task("jade", () => {
 	return gulp.src(["src/jade/**/*.jade","!src/jade/**/_*.jade"])
         .pipe(plumber({errorHandler: notify.onError('<%= error.message %>')}))
-		.pipe(jade({
-			pretty: true
-		}))
-		.pipe(changed("dist", {extension: '.html'}))
-		.pipe(gulp.dest("dist/"))
+		.pipe(jade(jadeOption))
+		.pipe(changed(baseOption.baseDir, {extension: '.html'}))
+		.pipe(gulp.dest(baseOption.baseDir+"/"))
 		.pipe(browserSync.stream())
 });
 
@@ -64,22 +78,29 @@ gulp.task("jade", () => {
 gulp.task("jade2", () => {
 	return gulp.src(["src/jade/**/*.jade","!src/jade/**/_*.jade"])
         .pipe(plumber({errorHandler: notify.onError('<%= error.message %>')}))
-		.pipe(jade({
-			pretty: true
-		}))
-		.pipe(gulp.dest("dist/"))
+		.pipe(jade(jadeOption))
+		.pipe(gulp.dest(baseOption.baseDir+"/"))
 		.pipe(browserSync.stream())
 });
 
 // js
 gulp.task("js", () => {
-	return gulp.src(["src/js/*.js","!src/js/*.min.js"])
-		.pipe(babel({presets: ['@babel/preset-env']}))
-        .pipe(plumber({errorHandler: notify.onError('<%= error.message %>')}))
-        .pipe(terser())
-        .pipe(rename({extname: ".min.js"}))
-		.pipe(gulp.dest("dist/js"))
-		.pipe(browserSync.stream())
+	if(jsOptions.minify){
+		return gulp.src(["src/js/*.js","!src/js/*.min.js"])
+			.pipe(babel({presets: ['@babel/preset-env']}))
+			.pipe(plumber({errorHandler: notify.onError('<%= error.message %>')}))
+			.pipe(terser())
+			.pipe(rename({extname: ".min.js"}))
+			.pipe(gulp.dest(baseOption.baseDir+"/assets/js"))
+			.pipe(browserSync.stream())
+	}else{
+		return gulp.src(["src/js/*.js","!src/js/*.min.js"])
+			.pipe(babel({presets: ['@babel/preset-env']}))
+			.pipe(plumber({errorHandler: notify.onError('<%= error.message %>')}))
+			.pipe(rename({extname: ".min.js"}))
+			.pipe(gulp.dest(baseOption.baseDir+"/assets/js"))
+			.pipe(browserSync.stream())
+	}
 });
 
 // // ブラウザリロード
@@ -94,9 +115,7 @@ gulp.task("browser-sync", () => {
 		// proxy: {
 		//     target: "http://test.dev",
 		// }
-        server: {
-            baseDir: "./dist",
-        },
+        server: browserOption,
 		port: 2527
 	});
 });
@@ -111,4 +130,13 @@ gulp.task("watch", () => {
 
 gulp.task('default', gulp.parallel('clear', 'watch', "browser-sync"));
 
+gulp.task("buildOption", () => {
+	baseOption.baseDir = "build";
+	jadeOption.pretty = false;
+	sassOptions.outputStyle = "compressed";
+	jsOptions.minify = true;
+	browserOption.baseDir = "./build";
+});
+
+gulp.task('build', gulp.parallel('buildOption', 'clear', 'watch', "browser-sync"));
 

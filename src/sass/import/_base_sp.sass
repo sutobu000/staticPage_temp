@@ -1,26 +1,34 @@
 /* -----------------------------------------------
   COMMON SETTINGS SP
   ----------------------------------------------- */
-html,body
-  // width: 100%
-  // height: 100%
+// html,body
+//   width: 100%
+//   height: 100%
 body
-  // color: #000
+  // color: $COL_FONT_BASE
   // backface-visibility: hidden
   // font-family: $FONT_BASE
   +MIX_FONT_VW($DE_FONT)
   // font-size: 1rem
   // line-height: 1.5
 
-a
-  // outline: none
-  // text-decoration: none
+// a
+//   outline: none
+//   text-decoration: none
 
+// .wrapper
+// .wrapper__bg
+//   position: fixed
+//   top: 0
+//   left: 0
+//   width: 100%
+//   height: 100%
+//   background-color: #fff
 
 /* ヘッダー */
-.header
-  position: relative
-  width: 100%
+header.header
+  // position: relative
+  // width: 100%
   z-index: 999
 .header__wrapper
   padding: 0
@@ -34,28 +42,25 @@ a
   height: 50px
   cursor: pointer
   &.is-open
-    .header__menubtn__bar
+    &:before,&:after
       top: 20px
       transform: rotate(45deg)
-      &:nth-child(2)
-        transform: scaleX(0)
-      &:nth-child(3)
-        top: 20px
-        transform: rotate(135deg)
-.header__menubtn__bar
-  display: block
-  position: absolute
-  top: 10px
-  left: 2px
-  width: 45px
-  height: 2px
-  background:
-    color: $COL_BASE
-  transition: transform .3s, top .2s
-  &:nth-child(2)
-    top: 25px
-  &:nth-child(3)
-    top: 40px
+    &:after
+      top: 20px
+      transform: rotate(135deg)
+  &:before,&:after
+    content: ""
+    display: block
+    position: absolute
+    top: 20px
+    left: 2px
+    width: 45px
+    height: 2px
+    background:
+      color: $COL_BASE
+    transition: transform .3s, top .2s
+  &:after
+    top: 30px
 
 .gnav
   position: absolute
@@ -72,62 +77,232 @@ a
 .gnav__lists
   padding: 25px 0
   padding: #{50/$base_vw*100}vw 0
-  text-align: center
+  // text-align: center
 .gnav__item
   display: block
-  vertical-align: top
+  // vertical-align: top
   margin: 0 auto
   a
-    display: block
+    // display: block
     padding: 25px 0
     padding: #{50/$base_vw*100}vw 0
+    &:hover
+      span
+        color: $COL_FONT_BASE
   span
-    color: $COL_BASE
+    color: $COL_FONT_BASE
     +MIX_REM(24)
     // line-height: 1
     // letter-spacing: .05em
+  // &.is-current
+  //   a
+  //     pointer-events: none
+  //   span
+  //     color: $COL_BASE
 
 /* フッター */
-.footer
-  border:
-    top: 1px solid $COL_SUB
+// footer.footer
+//   border:
+//     top: 1px solid $COL_SUB
 .footer__wrapper
   padding: 12px 0
   padding: #{24/$base_vw*100}vw 0
 .footer__copylight
-  text-align: center
+  // text-align: center
   small
-    color: $COL_BASE
+    color: $COL_FONT_BASE
     +MIX_REM_SP(12)
-    line-height: 1
-    letter-spacing: .05em
+    // line-height: 1
+    // letter-spacing: .05em
+
 
 /* コンテンツ */
-.main
+main.main
+  // .color-base
+  //   color: $COL_BASE
+  // .color-sub
+  //   color: $COL_SUB
+  // .color-fontBase
+  //   color: $COL_FONT_BASE
+  // .bgcolor-base
+  //   background:
+  //     color: $COL_BASE
+  // @for $i from 1 through 10
+  //   .bgcolor-base-#{$i}
+  //     background:
+  //       color: rgba($COL_BASE, $i/10)
+  // .bgcolor-sub
+  //   background:
+  //     color: $COL_SUB
+  // @for $i from 1 through 10
+  //   .bgcolor-sub-#{$i}
+  //     background:
+  //       color: rgba($COL_SUB, $i/10)
+  // .bgcolor-fontBase
+  //   background:
+  //     color: $COL_FONT_BASE
+  // @for $i from 1 through 10
+  //   .bgcolor-fontBase-#{$i}
+  //     background:
+  //       color: rgba($COL_FONT_BASE, $i/10)
+  section
+    // width: 100%
+    // padding: 1rem
+    &+section
+      margin:
+        top: 4rem
+  article
+    // width: 100%
+    // height: 100%
+    &+article
+      margin:
+        top: 2rem
+  h1
+    +MIX_REM_SP(42)
+    // line-height: 1.2
+    // letter-spacing: .05em
+  h2
+    +MIX_REM_SP(38)
+    // line-height: 1.2
+    // letter-spacing: .05em
+  h3
+    +MIX_REM_SP(34)
+    // line-height: 1.2
+    // letter-spacing: .05em
+  h4
+    +MIX_REM_SP(30)
+    // line-height: 1.2
+    // letter-spacing: .05em
+  h5
+    +MIX_REM_SP(26)
+    // line-height: 1.2
+    // letter-spacing: .05em
+  h6
+    +MIX_REM_SP(22)
+    // line-height: 1.2
+    // letter-spacing: .05em
+  p
+    +MIX_REM_SP(16)
+    // line-height: 1.2
+    // letter-spacing: .05em
+  span
+    +MIX_REM_SP(16)
+    // line-height: 1.2
+    // letter-spacing: .05em
+  a
+    // color: $COL_BASE
+    +MIX_REM_SP(16)
+    // line-height: 1.2
+    // letter-spacing: .05em
+    transition: none
+    &:hover
+      color: $COL_BASE
+    // &[target="_blank"]
+    //   text-decoration: underline
+    //   &:after
+    //     content: "*"
 
-.wrapper__bg
-  // position: fixed
-  // top: 0
-  // left: 0
-  // width: 100%
-  // height: 100%
-  // background-color: #fff
+  // ul
+  //   ul,ol
+  //     padding:
+  //       left: 1rem
+  //   &>li
+  //     &:before
+  //       content: "・"
+  //       position: absolute
+  //       top: 0
+  //       left: 0
+  // ol
+  //   counter-reset: item
+  //   ol,ul
+  //     padding:
+  //       left: 1rem
+  //   &>li
+  //     &:before
+  //       content: counter(item)"."
+  //       counter-increment: item
+  //       position: absolute
+  //       top: 0
+  //       left: 0
+  li
+    // position: relative
+    // padding:
+    //   left: 1em
+    +MIX_REM_SP(16)
+    // line-height: 1.2
+    // letter-spacing: .05em
+
+  .tableWrap
+    width: 100%
+    overflow: auto
+    -webkit-overflow-scrolling: touch
+    table
+      width: auto
+  table
+    // width: 100%
+    // border: 1px solid $COL_FONT_BASE
+  // thead
+  // tbody
+  // tr
+  th,td
+    padding: 1em
+    +MIX_REM_SP(16)
+    // line-height: 1.2
+    // letter-spacing: .05em
+  // th
+  //   text-align: center
+  // td
+  //   text-align: center
+
+  // dl
+  dt
+    // display: inline-block
+    // vertical-align: top
+    +MIX_REM_SP(16)
+    // line-height: 1.2
+    // letter-spacing: .05em
+    // &:after
+    //   content: ":"
+  dd
+    // display: inline-block
+    // vertical-align: top
+    +MIX_REM_SP(16)
+    // line-height: 1.2
+    // letter-spacing: .05em
+
+  // figure
+  //   display: inline-block
+  //   vertical-align: top
+  //   img
+  //     display: block
+  //     width: 100%
+  //     height: auto
+  //   figcaption
+  //     text-align: center
+
 
 .container
   max-width: 100%
   // margin: 0 auto
+
 
 /* ページトップ */
 .pagetop
   position: static
   bottom: auto
   right: auto
+  transition: 0
+  // pointer-events: none
+  // cursor: pointer
+  // &.is-current
+  //   opacity: 1
+  //   pointer-events: auto
 .pagetop__inner
   position: relative
   width: 100%
   height: 60px
-  border:
-    radius: 0
+  // border:
+  //   radius: 0
   background-color: $COL_BASE
 .pagetop__obj
   position: static
@@ -145,3 +320,4 @@ a
     +MIX_REM_SP(20)
     line-height: 1
     letter-spacing: .05em
+

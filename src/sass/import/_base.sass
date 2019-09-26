@@ -5,7 +5,7 @@ html,body
   width: 100%
   height: 100%
 body
-  color: #000
+  color: $COL_FONT_BASE
   backface-visibility: hidden
   font-family: $FONT_BASE
   font-size: $DE_FONT + px
@@ -16,9 +16,18 @@ a
   outline: none
   text-decoration: none
 
+// .wrapper
+.wrapper__bg
+  position: fixed
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  background-color: $COL_SUB
+
 
 /* ヘッダー */
-.header
+header.header
   position: relative
   width: 100%
 .header__wrapper
@@ -36,52 +45,216 @@ a
   margin: 0 20px
   a
     display: block
+    &:hover
+      span
+        color: $COL_BASE
   span
-    color: $COL_BASE
+    color: $COL_FONT_BASE
     +MIX_REM(12)
     line-height: 1
     letter-spacing: .05em
+  &.is-current
+    a
+      pointer-events: none
+    span
+      color: $COL_BASE
 
 /* フッター */
-.footer
-  border:
-    top: 1px solid $COL_SUB
+footer.footer
 .footer__wrapper
   padding: 25px 0
 .footer__copylight
   text-align: center
   small
-    color: $COL_BASE
+    color: $COL_FONT_BASE
     +MIX_REM(12)
     line-height: 1
     letter-spacing: .05em
 
-/* コンテンツ */
-.main
 
-.wrapper__bg
-  position: fixed
-  top: 0
-  left: 0
-  width: 100%
-  height: 100%
-  background-color: #fff
+/* コンテンツ */
+main.main
+  .color-base
+    color: $COL_BASE
+  .color-sub
+    color: $COL_SUB
+  .color-fontBase
+    color: $COL_FONT_BASE
+  .bgcolor-base
+    background:
+      color: $COL_BASE
+  @for $i from 1 through 10
+    .bgcolor-base-#{$i}
+      background:
+        color: rgba($COL_BASE, $i/10)
+  .bgcolor-sub
+    background:
+      color: $COL_SUB
+  @for $i from 1 through 10
+    .bgcolor-sub-#{$i}
+      background:
+        color: rgba($COL_SUB, $i/10)
+  .bgcolor-fontBase
+    background:
+      color: $COL_FONT_BASE
+  @for $i from 1 through 10
+    .bgcolor-fontBase-#{$i}
+      background:
+        color: rgba($COL_FONT_BASE, $i/10)
+  section
+    width: 100%
+    padding: 1rem
+    &+section
+      margin:
+        top: 2rem
+  article
+    width: 100%
+    height: 100%
+    &+article
+      margin:
+        top: 1rem
+  h1
+    +MIX_REM(36)
+    line-height: 1.2
+    letter-spacing: .05em
+  h2
+    +MIX_REM(32)
+    line-height: 1.2
+    letter-spacing: .05em
+  h3
+    +MIX_REM(28)
+    line-height: 1.2
+    letter-spacing: .05em
+  h4
+    +MIX_REM(24)
+    line-height: 1.2
+    letter-spacing: .05em
+  h5
+    +MIX_REM(20)
+    line-height: 1.2
+    letter-spacing: .05em
+  h6
+    +MIX_REM(16)
+    line-height: 1.2
+    letter-spacing: .05em
+  p
+    +MIX_REM(12)
+    line-height: 1.2
+    letter-spacing: .05em
+  span
+    +MIX_REM(12)
+    line-height: 1.2
+    letter-spacing: .05em
+  a
+    color: $COL_BASE
+    +MIX_REM(12)
+    line-height: 1.2
+    letter-spacing: .05em
+    transition: color .1s
+    &:hover
+      color: $COL_SUB
+    &[target="_blank"]
+      text-decoration: underline
+      &:after
+        content: "*"
+
+  ul
+    ul,ol
+      padding:
+        left: 1rem
+    &>li
+      &:before
+        content: "・"
+        position: absolute
+        top: 0
+        left: 0
+  ol
+    counter-reset: item
+    ol,ul
+      padding:
+        left: 1rem
+    &>li
+      &:before
+        content: counter(item)"."
+        counter-increment: item
+        position: absolute
+        top: 0
+        left: 0
+  li
+    position: relative
+    padding:
+      left: 1em
+    +MIX_REM(12)
+    line-height: 1.2
+    letter-spacing: .05em
+
+  .tableWrap
+    width: 100%
+  table
+    width: 100%
+    border: 1px solid $COL_FONT_BASE
+  // thead
+  // tbody
+  // tr
+  th,td
+    padding: .5em 0
+    +MIX_REM(12)
+    line-height: 1.2
+    letter-spacing: .05em
+  th
+    text-align: center
+  td
+    text-align: center
+
+  // dl
+  dt
+    display: inline-block
+    vertical-align: top
+    +MIX_REM(12)
+    line-height: 1.2
+    letter-spacing: .05em
+    &:after
+      content: ":"
+  dd
+    display: inline-block
+    vertical-align: top
+    +MIX_REM(12)
+    line-height: 1.2
+    letter-spacing: .05em
+
+  figure
+    display: inline-block
+    vertical-align: top
+    img
+      display: block
+      width: 100%
+      height: auto
+    figcaption
+      text-align: center
 
 .container
   max-width: 1280px
   margin: 0 auto
 
+
 /* ページトップ */
 .pagetop
   position: fixed
-  bottom: 75px
-  right: 20px
+  bottom: 0
+  right: 0
+  opacity: 0
+  transition: opacity .2s
+  pointer-events: none
+  cursor: pointer
+  &.is-current
+    opacity: 1
+    pointer-events: auto
 .pagetop__inner
   position: relative
   width: 50px
   height: 50px
-  border:
-    radius: 100%
+  // border:
+  //   radius: 100%
   background-color: $COL_SUB
 .pagetop__obj
   position: absolute
@@ -97,3 +270,4 @@ a
     bottom: 20px solid #fff
   span
     display: none
+

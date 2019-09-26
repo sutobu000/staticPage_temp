@@ -27,12 +27,6 @@ let cssImgResults = [];
 let cssSheets = document.styleSheets;
 let completecssImageCount = 0;
 
-/* --- hover 処理 --- */
-let $hover = document.querySelectorAll(".js-hover");
-
-/*--アンカーリンク処理 --- */
-let $ancLink = document.querySelectorAll("a[href^='#']")
-
 /* --- スライドフェードイン --- */
 let $sliSL = document.querySelectorAll(".js-sliSL");
 let sliSLArr = [];
@@ -56,8 +50,27 @@ for(let stgSLCount = 0; stgSLCount < $stgSL.length; stgSLCount++) {
 /* --- SPメニュー --- */
 let $gnav = document.querySelector(".gnav");
 let $menuBtn = document.querySelector(".header__menubtn");
+let menuBtnTop;
 let is_gnav = false;
 let is_open = false;
+
+/* --- hover 処理 --- */
+let $hover = document.querySelectorAll(".js-hover");
+
+let $gnavItem = document.querySelectorAll(".gnav__item");
+
+/*--アンカーリンク処理 --- */
+let $ancLink = document.querySelectorAll("a[href^='#']")
+let ancTopArr = [];
+for (let ancCount = 0; ancCount < $ancLink.length; ancCount++) {
+	let ancObj = document.getElementById($ancLink[ancCount].getAttribute("href").slice(1));
+	ancTopArr[ancCount] = _sTop + ancObj.getBoundingClientRect().top
+	$ancLink[ancCount].addEventListener("click", function(e) {
+		e.preventDefault();
+		let href = this.getAttribute("href");
+		scrollAnc(href, .5, ancTopArr[ancCount]);
+	})
+}
 
 /* --- pageTop --- */
 let $pageTop = document.querySelector(".pagetop");
@@ -184,6 +197,17 @@ let readyInit = () => {
 		// scroll_flag = false;
 	}});
 
+	// アンカーリンク
+	for (let ancCount = 0; ancCount < $ancLink.length; ancCount++) {
+		let ancObj = document.getElementById($ancLink[ancCount].getAttribute("href").slice(1));
+		ancTopArr[ancCount] = _sTop + ancObj.getBoundingClientRect().top
+		$ancLink[ancCount].addEventListener("click", function(e) {
+			e.preventDefault();
+			let href = this.getAttribute("href");
+			scrollAnc(href, .5, ancTopArr[ancCount]);
+		})
+	}
+
 	/* sliSL */
 	let wscroll = _sTop + wh;
 	for (let i = 0; i < sliSLTopArr.length; i++) {
@@ -207,28 +231,32 @@ for(let sliSLCount = 0; sliSLCount < $sliSL.length; sliSLCount++) {
 }
 let sliSLAnime = ($obj) => {
 	TweenMax.killTweensOf($obj);
+	let SLIval = 20
+	let SLIdelay = .3
+	if($obj.getAttribute("data-sliVal") >= 0) SLIval = $obj.getAttribute("data-sliVal");
+	if($obj.getAttribute("data-sliDelay") >= 0) SLIdelay = $obj.getAttribute("data-sliDelay");
 	if($obj.classList.contains('js-sliSL-left')){
-		TweenMax.fromTo($obj, .7, {x:-20,opacity:0},{x:0,opacity:1,delay:.3,onComplete: () => {
+		TweenMax.fromTo($obj, .3, {x:-1*SLIval,opacity:0},{x:0,opacity:1,delay:SLIdelay,onComplete: () => {
 			$obj.removeAttribute('style');
 			$obj.classList.remove('js-sliSL', 'js-sliSL-left');
 		}});
 	}else if($obj.classList.contains('js-sliSL-right')){
-		TweenMax.fromTo($obj, .7, {x:20,opacity:0},{x:0,opacity:1,delay:.3,onComplete: () => {
+		TweenMax.fromTo($obj, .3, {x:SLIval,opacity:0},{x:0,opacity:1,delay:SLIdelay,onComplete: () => {
 			$obj.removeAttribute('style');
 			$obj.classList.remove('js-sliSL', 'js-sliSL-right');
 		}});
 	}else if($obj.classList.contains('js-sliSL-top')){
-		TweenMax.fromTo($obj, .7, {y:-20,opacity:0},{y:0,opacity:1,delay:.3,onComplete: () => {
+		TweenMax.fromTo($obj, .3, {y:-1*SLIval,opacity:0},{y:0,opacity:1,delay:SLIdelay,onComplete: () => {
 			$obj.removeAttribute('style');
 			$obj.classList.remove('js-sliSL', 'js-sliSL-top');
 		}});
 	}else if($obj.classList.contains('js-sliSL-bottom')){
-		TweenMax.fromTo($obj, .7, {y:20,opacity:0},{y:0,opacity:1,delay:.3,onComplete: () => {
+		TweenMax.fromTo($obj, .3, {y:SLIval,opacity:0},{y:0,opacity:1,delay:SLIdelay,onComplete: () => {
 			$obj.removeAttribute('style');
 			$obj.classList.remove('js-sliSL', 'js-sliSL-bottom');
 		}});
 	}else{
-		TweenMax.fromTo($obj, .7, {y:20,opacity:0},{y:0,opacity:1,delay:.3,onComplete: () => {
+		TweenMax.fromTo($obj, .3, {y:SLIval,opacity:0},{y:0,opacity:1,delay:SLIdelay,onComplete: () => {
 			$obj.removeAttribute('style');
 			$obj.classList.remove('js-sliSL');
 		}});
@@ -243,28 +271,32 @@ for (let stgSLCount = 0; stgSLCount < $stgSL.length; stgSLCount++) {
   stgSLTopArr[stgSLCount] = $this.getBoundingClientRect().top;
 }
 let stgSLInAnime = ($obj) => {
+	let stgSLIval = 20
+	let stgSLIdelay = .3
+	if($obj.getAttribute("data-sliVal") >= 0) stgSLIval = Number($obj.getAttribute("data-sliVal"));
+	if($obj.getAttribute("data-sliDelay") >= 0) stgSLIdelay = Number($obj.getAttribute("data-sliDelay"));
 	if($obj.classList.contains('js-stgSL-left')){
-		TweenMax.staggerFromTo($obj.children, .7, {x:-20,opacity:0},{x:0,opacity:1,delay:.3},.15, () => {
+		TweenMax.staggerFromTo($obj.children, .3, {x:-1*stgSLIval,opacity:0},{x:0,opacity:1,delay:stgSLIdelay},.15, () => {
 			$obj.children.removeAttribute('style');
 			$obj.classList.remove('js-stgSL', 'js-stgSL-left');
 		});
 	}else if($obj.classList.contains('js-stgSL-right')){
-		TweenMax.staggerFromTo($obj.children, .7, {x:20,opacity:0},{x:0,opacity:1,delay:.3},.15, () => {
+		TweenMax.staggerFromTo($obj.children, .3, {x:stgSLIval,opacity:0},{x:0,opacity:1,delay:stgSLIdelay},.15, () => {
 			$obj.children.removeAttribute('style');
 			$obj.classList.remove('js-stgSL', 'js-stgSL-right');
 		});
 	}else if($obj.classList.contains('js-stgSL-top')){
-		TweenMax.staggerFromTo($obj.children, .7, {y:-20,opacity:0},{y:0,opacity:1,delay:.3},.15, () => {
+		TweenMax.staggerFromTo($obj.children, .3, {y:-1*stgSLIval,opacity:0},{y:0,opacity:1,delay:stgSLIdelay},.15, () => {
 			$obj.children.removeAttribute('style');
 			$obj.classList.remove('js-stgSL', 'js-stgSL-top');
 		});
 	}else if($obj.classList.contains('js-stgSL-bottom')){
-		TweenMax.staggerFromTo($obj.children, .7, {y:20,opacity:0},{y:0,opacity:1,delay:.3},.15, () => {
+		TweenMax.staggerFromTo($obj.children, .3, {y:stgSLIval,opacity:0},{y:0,opacity:1,delay:stgSLIdelay},.15, () => {
 			$obj.children.removeAttribute('style');
 			$obj.classList.remove('js-stgSL', 'js-stgSL-bottom');
 		});
 	}else{
-		TweenMax.staggerFromTo($obj.children, .7, {y:20,opacity:0},{y:0,opacity:1,delay:.3},.15, () => {
+		TweenMax.staggerFromTo($obj.children, .7, {y:stgSLIval,opacity:0},{y:0,opacity:1,delay:stgSLIdelay},.15, () => {
 			for(let i = 0; i < $obj.children.length; i++){
 				$obj.children[i].removeAttribute('style');
 			}
@@ -272,6 +304,21 @@ let stgSLInAnime = ($obj) => {
 		});
 	}
 }
+
+// /* -----------------------------------------------
+//  * PC時 headerのtopとbottom切り替え
+//  * ----------------------------------------------- */
+// let headerFixed = (_stop) => {
+// 	if (!_SP) {
+// 		if (_stop < wh/2) {
+// 			if (!$gnav.classList.contains("is-top")) {
+// 				$gnav.classList.add('is-top');
+// 			}
+// 		}else if($gnav.classList.contains("is-top")) {
+// 			$gnav.classList.remove('is-top');
+// 		}
+// 	}
+// }
 
 /* -----------------------------------------------
 * スクロール禁止復活用関数
@@ -293,6 +340,69 @@ let return_scroll = () => {
 /* ========================================================================
  * Event
  * ======================================================================== */
+
+/* -----------------------------------------------
+ * アンカークリック
+ * ----------------------------------------------- */
+let scrollAnc = ($object, $speed, $scroll) => {
+	let hash = $object;
+	let $target;
+	let t_hash;
+	// let h_h = document.querySelector(".header").clientHeight;
+	// console.log($scroll);
+	if(is_open) $menuBtn.dispatchEvent(new Event("click"));
+	if(hash==="#") {
+		t_hash = 0;
+	} else {
+		t_hash = $scroll;
+	}
+	TweenMax.to(window,$speed,{scrollTo: t_hash});
+}
+
+
+/* -----------------------------------------------
+ * SP メニュー
+ * ----------------------------------------------- */
+$menuBtn.addEventListener('click', (e) => {
+	let h_gnav = Number(window.innerHeight);
+	if (!is_gnav) {
+		if (!is_open) {
+			menuBtnTop = document.documentElement.scrollTop || document.body.scrollTop;
+			console.log(menuBtnTop);
+			is_open = true;
+			is_gnav = true;
+			$menuBtn.classList.add("is-open");
+			$wrapper.style.position = "fixed";
+			$wrapper.style.top = "-" + menuBtnTop + "px";
+			$wrapper.style.left = 0;
+			TweenMax.to($gnav, .3, {height:h_gnav, onComplete: () => {is_gnav = false;}});
+		} else {
+			console.log(menuBtnTop);
+			$wrapper.removeAttribute('style');
+			window.scrollTo({top:menuBtnTop});
+			is_open = false;
+			is_gnav = true;
+			$menuBtn.classList.remove("is-open");
+			TweenMax.to($gnav, .3, {height:0, onComplete: () => {is_gnav = false;}});
+		}
+	}
+});
+
+
+/* -----------------------------------------------
+ * マウスオーバー - フェード
+ * ----------------------------------------------- */
+if (!_SP) {
+	for(let hoverCount = 0; hoverCount < $hover.length; hoverCount++){
+		$hover[hoverCount].addEventListener("mouseover", (e) => {
+			TweenMax.to($hover[hoverCount],.2,{opacity: .5});
+		});
+		$hover[hoverCount].addEventListener("mouseout", (e) => {
+			TweenMax.to($hover[hoverCount],.2,{opacity: 1, onComplete: () => {$hover[hoverCount].removeAttribute("style");}});
+		});
+	}
+}
+
 
 /* -----------------------------------------------
  * - スクロール -
@@ -320,48 +430,26 @@ window.addEventListener('scroll', (e) => {
 		}
 	}
 
+	// headerFixed(_sTop);
+
+	if (_sTop > wh) {
+		$pageTop.classList.add("is-current");
+	}else{
+		$pageTop.classList.remove("is-current");
+	}
+
+	// for (let i = 0; i < ancTopArr.length; i++) {
+	// 	if(i === 0 && ancTopArr[0] <= _sMdl){
+	// 		$gnavItem[i].classList.add("is-active");
+	// 	}else if (ancTopArr[i + 1] >= _sTop && ancTopArr[i] <= _sTop) {
+	// 		$gnavItem[i].classList.add("is-active");
+	// 	}else{
+	// 		$gnavItem[i].classList.remove("is-active");
+	// 	}
+	// }
+
 });
 
-/* -----------------------------------------------
- * SP メニュー
- * ----------------------------------------------- */
-$menuBtn.addEventListener	('click', (e) => {
-	let h_gnav = Number(window.innerHeight);
-	if (!is_gnav) {
-		if (!is_open) {
-			_sTop = document.documentElement.scrollTop || document.body.scrollTop;
-			is_open = true;
-			is_gnav = true;
-			$menuBtn.classList.add("is-open");
-			$wrapper.style.position = "fixed";
-			$wrapper.style.top = -(_sTop);
-			$wrapper.style.left = 0;
-			TweenMax.to($gnav, .3, {height:h_gnav, onComplete: () => {is_gnav = false;}});
-		} else {
-			$wrapper.removeAttribute('style');
-			window.scrollTo(0, _sTop);
-			is_open = false;
-			is_gnav = true;
-			$menuBtn.classList.remove("is-open");
-			TweenMax.to($gnav, .3, {height:0, onComplete: () => {is_gnav = false;}});
-		}
-	}
-});
-
-
-/* -----------------------------------------------
- * マウスオーバー - フェード
- * ----------------------------------------------- */
-if (!_SP) {
-	for(let hoverCount = 0; hoverCount < $hover.length; hoverCount++){
-		$hover[hoverCount].addEventListener("mouseover", () => {
-			TweenMax.to(this,.2,{opacity: .5});
-		});
-		$hover[hoverCount].addEventListener("mouseout", () => {
-			TweenMax.to(this,.2,{opacity: 1, onComplete: () => {$hover[hoverCount].removeAttribute("style");}});
-		});
-	}
-}
 
 /* -----------------------------------------------
  * ページトップ スクロール
@@ -374,33 +462,6 @@ $pageTop.addEventListener('click', (e) => {
 	}
 });
 
-/* -----------------------------------------------
- * アンカークリック
- * ----------------------------------------------- */
-for (var ancCount = 0; ancCount < $ancLink.length; ancCount++) {
-	console.log($ancLink[ancCount]);
-	$ancLink[ancCount].addEventListener("click", (e) => {
-		e.preventDefault();
-		console.log(e);
-		let href = e.target.getAttribute("href");
-		console.log(href);
-		scrollAnc(href, .5);
-	})
-}
-let scrollAnc = ($object, $speed) => {
-	let hash = $object;
-	let $target;
-	let t_hash;
-	let h_h = document.querySelector(".header").clientHeight;
-	if(hash==="#") {
-		t_hash = 0;
-	} else {
-		console.log(hash);
-		$target = document.querySelector(hash);
-		t_hash = $target.getBoundingClientRect().top - h_h;
-	}
-	TweenMax.to(window,$speed,{scrollTo: t_hash});
-}
 
 
 
