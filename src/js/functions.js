@@ -277,22 +277,30 @@ let stgSLInAnime = ($obj) => {
 	if($obj.getAttribute("data-sliDelay") >= 0) stgSLIdelay = Number($obj.getAttribute("data-sliDelay"));
 	if($obj.classList.contains('js-stgSL-left')){
 		TweenMax.staggerFromTo($obj.children, .3, {x:-1*stgSLIval,opacity:0},{x:0,opacity:1,delay:stgSLIdelay},.15, () => {
-			$obj.children.removeAttribute('style');
+			for(let i = 0; i < $obj.children.length; i++){
+				$obj.children[i].removeAttribute('style');
+			}
 			$obj.classList.remove('js-stgSL', 'js-stgSL-left');
 		});
 	}else if($obj.classList.contains('js-stgSL-right')){
 		TweenMax.staggerFromTo($obj.children, .3, {x:stgSLIval,opacity:0},{x:0,opacity:1,delay:stgSLIdelay},.15, () => {
-			$obj.children.removeAttribute('style');
+			for(let i = 0; i < $obj.children.length; i++){
+				$obj.children[i].removeAttribute('style');
+			}
 			$obj.classList.remove('js-stgSL', 'js-stgSL-right');
 		});
 	}else if($obj.classList.contains('js-stgSL-top')){
 		TweenMax.staggerFromTo($obj.children, .3, {y:-1*stgSLIval,opacity:0},{y:0,opacity:1,delay:stgSLIdelay},.15, () => {
-			$obj.children.removeAttribute('style');
+			for(let i = 0; i < $obj.children.length; i++){
+				$obj.children[i].removeAttribute('style');
+			}
 			$obj.classList.remove('js-stgSL', 'js-stgSL-top');
 		});
 	}else if($obj.classList.contains('js-stgSL-bottom')){
 		TweenMax.staggerFromTo($obj.children, .3, {y:stgSLIval,opacity:0},{y:0,opacity:1,delay:stgSLIdelay},.15, () => {
-			$obj.children.removeAttribute('style');
+			for(let i = 0; i < $obj.children.length; i++){
+				$obj.children[i].removeAttribute('style');
+			}
 			$obj.classList.remove('js-stgSL', 'js-stgSL-bottom');
 		});
 	}else{
