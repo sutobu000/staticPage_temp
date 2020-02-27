@@ -1,3 +1,4 @@
+extends partial/_layout
 block vars
 	- var _title_str = '株式会社'; // タイトルタグ
 	- var _desc_str = 'でぃすくりぷしょん'; // descriptions
@@ -9,9 +10,8 @@ block vars
 	//- var DIR_JS = "/js/"; // jsのリンク
 	- var _page_name = ''; // ページ名
 
-extends partial/_layout
 block link
-	link(rel='stylesheet', href='#{DIR_CSS}#{_page_category}.css')
+	link(rel='stylesheet', href=DIR_CSS + _page_category + ".css")
 block body
 	//- section.mainVisual
 	//- 	.mainVisual__inner
@@ -137,6 +137,9 @@ block body
 						span.color-base &lt;ul&gt;&lt;li&gt;
 						| Dummy Dummy Dummy Dummy Dummy Dummy Dummy
 	section
+		p#inline-frame-wrap
+			iframe(src="http://netmokei.place-on.net/netmokei/superworks/sample2/", id="inline-frame", frameborder="0")
+	section
 		p.color-base &lt;section&gt;で囲む
 		p
 			a(href="")
@@ -198,4 +201,4 @@ block body
 
 block script
 	//- ページ固有のjs
-	//- script(src='#{DIR_JS}#{_page_category}.min.js')
+	script(src=DIR_JS + _page_category + ".min.js")

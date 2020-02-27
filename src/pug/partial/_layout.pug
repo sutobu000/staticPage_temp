@@ -13,36 +13,36 @@ html(lang='ja')
 		title #{_title_str}
 		// Page Setting
 		meta(http-equiv='X-UA-Compatible', content='IE=edge')
-		meta(name='description', content='#{_desc_str}')
-		meta(name='keywords', content='#{_keys_str}')
+		meta(name='description', content=_desc_str)
+		meta(name='keywords', content=_keys_str)
 		//- // OG
 		meta(property="og:title", content="#{_title_str}")
 		//- meta(property="og:type", content="website")
 		meta(property="og:type", content="article")
-		meta(property="og:description", content="#{_desc_str}")
-		meta(property="og:url", content="#{DOMAIN}")
-		meta(property="og:image", content="#{DIR_IMG_CMN}og_image.jpg")
+		meta(property="og:description", content=_desc_str)
+		meta(property="og:url", content=DOMAIN)
+		meta(property="og:image", content=DIR_IMG_CMN + "og_image.jpg")
 		meta(name="twitter:card", content="summary_large_image")
 		meta(name="twitter:site", content="@")
-		meta(name="twitter:title", content="#{_title_str}")
-		meta(name="twitter:description", content="#{_desc_str}")
-		meta(name="twitter:image", content="#{DIR_IMG_CMN}og_image.jpg")
+		meta(name="twitter:title", content=_title_str)
+		meta(name="twitter:description", content=_desc_str)
+		meta(name="twitter:image", content=DIR_IMG_CMN + "og_image.jpg")
 		// ViewPort Setting
 		meta(name='viewport', content='width=device-width,user-scalable=yes')
 		//- meta(name='viewport', content='width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=yes')
 		// Add to homescreen for Chrome on Android
 		meta(name='mobile-web-app-capable', content='yes')
 		//- // iOS Icon Setting
-		link(rel='apple-touch-icon', href='#{DIR_IMG_CMN}apple-touch-icon.png')
+		link(rel='apple-touch-icon', href=DIR_IMG_CMN + "apple-touch-icon.png")
 		// GEneric icon
 		link(rel='shortcut icon', href='/favicon.ico')
 		// CSS Setting
 		link(href='http://fonts.googleapis.com/css?family=Roboto', rel='stylesheet', type='text/css')
-		link(rel='stylesheet', href='#{DIR_CSS}master.css')
+		link(rel='stylesheet', href=DIR_CSS + "master.css")
 
 		block link
 
-	body(id="#{_page_id}")
+	body(id=_page_id)
 		.wrapper
 			.wrapper__bg
 			//
@@ -87,6 +87,6 @@ html(lang='ja')
 
 
 	//- 全体共通のjs
-	script(src='#{DIR_JS}libs.min.js')
-	script(src='#{DIR_JS}functions.min.js')
+	script(src=DIR_JS + "libs.min.js")
+	script(src=DIR_JS + "functions.min.js")
 	block script
