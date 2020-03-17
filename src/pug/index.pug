@@ -13,190 +13,25 @@ block vars
 block link
 	link(rel='stylesheet', href=DIR_CSS + _page_category + ".css")
 block body
-	//- section.mainVisual
-	//- 	.mainVisual__inner
-	//- 		.mainVisual__node
-	//- 			h1.mainVisual__node__title.js-sliSL: span Corporation
+	section.mainVisual
+		.mainVisual__inner
+			.mainVisual__node
+				h1.mainVisual__node__title.js-sliSL: span Corporation
 
-	//- section.section.section-lead
-	//- 	.section__inner
-	//- 		h2.section__lead.js-sliSL: p.section__lead__txt
-	//- 			| Be beans, Be Nuts
+	section.section.section-lead
+		.section__inner
+			h2.section__lead.js-sliSL: p.section__lead__txt
+				| Be beans, Be Nuts
 
-	//- section.section#content
-	//- 	.section__inner
-	//- 		.section__lists.js-staggerSlide
-	//- 			- for (var i = 0; i < 9; i++) {
-	//- 				.section__item: a.js-hover(href="")
-	//- 					.section__item__inner
-	//- 						.section__item__visual: img(src="https://placehold.jp/300x150.png", alt="test")
-	//- 						p.section__item__content dummy dummy dummy dummy dummy dummy dummy dummy
-	//- 			- }
-
-	section#content
-		p.color-base &lt;section&gt;で囲む
-		article
-			p.color-base &lt;article&gt;で囲む
-			h1.color-base &lt;h1&gt; Head1
-			p &lt;p&gt; Dummy Dummy Dummy Dummy Dummy Dummy Dummy
-		article
-			p.color-base &lt;article&gt;で囲む
-			h2.color-base &lt;h2&gt; Head2
-			p
-				span &lt;p&gt;
-				| Dummy Dummy Dummy Dummy Dummy Dummy Dummy
-		article
-			p.color-base &lt;article&gt;で囲む
-			h3.color-base &lt;h3&gt; Head3
-			p
-				span.color-base &lt;p&gt;
-				| Dummy Dummy Dummy Dummy Dummy Dummy Dummy
-		article
-			p.color-base &lt;article&gt;で囲む
-			h4.color-base Head4
-			p
-				span.color-base &lt;p&gt;
-				| Dummy Dummy Dummy Dummy Dummy Dummy Dummy
-		article
-			p.color-base &lt;article&gt;で囲む
-			h5.color-base Head5
-			p
-				span.color-base &lt;p&gt;
-				| Dummy Dummy Dummy Dummy Dummy Dummy Dummy
-		article
-			p.color-base &lt;article&gt;で囲む
-			h6.color-base Head6
-			p
-				span.color-base &lt;p&gt;
-				| Dummy Dummy Dummy Dummy Dummy Dummy Dummy
-
-	section
-		p.color-base &lt;section&gt;で囲む
-		p
-			span.color-base &lt;p&gt;
-			| Dummy Dummy Dummy Dummy Dummy Dummy Dummy
-			br
-			span.color-base &lt;span&gt;
-			span Dummy Dummy Dummy Dummy Dummy Dummy Dummy
-	section
-		p.color-base &lt;section&gt;で囲む
-		ul
-			li
-				span.color-base &lt;ul&gt;&lt;li&gt;
-				| Dummy Dummy Dummy Dummy Dummy Dummy Dummy
-			li
-				span.color-base &lt;ul&gt;&lt;li&gt;
-				| Dummy Dummy Dummy Dummy Dummy Dummy Dummy
-			ul
-				li
-					span.color-base &lt;ul&gt;&lt;li&gt;
-					| Dummy Dummy Dummy Dummy Dummy Dummy Dummy
-				li
-					span.color-base &lt;ul&gt;&lt;li&gt;
-					| Dummy Dummy Dummy Dummy Dummy Dummy Dummy
-				ul
-					li
-						span.color-base &lt;ul&gt;&lt;li&gt;
-						| Dummy Dummy Dummy Dummy Dummy Dummy Dummy
-					li
-						span.color-base &lt;ul&gt;&lt;li&gt;
-						| Dummy Dummy Dummy Dummy Dummy Dummy Dummy
-				ol
-					li
-						span.color-base &lt;ol&gt;&lt;li&gt;
-						| Dummy Dummy Dummy Dummy Dummy Dummy Dummy
-					li
-						span.color-base &lt;ol&gt;&lt;li&gt;
-						| Dummy Dummy Dummy Dummy Dummy Dummy Dummy
-		ol
-			li
-				span.color-base &lt;ol&gt;&lt;li&gt;
-				| Dummy Dummy Dummy Dummy Dummy Dummy Dummy
-			li
-				span.color-base &lt;ol&gt;&lt;li&gt;
-				| Dummy Dummy Dummy Dummy Dummy Dummy Dummy
-			ol
-				li
-					span.color-base &lt;ol&gt;&lt;li&gt;
-					| Dummy Dummy Dummy Dummy Dummy Dummy Dummy
-				li
-					span.color-base &lt;ol&gt;&lt;li&gt;
-					| Dummy Dummy Dummy Dummy Dummy Dummy Dummy
-				ol
-					li
-						span.color-base &lt;ol&gt;&lt;li&gt;
-						| Dummy Dummy Dummy Dummy Dummy Dummy Dummy
-					li
-						span.color-base &lt;ol&gt;&lt;li&gt;
-						| Dummy Dummy Dummy Dummy Dummy Dummy Dummy
-				ul
-					li
-						span.color-base &lt;ul&gt;&lt;li&gt;
-						| Dummy Dummy Dummy Dummy Dummy Dummy Dummy
-					li
-						span.color-base &lt;ul&gt;&lt;li&gt;
-						| Dummy Dummy Dummy Dummy Dummy Dummy Dummy
-	section
-		p#inline-frame-wrap
-			iframe(src="http://netmokei.place-on.net/netmokei/superworks/sample2/", id="inline-frame", frameborder="0")
-	section
-		p.color-base &lt;section&gt;で囲む
-		p
-			a(href="")
-				span.color-base &lt;a&gt;
-				| Dummy Dummy
-			span Dummy Dummy
-			br
-			a(href="",target="_blank",rel="noopener")
-				span.color-base &lt;a&gt;
-				| blank Dummy
-			span Dummy Dummy
-	section
-		p.color-base &lt;section&gt;で囲む
-		.tableWrap
-			table
-				thead
-					tr
-						th.bgcolor-fontBase-5
-						th.bgcolor-base-5 first
-						th.bgcolor-base-5 second
-						th.bgcolor-base-5 third
-						th.bgcolor-base-5 fourth
-				tbody
-					tr
-						th.bgcolor-sub-5 first
-						td Dummy
-						td.bgcolor-base-5 Dummy
-						td Dummy
-						td Dummy
-					tr
-						th.bgcolor-sub-5 third
-						td Dummy
-						td Dummy
-						td Dummy
-						td Dummy
-					tr
-						th.bgcolor-sub-5 fourth
-						td Dummy
-						td Dummy
-						td Dummy
-						td Dummy
-
-	section
-		p.color-base &lt;section&gt;で囲む
-		dl
-			dt DUMMY
-			dd dummy
-		dl
-			dt TEST
-			dd test
-
-	section
-		p.color-base &lt;section&gt;で囲む
-		figure
-			img(src="https://placehold.jp/150x150.png", alt="dummy")
-			figcaption: span Dummy
-
+	section.section.section-content
+		.section__inner
+			.section__lists.js-staggerSlide
+				- for (var i = 0; i < 9; i++) {
+					.section__item: a.js-hover(href="")
+						.section__item__inner
+							.section__item__visual: img(src="https://placehold.jp/300x150.png", alt="test")
+							p.section__item__content dummy dummy dummy dummy dummy dummy dummy dummy
+				- }
 
 
 block script

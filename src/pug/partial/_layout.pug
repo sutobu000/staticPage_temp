@@ -44,7 +44,6 @@ html(lang='ja')
 
 	body(id=_page_id)
 		.wrapper
-			.wrapper__bg
 			//
 				==============================================
 				ヘッダー
@@ -56,11 +55,11 @@ html(lang='ja')
 					.gnav
 						.gnav__inner
 							nav.gnav__lists.js-stgSL
-								.gnav__item.is-current: a(href="/"): span HOME
-								.gnav__item: a(href="#content"): span CONTENT
-								.gnav__item: a(href="/about"): span ABOUT
-								.gnav__item: a(href="/works"): span WORKS
-								.gnav__item: a(href="/contact"): span CONTACT
+								.gnav__item(data-current=_page_category=="top" ? "true" : "false"): a(href="/"): span HOME
+								.gnav__item(data-current=_page_category=="ui" ? "true" : "false"): a(href="/ui"): span UI
+								.gnav__item(data-current=_page_category=="input" ? "true" : "false"): a(href="/input"): span INPUT
+								.gnav__item(data-current=_page_category=="btn_modal" ? "true" : "false"): a(href="/btn_modal"): span BTN+MODAL
+
 
 			//
 				==============================================

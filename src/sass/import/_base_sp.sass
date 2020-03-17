@@ -17,13 +17,8 @@ body
 //   text-decoration: none
 
 // .wrapper
-// .wrapper__bg
-//   position: fixed
-//   top: 0
-//   left: 0
 //   width: 100%
 //   height: 100%
-//   background-color: #fff
 
 /* ヘッダー */
 header.header
@@ -41,7 +36,7 @@ header.header
   width: 50px
   height: 50px
   cursor: pointer
-  &.is-open
+  &[data-open=true]
     &:before,&:after
       top: 20px
       transform: rotate(45deg)
@@ -94,7 +89,7 @@ header.header
     +MIX_REM(24)
     // line-height: 1
     // letter-spacing: .05em
-  // &.is-current
+  // &[data-current=true]
   //   a
   //     pointer-events: none
   //   span
@@ -162,22 +157,27 @@ main.main
     // line-height: 1.2
     // letter-spacing: .05em
   h2
+    // margin-bottom: 1rem
     +MIX_REM_SP(38)
     // line-height: 1.2
     // letter-spacing: .05em
   h3
+    // margin-bottom: 1rem
     +MIX_REM_SP(34)
     // line-height: 1.2
     // letter-spacing: .05em
   h4
+    // margin-bottom: 1rem
     +MIX_REM_SP(30)
     // line-height: 1.2
     // letter-spacing: .05em
   h5
+    // margin-bottom: 1rem
     +MIX_REM_SP(26)
     // line-height: 1.2
     // letter-spacing: .05em
   h6
+    // margin-bottom: 1rem
     +MIX_REM_SP(22)
     // line-height: 1.2
     // letter-spacing: .05em
@@ -185,6 +185,8 @@ main.main
     +MIX_REM_SP(16)
     // line-height: 1.2
     // letter-spacing: .05em
+    // &+p
+    //   margin-top: .5rem
   span
     +MIX_REM_SP(16)
     // line-height: 1.2
@@ -294,7 +296,7 @@ main.main
   transition: 0
   // pointer-events: none
   // cursor: pointer
-  // &.is-current
+  // &[data-current=true]
   //   opacity: 1
   //   pointer-events: auto
 .pagetop__inner

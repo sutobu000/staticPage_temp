@@ -1,0 +1,51 @@
+extends ../partial/_layout
+block vars
+	- var _title_str = '株式会社'; // タイトルタグ
+	- var _desc_str = 'でぃすくりぷしょん'; // descriptions
+	- var _keys_str = 'きーわーど'; // keywords
+	- var _page_category = 'btn_modal'; // ページのカテゴリー
+	- var _page_id = _page_category + '-page'; // ページカテゴリーの後ろに付与してIDとして使う
+	- var DIR_IMG_PAGE = "/img/" + _page_category + "/"; // イメージへのリンク
+	//- var DIR_CSS = "/css/"; // cssのリンク
+	//- var DIR_JS = "/js/"; // jsのリンク
+	- var _page_name = ''; // ページ名
+
+block link
+	//- link(rel='stylesheet', href=DIR_CSS + _page_category + ".css")
+block body
+	section
+		article
+			p: button(btn-hover1): span hoverアニメーション1
+		article
+			p: button(btn-hover2): span hoverアニメーション2
+		article
+			p: button(btn-hover3): span hoverアニメーション3
+		article
+			p: button(btn-hover4): span hoverアニメーション4
+	section
+		article
+			p モーダル 1
+			p: button(btn-hover2,modal-select="1"): span click
+		article
+			p モーダル 2
+			p: button(btn-hover2,modal-select="2"): span click
+
+	.mlWrap(modal-select="1", data-current="false")
+		.mlWrap__close
+		.mlWrap__container
+			section
+				article
+					h3 モーダルタイトル
+					p テストてすとtestTest テストてすとtestTest テストてすとtestTest テストてすとtestTest テストてすとtestTest テストてすとtestTest テストてすとtestTest テストてすとtestTest テストてすとtestTest
+					p: button(btn-hover4): span hoverアニメーション4
+	.mlWrap(modal-select="2", data-current="false")
+		.mlWrap__close
+		.mlWrap__container
+			section
+				article
+					h3 モーダルタイトル
+					p テストてすとtestTest テストてすとtestTest テストてすとtestTest テストてすとtestTest テストてすとtestTest テストてすとtestTest テストてすとtestTest テストてすとtestTest テストてすとtestTest
+					p: button(btn-hover4): span hoverアニメーション4
+block script
+	//- ページ固有のjs
+	script(src=DIR_JS + _page_category + ".min.js")

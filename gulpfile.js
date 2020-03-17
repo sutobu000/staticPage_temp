@@ -89,7 +89,7 @@ gulp.task("pug2", () => {
 // js
 gulp.task("js", () => {
 	if(jsOptions.minify){
-		return gulp.src([baseOption.srcDir +"/js/*.js","!"+ baseOption.srcDir +"/js/*.min.js"])
+		return gulp.src([baseOption.srcDir +"/js/*.js","!"+ baseOption.srcDir +"/js/*.min.js","!"+ baseOption.srcDir +"/js/libs.js"])
 			.pipe(babel({presets: ["@babel/preset-env"]}))
 			.pipe(plumber({errorHandler: notify.onError("<%= error.message %>")}))
 			.pipe(terser())
@@ -97,13 +97,22 @@ gulp.task("js", () => {
 			.pipe(gulp.dest(baseOption.destDir+"/"+assets.assetsDir+"js"))
 			.pipe(browserSync.stream())
 	}else{
-		return gulp.src([baseOption.srcDir +"/js/*.js","!"+ baseOption.srcDir +"/js/*.min.js"])
+		return gulp.src([baseOption.srcDir +"/js/*.js","!"+ baseOption.srcDir +"/js/*.min.js","!"+ baseOption.srcDir +"/js/libs.js"])
 			.pipe(babel({presets: ["@babel/preset-env"]}))
 			.pipe(plumber({errorHandler: notify.onError("<%= error.message %>")}))
 			.pipe(rename({extname: ".min.js"}))
 			.pipe(gulp.dest(baseOption.destDir+"/"+assets.assetsDir+"js"))
 			.pipe(browserSync.stream())
 	}
+});
+
+gulp.task("libjs", () => {
+	return gulp.src(baseOption.srcDir +"/js/libs.js")
+	.pipe(plumber({errorHandler: notify.onError('<%= error.message %>')}))
+	.pipe(terser())
+	.pipe(rename({extname: ".min.js"}))
+	.pipe(gulp.dest(baseOption.destDir+"/"+assets.assetsDir+"js"))
+	.pipe(browserSync.stream())
 });
 
 gulp.task("browser-sync", () => {
@@ -115,8 +124,8 @@ gulp.task("watch", () => {
 	gulp.watch([baseOption.srcDir +"/pug/**/*.pug","!"+ baseOption.srcDir +"/pug/**/_*.pug"], gulp.task("pug"));
 	gulp.watch([baseOption.srcDir +"/pug/**/_*.pug"], gulp.task("pug2"));
 	gulp.watch(baseOption.srcDir +"/sass/**/*.+(scss|sass)", gulp.task("sass"));
-	gulp.watch([baseOption.srcDir +"/js/*.js","!"+ baseOption.srcDir +"/js/*.min.js"],gulp.task("js"));
-	// gulp.watch(baseOption.srcDir +"/pug/**/*.pug", gulp.task("reload"));
+	gulp.watch([baseOption.srcDir +"/js/*.js","!"+ baseOption.srcDir +"/js/*.min.js","!"+ baseOption.srcDir  +"/js/libs.js"],gulp.task("js"));
+	gulp.watch(baseOption.srcDir +"/js/libs.js",gulp.task("libjs"));
 });
 
 gulp.task("default", gulp.parallel( "watch", "browser-sync"));
@@ -129,5 +138,5 @@ gulp.task("buildOption", () => {
 	browserOption.baseDir = "./build";
 });
 
-gulp.task("build", gulp.parallel("buildOption",  "watch", "browser-sync"));
+gulp.task("build", gulp.parallel("buildOption",  "pug", "pug2", "sass", "js", "libjs"));
 

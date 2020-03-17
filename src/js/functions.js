@@ -1,4 +1,41 @@
 // console.log("js start");
+/* ========================================================================
+ * User settings
+ * ======================================================================== */
+const userSet = {
+	load:{
+		img: true
+	},
+	breakpoint: 768,
+	anchorLink:{
+		duration: .5
+	},
+	wrap:{
+		wrapperClass: "wrapper",
+	},
+	globalNav:{
+		class: "gnav",
+		menuBtn: "header__menubtn",
+		openState: "data-open"
+	},
+	pageTop:{
+		class: "pagetop",
+		currentState: "data-current",
+		duration: .8
+	},
+	slide:{
+		singleClass: "js-sliSL", // gsapによるtranslateのスライド処理を追加(-left,-right,-top,-bottomで方向を指定)
+		multiClass: "js-stgSL", // gsapのstaggerによるchildrenのtranslateのスライド処理を追加(-left,-right,-top,-bottomで方向を指定)
+		data:{
+			sliDuration: "data-sliDur", // gsapのduration (default:.3)
+			sliValue: "data-sliVal", // gsapのtranslateの量 (default:20)
+			sliDelay: "data-sliDelay", // 遅延時間を指定 (default:.7)
+			sliFrom: "data-sliFrom", // multiのみ 開始する箇所を指定 (default:start, 他指定値:{start, center, edges, random, end)
+		}
+	}
+}
+
+
 
 /* ========================================================================
  * init
@@ -7,18 +44,16 @@ let $html = document.getElementsByTagName("html");
 let $body = document.getElementsByTagName("body");
 
 /* --- Common letiable --- */
-let $wrapper = document.querySelector(".wrapper");
-let $wrapper_bg = document.querySelector(".wrapper__bg");
+let $wrapper = document.querySelector("."+userSet.wrap.wrapperClass);
 let ww = window.innerWidth;
 let wh = window.innerHeight;
-let w_breakPoint = 768;
+let w_breakPoint = userSet.breakpoint;
 
 let _sTop = document.documentElement.scrollTop || document.body.scrollTop;
 let mousewheelevent = 'onwheel' in document ? 'wheel' : 'onmousewheel' in document ? 'mousewheel' : 'DOMMouseScroll';
 
 /* --- 画像preload --- */
 let is_ready = false;
-let is_cssImg = false;
 let $allImage = document.querySelectorAll(".main img");
 let allImageCount = $allImage.length;
 let completeImageCount = 0;
@@ -28,7 +63,7 @@ let cssSheets = document.styleSheets;
 let completecssImageCount = 0;
 
 /* --- スライドフェードイン --- */
-let $sliSL = document.querySelectorAll(".js-sliSL");
+let $sliSL = document.querySelectorAll("."+userSet.slide.sigleClass);
 let sliSLArr = [];
 let sliSLFlagArr = [];
 let sliSLTopArr = [];
@@ -36,7 +71,7 @@ for(let sliSLCount = 0; sliSLCount < $sliSL.length; sliSLCount++) {
 	$sliSL[sliSLCount].style.opacity = 0;
 }
 
-let $stgSL = document.querySelectorAll(".js-stgSL");
+let $stgSL = document.querySelectorAll("."+userSet.slide.multiClass);
 let stgSLArr = [];
 let stgSLFlagArr = [];
 let stgSLTopArr = [];
@@ -48,32 +83,18 @@ for(let stgSLCount = 0; stgSLCount < $stgSL.length; stgSLCount++) {
 }
 
 /* --- SPメニュー --- */
-let $gnav = document.querySelector(".gnav");
-let $menuBtn = document.querySelector(".header__menubtn");
+let $gnav = document.querySelector("."+userSet.globalNav.class);
+let $menuBtn = document.querySelector("."+userSet.globalNav.menuBtn);
 let menuBtnTop;
 let is_gnav = false;
 let is_open = false;
 
-/* --- hover 処理 --- */
-let $hover = document.querySelectorAll(".js-hover");
-
-let $gnavItem = document.querySelectorAll(".gnav__item");
-
 /*--アンカーリンク処理 --- */
 let $ancLink = document.querySelectorAll("a[href^='#']")
 let ancTopArr = [];
-for (let ancCount = 0; ancCount < $ancLink.length; ancCount++) {
-	let ancObj = document.getElementById($ancLink[ancCount].getAttribute("href").slice(1));
-	ancTopArr[ancCount] = _sTop + ancObj.getBoundingClientRect().top
-	$ancLink[ancCount].addEventListener("click", function(e) {
-		e.preventDefault();
-		let href = this.getAttribute("href");
-		scrollAnc(href, .5, ancTopArr[ancCount]);
-	})
-}
 
 /* --- pageTop --- */
-let $pageTop = document.querySelector(".pagetop");
+let $pageTop = document.querySelector("."+userSet.pageTop.class);
 let is_pageTop = false;
 
 let _SP = false;
@@ -93,64 +114,71 @@ window.addEventListener("resize", (e) => {
 	}
 });
 
-// setUA();
-
 /* -----------------------------------------------
  * Ready imageなど遅延ロード
  * ----------------------------------------------- */
 document.addEventListener("DOMContentLoaded", () => {
-	console.log("ready");
-	// let tags = document.getElementsByTagName("*");
-	try{
-		if (Array.from) {
-			let classesEle = Array.from(document.querySelectorAll('[class]')); // 全要素からクラス名を持つ要素を取得
-			let classes = [];
-			for (let i = 0; i < classesEle.length; i++) {
-				classes.push(Array.from(classesEle[i].classList));
-			}
-			let flatten = Array.prototype.concat.apply([], classes);
-			let set = new Set(flatten);
-			let arrSet = Array.from(set); // 開いているHTMLから全クラス名を取得
-			let cssStyle = [];
-			for (let i = 0; i < arrSet.length; i++) {
-				let block = document.getElementsByClassName(arrSet[i]);
-				if (window.getComputedStyle(block[0]).getPropertyValue("background-image") !== "none") {
-					cssStyle.push(window.getComputedStyle(block[0]).getPropertyValue("background-image"));
-				}else if (window.getComputedStyle(block[0], "::after").getPropertyValue("background-image") !== "none") {
-					cssStyle.push(window.getComputedStyle(block[0], "::after").getPropertyValue("background-image"));
-				}else if (window.getComputedStyle(block[0], "::before").getPropertyValue("background-image") !== "none") {
-					cssStyle.push(window.getComputedStyle(block[0], "::before").getPropertyValue("background-image"));
+	// console.log("ready");
+	if(userSet.load.img){
+		try{
+			if (Array.from) {
+				let classesEle = Array.from(document.querySelectorAll('[class]')); // 全要素からクラス名を持つ要素を取得
+				let classes = [];
+				for (let i = 0; i < classesEle.length; i++) {
+					classes.push(Array.from(classesEle[i].classList));
 				}
-			}
+				let flatten = Array.prototype.concat.apply([], classes);
+				let set = new Set(flatten);
+				let arrSet = Array.from(set); // 開いているHTMLから全クラス名を取得
+				let cssStyle = [];
+				for (let i = 0; i < arrSet.length; i++) {
+					let block = document.getElementsByClassName(arrSet[i]);
+					if (window.getComputedStyle(block[0]).getPropertyValue("background-image") !== "none") {
+						if(window.getComputedStyle(block[0]).getPropertyValue("background-image").includes("url")){
+							cssStyle.push(window.getComputedStyle(block[0]).getPropertyValue("background-image"));
+						}
+					}else if (window.getComputedStyle(block[0], "::after").getPropertyValue("background-image") !== "none") {
+						if(window.getComputedStyle(block[0], "::after").getPropertyValue("background-image").includes("url")){
+							cssStyle.push(window.getComputedStyle(block[0], "::after").getPropertyValue("background-image"));
+						}
+					}else if (window.getComputedStyle(block[0], "::before").getPropertyValue("background-image") !== "none") {
+						if(window.getComputedStyle(block[0], "::before").getPropertyValue("background-image").includes("url")){
+							cssStyle.push(window.getComputedStyle(block[0], "::before").getPropertyValue("background-image"));
+						}
+					}
+				}
 
-			if (cssStyle.length === 0) {
+				if (cssStyle.length === 0) {
+					is_ready = true;
+					readySection();
+				}else{
+					for(let j = 0; j < cssStyle.length; j++){
+						// let img = new Image();
+						let $imgnew = document.createElement("img");
+						// let imgurl = cssStyle[j].slice(5).slice(0, -2);
+						let imgurl = cssStyle[j].replace(/"/g, '');
+						imgurl = imgurl.slice(4).slice(0, -1);
+						$imgnew.setAttribute("src", imgurl);
+						$imgnew.addEventListener("load", (response, status, xhr) => {
+							completecssImageCount++;
+							if (completecssImageCount == cssStyle.length){
+								is_ready = true;
+								readySection();
+							}
+						});
+					}
+				}
+			}else{
 				is_ready = true;
 				readySection();
-			}else{
-				for(let j = 0; j < cssStyle.length; j++){
-					// let img = new Image();
-					let $imgnew = document.createElement("img");
-					// let imgurl = cssStyle[j].slice(5).slice(0, -2);
-					let imgurl = cssStyle[j].replace(/"/g, '');
-					imgurl = imgurl.slice(4).slice(0, -1);
-					$imgnew.setAttribute("src", imgurl);
-					$imgnew.addEventListener("load", (response, status, xhr) => {
-						completecssImageCount++;
-						if (completecssImageCount == cssStyle.length){
-							is_ready = true;
-							readySection();
-						}
-					});
-				}
 			}
-		}else{
+		}catch(e){
+			// console.log("try");
 			is_ready = true;
 			readySection();
 		}
-	}catch(e){
-		// console.log("try");
-		is_ready = true;
-		readySection();
+	}else{
+		readyInit();
 	}
 });
 
@@ -191,11 +219,6 @@ let readySection = () => {
 /* -- Ready init (Loadが終わったら) -- */
 let readyInit = () => {
 	// console.log("init start");
-	/* ホワイトバック */
-	TweenMax.to($wrapper_bg, .6, {opacity:0, onComplete: () => {
-		$wrapper_bg.parentNode.removeChild($wrapper_bg);
-		// scroll_flag = false;
-	}});
 
 	// アンカーリンク
 	for (let ancCount = 0; ancCount < $ancLink.length; ancCount++) {
@@ -204,7 +227,7 @@ let readyInit = () => {
 		$ancLink[ancCount].addEventListener("click", function(e) {
 			e.preventDefault();
 			let href = this.getAttribute("href");
-			scrollAnc(href, .5, ancTopArr[ancCount]);
+			scrollAnc(href, userSet.anchorLink.duration, ancTopArr[ancCount]);
 		})
 	}
 
@@ -230,35 +253,37 @@ for(let sliSLCount = 0; sliSLCount < $sliSL.length; sliSLCount++) {
 	sliSLTopArr[sliSLCount] = $this.getBoundingClientRect().top;
 }
 let sliSLAnime = ($obj) => {
-	TweenMax.killTweensOf($obj);
+	gsap.killTweensOf($obj);
+	let SLIdur = .3
 	let SLIval = 20
-	let SLIdelay = .3
-	if($obj.getAttribute("data-sliVal") >= 0) SLIval = $obj.getAttribute("data-sliVal");
-	if($obj.getAttribute("data-sliDelay") >= 0) SLIdelay = $obj.getAttribute("data-sliDelay");
-	if($obj.classList.contains('js-sliSL-left')){
-		TweenMax.fromTo($obj, .3, {x:-1*SLIval,opacity:0},{x:0,opacity:1,delay:SLIdelay,onComplete: () => {
-			$obj.removeAttribute('style');
-			$obj.classList.remove('js-sliSL', 'js-sliSL-left');
+	let SLIdelay = .7
+	if($obj.getAttribute(userSet.slide.data.sliDuration) >= 0) SLIdur = Number($obj.getAttribute(userSet.slide.data.sliDuration));
+	if($obj.getAttribute(userSet.slide.data.sliValue) >= 0) SLIval = $obj.getAttribute(userSet.slide.data.sliValue);
+	if($obj.getAttribute(userSet.slide.data.sliDelay) >= 0) SLIdelay = $obj.getAttribute(userSet.slide.data.sliDelay);
+	if($obj.classList.contains(userSet.slide.singleClass+"-left")){
+		gsap.fromTo($obj, {duration:SLIdur, x:-1*SLIval,opacity:0},{x:0,opacity:1,delay:SLIdelay,onComplete: () => {
+			$obj.removeAttribute("style");
+			$obj.classList.remove(userSet.slide.singleClass, userSet.slide.singleClass+"-left");
 		}});
-	}else if($obj.classList.contains('js-sliSL-right')){
-		TweenMax.fromTo($obj, .3, {x:SLIval,opacity:0},{x:0,opacity:1,delay:SLIdelay,onComplete: () => {
-			$obj.removeAttribute('style');
-			$obj.classList.remove('js-sliSL', 'js-sliSL-right');
+	}else if($obj.classList.contains(userSet.slide.singleClass+"-right")){
+		gsap.fromTo($obj, {duration:SLIdur, x:SLIval,opacity:0},{x:0,opacity:1,delay:SLIdelay,onComplete: () => {
+			$obj.removeAttribute("style");
+			$obj.classList.remove(userSet.slide.singleClass, userSet.slide.singleClass+"-right");
 		}});
-	}else if($obj.classList.contains('js-sliSL-top')){
-		TweenMax.fromTo($obj, .3, {y:-1*SLIval,opacity:0},{y:0,opacity:1,delay:SLIdelay,onComplete: () => {
-			$obj.removeAttribute('style');
-			$obj.classList.remove('js-sliSL', 'js-sliSL-top');
+	}else if($obj.classList.contains(userSet.slide.singleClass+"-top")){
+		gsap.fromTo($obj, {duration:SLIdur, y:-1*SLIval,opacity:0},{y:0,opacity:1,delay:SLIdelay,onComplete: () => {
+			$obj.removeAttribute("style");
+			$obj.classList.remove(userSet.slide.singleClass, userSet.slide.singleClass+"-top");
 		}});
-	}else if($obj.classList.contains('js-sliSL-bottom')){
-		TweenMax.fromTo($obj, .3, {y:SLIval,opacity:0},{y:0,opacity:1,delay:SLIdelay,onComplete: () => {
-			$obj.removeAttribute('style');
-			$obj.classList.remove('js-sliSL', 'js-sliSL-bottom');
+	}else if($obj.classList.contains(userSet.slide.singleClass+"-bottom")){
+		gsap.fromTo($obj, {duration:SLIdur, y:SLIval,opacity:0},{y:0,opacity:1,delay:SLIdelay,onComplete: () => {
+			$obj.removeAttribute("style");
+			$obj.classList.remove(userSet.slide.singleClass, userSet.slide.singleClass+"-bottom");
 		}});
 	}else{
-		TweenMax.fromTo($obj, .3, {y:SLIval,opacity:0},{y:0,opacity:1,delay:SLIdelay,onComplete: () => {
-			$obj.removeAttribute('style');
-			$obj.classList.remove('js-sliSL');
+		gsap.fromTo($obj, {duration:SLIdur, y:SLIval,opacity:0},{y:0,opacity:1,delay:SLIdelay,onComplete: () => {
+			$obj.removeAttribute("style");
+			$obj.classList.remove(userSet.slide.singleClass);
 		}});
 	}
 }
@@ -271,79 +296,51 @@ for (let stgSLCount = 0; stgSLCount < $stgSL.length; stgSLCount++) {
   stgSLTopArr[stgSLCount] = $this.getBoundingClientRect().top;
 }
 let stgSLInAnime = ($obj) => {
+	let stgSLIdur = .3
 	let stgSLIval = 20
-	let stgSLIdelay = .3
-	if($obj.getAttribute("data-sliVal") >= 0) stgSLIval = Number($obj.getAttribute("data-sliVal"));
-	if($obj.getAttribute("data-sliDelay") >= 0) stgSLIdelay = Number($obj.getAttribute("data-sliDelay"));
-	if($obj.classList.contains('js-stgSL-left')){
-		TweenMax.staggerFromTo($obj.children, .3, {x:-1*stgSLIval,opacity:0},{x:0,opacity:1,delay:stgSLIdelay},.15, () => {
+	let stgSLIdelay = .7
+	let stgSLIfrom = "start"
+	if($obj.getAttribute(userSet.slide.data.sliDuration) >= 0) stgSLIdur = Number($obj.getAttribute(userSet.slide.data.sliDuration));
+	if($obj.getAttribute(userSet.slide.data.sliValue) >= 0) stgSLIval = Number($obj.getAttribute(userSet.slide.data.sliValue));
+	if($obj.getAttribute(userSet.slide.data.sliDelay) >= 0) stgSLIdelay = Number($obj.getAttribute(userSet.slide.data.sliDelay));
+	if($obj.getAttribute(userSet.slide.data.sliFrom)) stgSLIfrom = $obj.getAttribute(userSet.slide.data.sliFrom);
+	if($obj.classList.contains(userSet.slide.multiClass+"-left")){
+		gsap.fromTo($obj.children, {duration:stgSLInAnime, x:-1*stgSLIval,opacity:0},{x:0,opacity:1,delay:stgSLIdelay, stagger:{amount:.15,from:stgSLIfrom}, onComplete:function(){
 			for(let i = 0; i < $obj.children.length; i++){
-				$obj.children[i].removeAttribute('style');
+				$obj.children[i].removeAttribute("style");
 			}
-			$obj.classList.remove('js-stgSL', 'js-stgSL-left');
-		});
-	}else if($obj.classList.contains('js-stgSL-right')){
-		TweenMax.staggerFromTo($obj.children, .3, {x:stgSLIval,opacity:0},{x:0,opacity:1,delay:stgSLIdelay},.15, () => {
+			$obj.classList.remove(userSet.slide.multiClass, userSet.slide.multiClass+"-left");
+		}});
+	}else if($obj.classList.contains(userSet.slide.multiClass+"-right")){
+		gsap.fromTo($obj.children, {duration:stgSLInAnime, x:stgSLIval,opacity:0},{x:0,opacity:1,delay:stgSLIdelay, stagger:{amount:.15,from:stgSLIfrom}, onComplete:function(){
 			for(let i = 0; i < $obj.children.length; i++){
-				$obj.children[i].removeAttribute('style');
+				$obj.children[i].removeAttribute("style");
 			}
-			$obj.classList.remove('js-stgSL', 'js-stgSL-right');
-		});
-	}else if($obj.classList.contains('js-stgSL-top')){
-		TweenMax.staggerFromTo($obj.children, .3, {y:-1*stgSLIval,opacity:0},{y:0,opacity:1,delay:stgSLIdelay},.15, () => {
+			$obj.classList.remove(userSet.slide.multiClass, userSet.slide.multiClass+"-right");
+		}});
+	}else if($obj.classList.contains(userSet.slide.multiClass+"-top")){
+		gsap.fromTo($obj.children, {duration:stgSLInAnime, y:-1*stgSLIval,opacity:0},{y:0,opacity:1,delay:stgSLIdelay, stagger:{amount:.15,from:stgSLIfrom}, onComplete:function(){
 			for(let i = 0; i < $obj.children.length; i++){
-				$obj.children[i].removeAttribute('style');
+				$obj.children[i].removeAttribute("style");
 			}
-			$obj.classList.remove('js-stgSL', 'js-stgSL-top');
-		});
-	}else if($obj.classList.contains('js-stgSL-bottom')){
-		TweenMax.staggerFromTo($obj.children, .3, {y:stgSLIval,opacity:0},{y:0,opacity:1,delay:stgSLIdelay},.15, () => {
+			$obj.classList.remove(userSet.slide.multiClass, userSet.slide.multiClass+"-top");
+		}});
+	}else if($obj.classList.contains(userSet.slide.multiClass+"-bottom")){
+		gsap.fromTo($obj.children, {duration:stgSLInAnime, y:stgSLIval,opacity:0},{y:0,opacity:1,delay:stgSLIdelay, stagger:{amount:.15,from:stgSLIfrom}, onComplete:function(){
 			for(let i = 0; i < $obj.children.length; i++){
-				$obj.children[i].removeAttribute('style');
+				$obj.children[i].removeAttribute("style");
 			}
-			$obj.classList.remove('js-stgSL', 'js-stgSL-bottom');
-		});
+			$obj.classList.remove(userSet.slide.multiClass, userSet.slide.multiClass+"-bottom");
+		}});
 	}else{
-		TweenMax.staggerFromTo($obj.children, .7, {y:stgSLIval,opacity:0},{y:0,opacity:1,delay:stgSLIdelay},.15, () => {
+		gsap.fromTo($obj.children, {duration:stgSLInAnime, y:stgSLIval,opacity:0},{y:0,opacity:1,delay:stgSLIdelay, stagger:{amount:.15,from:stgSLIfrom}, onComplete:function(){
 			for(let i = 0; i < $obj.children.length; i++){
-				$obj.children[i].removeAttribute('style');
+				$obj.children[i].removeAttribute("style");
 			}
-			$obj.classList.remove('js-stgSL');
-		});
+			$obj.classList.remove(userSet.slide.multiClass);
+		}});
 	}
 }
-
-// /* -----------------------------------------------
-//  * PC時 headerのtopとbottom切り替え
-//  * ----------------------------------------------- */
-// let headerFixed = (_stop) => {
-// 	if (!_SP) {
-// 		if (_stop < wh/2) {
-// 			if (!$gnav.classList.contains("is-top")) {
-// 				$gnav.classList.add('is-top');
-// 			}
-// 		}else if($gnav.classList.contains("is-top")) {
-// 			$gnav.classList.remove('is-top');
-// 		}
-// 	}
-// }
-
-/* -----------------------------------------------
-* スクロール禁止復活用関数
-* ----------------------------------------------- */
-let scrolloff = ( event ) => {event.preventDefault();}
-let scroll_event = 'onwheel' in document ? 'wheel' : 'onmousewheel' in document ? 'mousewheel' : 'DOMMouseScroll';
-let no_scroll = () => {
-	document.addEventListener.on(scroll_event,scrolloff);
-	window.addEventListener('touchmove', scrolloff, {passive: false} );
-}
-let return_scroll = () => {
-	document.removeEventListener(scroll_event);
-	window.removeEventListener('touchmove', scrolloff, {passive: false} );
-}
-
-
-
 
 /* ========================================================================
  * Event
@@ -356,17 +353,28 @@ let scrollAnc = ($object, $speed, $scroll) => {
 	let hash = $object;
 	let $target;
 	let t_hash;
-	// let h_h = document.querySelector(".header").clientHeight;
-	// console.log($scroll);
-	if(is_open) $menuBtn.dispatchEvent(new Event("click"));
+	// let h_h = document.querySelector(".header").clientHeight; // scrollToの位置の差異を作る
+
+	// if(is_open) $menuBtn.dispatchEvent(new Event("click")); SPでgnavをopenしている時アンカーリンクをクリックしたら
 	if(hash==="#") {
 		t_hash = 0;
 	} else {
 		t_hash = $scroll;
 	}
-	TweenMax.to(window,$speed,{scrollTo: t_hash});
+	gsap.to(window, {duration:$speed, scrollTo:t_hash});
 }
 
+
+/* -----------------------------------------------
+ * ページトップ スクロール
+ * ----------------------------------------------- */
+$pageTop.addEventListener('click', (e) => {
+	e.preventDefault();
+	if (!is_pageTop) {
+		is_pageTop = true;
+		gsap.to(window, {duration:userSet.pageTop.duration, scrollTo: 0 , onComplete: () => {is_pageTop = false;}});
+	}
+});
 
 /* -----------------------------------------------
  * SP メニュー
@@ -376,40 +384,23 @@ $menuBtn.addEventListener('click', (e) => {
 	if (!is_gnav) {
 		if (!is_open) {
 			menuBtnTop = document.documentElement.scrollTop || document.body.scrollTop;
-			console.log(menuBtnTop);
 			is_open = true;
 			is_gnav = true;
-			$menuBtn.classList.add("is-open");
+			$menuBtn.setAttribute(userSet.globalNav.openState,true);
 			$wrapper.style.position = "fixed";
 			$wrapper.style.top = "-" + menuBtnTop + "px";
 			$wrapper.style.left = 0;
-			TweenMax.to($gnav, .3, {height:h_gnav, onComplete: () => {is_gnav = false;}});
+			gsap.to($gnav, {duration:.3, height:h_gnav, onComplete: () => {is_gnav = false;}});
 		} else {
-			console.log(menuBtnTop);
 			$wrapper.removeAttribute('style');
 			window.scrollTo({top:menuBtnTop});
 			is_open = false;
 			is_gnav = true;
-			$menuBtn.classList.remove("is-open");
-			TweenMax.to($gnav, .3, {height:0, onComplete: () => {is_gnav = false;}});
+			$menuBtn.setAttribute(userSet.globalNav.openState,false);
+			gsap.to($gnav, {duration:.3, height:0, onComplete: () => {is_gnav = false;}});
 		}
 	}
 });
-
-
-/* -----------------------------------------------
- * マウスオーバー - フェード
- * ----------------------------------------------- */
-if (!_SP) {
-	for(let hoverCount = 0; hoverCount < $hover.length; hoverCount++){
-		$hover[hoverCount].addEventListener("mouseover", (e) => {
-			TweenMax.to($hover[hoverCount],.2,{opacity: .5});
-		});
-		$hover[hoverCount].addEventListener("mouseout", (e) => {
-			TweenMax.to($hover[hoverCount],.2,{opacity: 1, onComplete: () => {$hover[hoverCount].removeAttribute("style");}});
-		});
-	}
-}
 
 
 /* -----------------------------------------------
@@ -441,68 +432,10 @@ window.addEventListener('scroll', (e) => {
 	// headerFixed(_sTop);
 
 	if (_sTop > wh) {
-		$pageTop.classList.add("is-current");
+		$pageTop.setAttribute(userSet.pageTop.currentState, true);
 	}else{
-		$pageTop.classList.remove("is-current");
+		$pageTop.setAttribute(userSet.pageTop.currentState, false);
 	}
 
-	// for (let i = 0; i < ancTopArr.length; i++) {
-	// 	if(i === 0 && ancTopArr[0] <= _sMdl){
-	// 		$gnavItem[i].classList.add("is-active");
-	// 	}else if (ancTopArr[i + 1] >= _sTop && ancTopArr[i] <= _sTop) {
-	// 		$gnavItem[i].classList.add("is-active");
-	// 	}else{
-	// 		$gnavItem[i].classList.remove("is-active");
-	// 	}
-	// }
 
 });
-
-
-/* -----------------------------------------------
- * ページトップ スクロール
- * ----------------------------------------------- */
-$pageTop.addEventListener('click', (e) => {
-	e.preventDefault();
-	if (!is_pageTop) {
-		is_pageTop = true;
-		TweenMax.to(window,.8,{scrollTo: 0 , onComplete: () => {is_pageTop = false;}});
-	}
-});
-
-
-
-
-
-// /* -----------------------------------------------
-//  * ユーザーエージェントを取得
-//  * ----------------------------------------------- */
-// let setUA = () => {
-// 	let ua = navigator.userAgent.toLowerCase();  //エージェント取得
-// 	let ver = navigator.appVersion.toLowerCase(); //バージョンを取得
-
-// 	let isMSIE = (ua.indexOf('msie') > -1) && (ua.indexOf('opera') == -1); // IE(11以外)
-// 	let isIE6 = isMSIE && (ver.indexOf('msie 6.') > -1); // IE6
-// 	let isIE7 = isMSIE && (ver.indexOf('msie 7.') > -1); // IE7
-// 	let isIE8 = isMSIE && (ver.indexOf('msie 8.') > -1); // IE8
-// 	let isIE9 = isMSIE && (ver.indexOf('msie 9.') > -1); // IE9
-// 	let isIE10 = isMSIE && (ver.indexOf('msie 10.') > -1); // IE10
-// 	let isIE11 = (ua.indexOf('trident/7') > -1); // IE11
-// 	let isIE = isMSIE || isIE11; // IE
-// 	let isEdge = (ua.indexOf('edge') > -1); // Edge
-
-// 	let isChrome = (ua.indexOf('chrome') > -1) && (ua.indexOf('edge') == -1); // Google Chrome
-// 	let isFirefox = (ua.indexOf('firefox') > -1); //Firefox
-// 	let isSafari = (ua.indexOf('safari') > -1) && (ua.indexOf('chrome') == -1); // Safari
-// 	let isOpera = (ua.indexOf('opera') > -1); // Opera
-// }
-
-
-// /* -----------------------------------------------
-//  * FastClick.js
-//  * ----------------------------------------------- */
-// if ('addEventListener' in document) {
-// 	document.addEventListener('DOMContentLoaded', () => {
-// 		FastClick.attach(document.body);
-// 	}, false);
-// }

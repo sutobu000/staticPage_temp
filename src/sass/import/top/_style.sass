@@ -1,84 +1,83 @@
 /* -----------------------------------------------
 	STYLE 
 	----------------------------------------------- */
-#top-page
-	/* --- .mainVisual --- */
-	.mainVisual
+/* --- .mainVisual --- */
+.mainVisual
+	width: 100%
+	height: 100%
+.mainVisual__inner
+	position: relative
+	width: 100%
+	height: 100%
+	min-height: 600px
+.mainVisual__bezier
+	position: absolute
+	top: 0
+	left: 0
+	width: 100%
+	height: 100%
+	path
 		width: 100%
 		height: 100%
-	.mainVisual__inner
-		position: relative
-		width: 100%
-		height: 100%
-		min-height: 600px
-	.mainVisual__bezier
-		position: absolute
-		top: 0
-		left: 0
-		width: 100%
-		height: 100%
-		path
-			width: 100%
-			height: 100%
-			fill: none
-			stroke: #000
-			stroke-width: 1px
-			vector-effect: non-scaling-stroke
-	.mainVisual__node
-		position: absolute
-		top: 50%
-		left: 50%
-		transform: translate(-50%,-50%)
-	.mainVisual__node__title
+		fill: none
+		stroke: #000
+		stroke-width: 1px
+		vector-effect: non-scaling-stroke
+.mainVisual__node
+	position: absolute
+	top: 50%
+	left: 50%
+	transform: translate(-50%,-50%)
+.mainVisual__node__title
+	text-align: center
+	span
+		+MIX_REM(30)
+		letter-spacing: .05em
+
+/* --- .section-lead --- */
+.section-lead
+	.section__inner
+		padding: 50px 0
+	.section__lead
 		text-align: center
-		span
-			+MIX_REM(30)
-			letter-spacing: .05em
+	.section__lead__txt
+		+MIX_REM(18)
+		line-height: 1
+		letter-spacing: .05em
 
-	/* --- .section-lead --- */
-	.section-lead
-		.section__inner
-			padding: 50px 0
-		.section__lead
-			text-align: center
-		.section__lead__txt
-			+MIX_REM(18)
-			line-height: 1
-			letter-spacing: .05em
-
-	/* --- .section-content --- */
-	.section-content
-		.section__inner
-			padding: 50px 0
-		.section__lists
-			text-align: center
-		.section__item
-			display: inline-block
-			vertical-align: top
-			width: 30%
+/* --- .section-content --- */
+.section-content
+	.section__inner
+		padding: 50px 0
+	.section__lists
+		text-align: center
+	.section__item
+		display: inline-block
+		vertical-align: top
+		width: 30%
+		margin:
+			top: 5%
+			left: 5%
+		text-align: left
+		a
+			display: block
+		&:nth-child(3n+1)
 			margin:
-				top: 5%
-				left: 5%
-			text-align: left
-			a
-				display: block
-			&:nth-child(3n+1)
-				margin:
-					left: 0
-			&:nth-child(-n+3)
-				margin:
-					top: 0
-		.section__item__inner
-		.section__item__visual
-			width: 100%
-			height: 150px
+				left: 0
+		&:nth-child(-n+3)
 			margin:
-				bottom: 10px
-			background-color: $COL_SUB
-			img
-				max-width: 100%
-		.section__item__content
-			color: $COL_BASE
-			+MIX_REM(15)
-			line-height: 1.25
-			letter-spacing: .05em
+				top: 0
+	.section__item__inner
+	.section__item__visual
+		width: 100%
+		height: 150px
+		margin:
+			bottom: 10px
+		background-color: $COL_SUB
+		img
+			max-width: 100%
+	.section__item__content
+		color: $COL_BASE
+		+MIX_REM(15)
+		line-height: 1.25
+		letter-spacing: .05em

@@ -16,15 +16,9 @@ a
   outline: none
   text-decoration: none
 
-// .wrapper
-.wrapper__bg
-  position: fixed
-  top: 0
-  left: 0
+.wrapper
   width: 100%
   height: 100%
-  background-color: $COL_SUB
-
 
 /* ヘッダー */
 header.header
@@ -53,7 +47,7 @@ header.header
     +MIX_REM(12)
     line-height: 1
     letter-spacing: .05em
-  &.is-current
+  &[data-current=true]
     a
       pointer-events: none
     span
@@ -112,28 +106,33 @@ main.main
     height: 100%
     &+article
       margin:
-        top: 1rem
+        top: 1.5rem
   h1
     +MIX_REM(36)
     line-height: 1.2
     letter-spacing: .05em
   h2
+    margin-bottom: 1rem
     +MIX_REM(32)
     line-height: 1.2
     letter-spacing: .05em
   h3
+    margin-bottom: 1rem
     +MIX_REM(28)
     line-height: 1.2
     letter-spacing: .05em
   h4
+    margin-bottom: 1rem
     +MIX_REM(24)
     line-height: 1.2
     letter-spacing: .05em
   h5
+    margin-bottom: 1rem
     +MIX_REM(20)
     line-height: 1.2
     letter-spacing: .05em
   h6
+    margin-bottom: 1rem
     +MIX_REM(16)
     line-height: 1.2
     letter-spacing: .05em
@@ -141,6 +140,8 @@ main.main
     +MIX_REM(12)
     line-height: 1.2
     letter-spacing: .05em
+    &+p
+      margin-top: .5rem
   span
     +MIX_REM(12)
     line-height: 1.2
@@ -232,6 +233,135 @@ main.main
     figcaption
       text-align: center
 
+
+  button
+    padding: .5rem 2rem
+    background-color: $COL_SUB
+    cursor: pointer
+    span
+      color: #fff
+    &[btn-hover1]
+      position: relative
+      z-index: 1
+      border: 2px solid $COL_SUB
+      &:before
+        content: ""
+        position: absolute
+        top: 0
+        left: 0
+        width: 0
+        height: 100%
+        background-color: #fff
+        transition: width .3s
+      span
+        position: relative
+        z-index: 2
+        transition: color .2s
+      &:hover
+        &:before
+          width: 100%
+        span
+          color: $COL_SUB
+    &[btn-hover2]
+      position: relative
+      z-index: 1
+      border: 2px solid $COL_SUB
+      &:before
+        content: ""
+        position: absolute
+        top: 0
+        left: 50%
+        width: 0
+        height: 100%
+        transform: translateX(-50%)
+        background-color: #fff
+        transition: width .3s
+      span
+        position: relative
+        z-index: 2
+        transition: color .2s
+      &:hover
+        &:before
+          width: 100%
+        span
+          color: $COL_SUB
+    &[btn-hover3]
+      position: relative
+      z-index: 1
+      border: 2px solid $COL_SUB
+      &:before
+        content: ""
+        position: absolute
+        top: 0
+        left: 0
+        width: 100%
+        height: 0
+        background-color: #fff
+        transition: height .3s
+      span
+        position: relative
+        z-index: 2
+        transition: color .2s
+      &:hover
+        &:before
+          height: 100%
+        span
+          color: $COL_SUB
+    &[btn-hover4]
+      position: relative
+      z-index: 1
+      border: 2px solid $COL_SUB
+      &:before
+        content: ""
+        position: absolute
+        top: 50%
+        left: 0
+        width: 100%
+        height: 0
+        transform: translateY(-50%)
+        background-color: #fff
+        transition: height .3s
+      span
+        position: relative
+        z-index: 2
+        transition: color .2s
+      &:hover
+        &:before
+          height: 100%
+        span
+          color: $COL_SUB
+
+  .mlWrap
+    display: none
+    position: fixed
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    opacity: 0
+    background-color: rgba(#111, .7)
+    transition: opacity .2s
+      delay: .1s
+    &[data-current=true]
+      display: block
+      opacity: 1
+      .mlWrap__container
+        width: 50%
+        height: auto
+        padding: 1.5rem
+  .mlWrap__container
+    position: absolute
+    top: 50%
+    left: 50%
+    transform: translate(-50%,-50%)
+    width: 0
+    height: 0
+    padding: 0
+    background-color: #ccc
+    transition: all .3s
+      delay: .2s
+
+
 .container
   max-width: 1280px
   margin: 0 auto
@@ -246,7 +376,7 @@ main.main
   transition: opacity .2s
   pointer-events: none
   cursor: pointer
-  &.is-current
+  &[data-current=true]
     opacity: 1
     pointer-events: auto
 .pagetop__inner

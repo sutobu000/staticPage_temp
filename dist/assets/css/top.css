@@ -1,25 +1,20 @@
 /* -----------------------------------------------
 	STYLE
 	----------------------------------------------- */
-#top-page {
-  /* --- .mainVisual --- */
-  /* --- .section-lead --- */
-  /* --- .section-content --- */
-}
-
-#top-page .mainVisual {
+/* --- .mainVisual --- */
+.mainVisual {
   width: 100%;
   height: 100%;
 }
 
-#top-page .mainVisual__inner {
+.mainVisual__inner {
   position: relative;
   width: 100%;
   height: 100%;
   min-height: 600px;
 }
 
-#top-page .mainVisual__bezier {
+.mainVisual__bezier {
   position: absolute;
   top: 0;
   left: 0;
@@ -27,7 +22,7 @@
   height: 100%;
 }
 
-#top-page .mainVisual__bezier path {
+.mainVisual__bezier path {
   width: 100%;
   height: 100%;
   fill: none;
@@ -36,47 +31,49 @@
   vector-effect: non-scaling-stroke;
 }
 
-#top-page .mainVisual__node {
+.mainVisual__node {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
 
-#top-page .mainVisual__node__title {
+.mainVisual__node__title {
   text-align: center;
 }
 
-#top-page .mainVisual__node__title span {
+.mainVisual__node__title span {
   font-size: 30px;
   font-size: 1.875rem;
   letter-spacing: .05em;
 }
 
-#top-page .section-lead .section__inner {
+/* --- .section-lead --- */
+.section-lead .section__inner {
   padding: 50px 0;
 }
 
-#top-page .section-lead .section__lead {
+.section-lead .section__lead {
   text-align: center;
 }
 
-#top-page .section-lead .section__lead__txt {
+.section-lead .section__lead__txt {
   font-size: 18px;
   font-size: 1.125rem;
   line-height: 1;
   letter-spacing: .05em;
 }
 
-#top-page .section-content .section__inner {
+/* --- .section-content --- */
+.section-content .section__inner {
   padding: 50px 0;
 }
 
-#top-page .section-content .section__lists {
+.section-content .section__lists {
   text-align: center;
 }
 
-#top-page .section-content .section__item {
+.section-content .section__item {
   display: inline-block;
   vertical-align: top;
   width: 30%;
@@ -85,30 +82,30 @@
   text-align: left;
 }
 
-#top-page .section-content .section__item a {
+.section-content .section__item a {
   display: block;
 }
 
-#top-page .section-content .section__item:nth-child(3n+1) {
+.section-content .section__item:nth-child(3n+1) {
   margin-left: 0;
 }
 
-#top-page .section-content .section__item:nth-child(-n+3) {
+.section-content .section__item:nth-child(-n+3) {
   margin-top: 0;
 }
 
-#top-page .section-content .section__item__visual {
+.section-content .section__item__visual {
   width: 100%;
   height: 150px;
   margin-bottom: 10px;
   background-color: #246;
 }
 
-#top-page .section-content .section__item__visual img {
+.section-content .section__item__visual img {
   max-width: 100%;
 }
 
-#top-page .section-content .section__item__content {
+.section-content .section__item__content {
   color: #642;
   font-size: 15px;
   font-size: 0.9375rem;
@@ -120,79 +117,77 @@
   /* -----------------------------------------------
   STYLE SP
   ----------------------------------------------- */
-  #top-page {
-    /* --- .mainVisual --- */
-    /* --- .section-lead --- */
-    /* --- .section-content --- */
-  }
-  #top-page .mainVisual {
+  /* --- .mainVisual --- */
+  .mainVisual {
     width: 100%;
     height: 100%;
   }
-  #top-page .mainVisual__inner {
+  .mainVisual__inner {
     position: relative;
     width: 100%;
     height: 100%;
     min-height: 600px;
   }
-  #top-page .mainVisual__node {
+  .mainVisual__node {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
   }
-  #top-page .mainVisual__node__title {
+  .mainVisual__node__title {
     text-align: center;
   }
-  #top-page .mainVisual__node__title span {
+  .mainVisual__node__title span {
     font-size: 25px;
     font-size: 3.125rem;
     letter-spacing: .05em;
   }
-  #top-page .section-lead .section__inner {
+  /* --- .section-lead --- */
+  .section-lead .section__inner {
     padding: 50px 0;
   }
-  #top-page .section-lead .section__lead {
+  .section-lead .section__lead {
     text-align: center;
   }
-  #top-page .section-lead .section__lead__txt {
+  .section-lead .section__lead__txt {
     font-size: 12px;
     font-size: 1.5rem;
     line-height: 1;
     letter-spacing: .05em;
   }
-  #top-page .section-content .section__inner {
+  /* --- .section-content --- */
+  .section-content .section__inner {
     padding: 25px 10px;
     padding: 6.66667vw 2.66667vw;
   }
-  #top-page .section-content .section__lists {
+  .section-content .section__lists {
     text-align: left;
   }
-  #top-page .section-content .section__item {
+  .section-content .section__item {
     width: 45%;
     margin-top: 10%;
     margin-left: 10%;
   }
-  #top-page .section-content .section__item:nth-child(3n+1) {
+  .section-content .section__item:nth-child(3n+1) {
     margin-left: 10%;
   }
-  #top-page .section-content .section__item:nth-child(-n+3) {
+  .section-content .section__item:nth-child(-n+3) {
     margin-top: 10%;
   }
-  #top-page .section-content .section__item:nth-child(2n+1) {
+  .section-content .section__item:nth-child(2n+1) {
     margin-left: 0;
   }
-  #top-page .section-content .section__item:nth-child(-n+2) {
+  .section-content .section__item:nth-child(-n+2) {
     margin-top: 0;
   }
-  #top-page .section-content .section__item__visual {
+  .section-content .section__item__visual {
     width: 100%;
     height: 100px;
     height: 26.66667vw;
     margin-bottom: 10px;
     margin-bottom: 2.66667vw;
   }
-  #top-page .section-content .section__item__content {
+  .section-content .section__item__content {
     font-size: 10px;
     font-size: 1.25rem;
   }
