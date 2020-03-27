@@ -14,8 +14,288 @@ block link
 	//- link(rel='stylesheet', href=DIR_CSS + _page_category + ".css")
 block body
 	section
-
-
+		h2.color-base &lt;form&gt;
+		form(action="", method="post")
+		fieldset
+			legend input[type="text"]
+			p: label(for="text1")
+				span input[type="text"]
+				input#text1(type="text", autofocus)
+			p: label(for="text2")
+				span input[type="text"]
+				input#text2(type="text", placeholder="required", required)
+			p: label(for="text3")
+				span input[type="text"]
+				input#text3(type="text", list="text", placeholder="datalist")
+				datalist#text
+					option(value="content 1")
+					option(value="content 2")
+					option(value="content 3")
+		fieldset
+			legend input[type="search"]
+			p: label(for="search1")
+				span input[type="search"]
+				input#search1(type="search")
+			p: label(for="search2")
+				span input[type="search"]
+				input#search2(type="search", placeholder="required", required)
+			p: label(for="search3")
+				span input[type="search"]
+				input#search3(type="search", list="search", placeholder="datalist")
+				datalist#search
+					option(value="content 1")
+					option(value="content 2")
+					option(value="content 3")
+		fieldset
+			legend input[type="tel"]
+			p: label(for="tel1")
+				span input[type="tel"]
+				input#tel1(type="tel")
+			p: label(for="tel2")
+				span input[type="tel"]
+				input#tel2(type="tel", placeholder="required", required)
+			p: label(for="tel3")
+				span input[type="tel"]
+				input#tel3(type="tel", list="tel", placeholder="datalist")
+				datalist#tel
+					option(value="content 1")
+					option(value="content 2")
+					option(value="content 3")
+		fieldset
+			legend input[type="url"]
+			p: label(for="url1")
+				span input[type="url"]
+				input#url1(type="url")
+			p: label(for="url2")
+				span input[type="url"]
+				input#url2(type="url", placeholder="required", required)
+			p: label(for="url3")
+				span input[type="url"]
+				input#url3(type="url", list="url", placeholder="datalist")
+				datalist#url
+					option(value="content 1")
+					option(value="content 2")
+					option(value="content 3")
+		fieldset
+			legend input[type="email"]
+			p: label(for="email1")
+				span input[type="email"]
+				input#email1(type="email", pattern="[^\s]+@[^\s]+")
+			p: label(for="email2")
+				span input[type="email"]
+				input#email2(type="email", pattern="[^\s]+@[^\s]+", placeholder="required", required)
+		fieldset
+			legend input[type="number"]
+			p: label(for="number1")
+				span input[type="number"]
+				input#number1(type="number")
+			p: label(for="number2")
+				span input[type="number"]
+				input#number2(type="number", placeholder="required", required)
+		fieldset
+			legend input[type="password"]
+			p: label(for="password1")
+				span input[type="password"]
+				input#password1(type="password")
+			p: label(for="password2")
+				span input[type="password"]
+				input#password2(type="password", placeholder="required", required)
+		//- こいつは廃止された
+		//- fieldset
+		//- 	legend input[type="datetime"]
+		//- 	p: label(for="datetime1")
+		//- 		span input[type="datetime"]
+		//- 		input#datetime1(type="datetime", value="2018-06-12T19:30")
+		//- 	p: label(for="datetime2")
+		//- 		span input[type="datetime"]
+		//- 		input#datetime2(type="datetime", value="2018-06-12T19:30", placeholder="required", required)
+		//- 	p: label(for="datetime3")
+		//- 		span input[type="datetime"]
+		//- 		input#datetime3(type="datetime", value="2018-06-12T19:30", placeholder="2010-08-24T22:40:00+09:00")
+		fieldset
+			legend input[type="datetime-local"]
+			p: label(for="datetime1")
+				span input[type="datetime-local"]#datetime1
+				input(type="datetime-local")
+			p: label(for="datetime2", data-checked)
+				span input[type="datetime-local"]#datetime2
+				input(type="datetime-local", value="2018-06-12T19:30", required)
+		fieldset
+			legend input[type="date"]
+			p: label(for="date1")
+				span input[type="date"]
+				input#date1(type="date")
+			p: label(for="date2", data-checked)
+				span input[type="date"]
+				input#date2(type="date", placeholder="required", required)
+		fieldset
+			legend input[type="month"]
+			p: label(for="month1")
+				span input[type="month"]
+				input#month1(type="month")
+			p: label(for="month2", data-checked)
+				span input[type="month"]
+				input#month2(type="month", placeholder="required", required)
+		fieldset
+			legend input[type="week"]
+			p: label(for="week1")
+				span input[type="week"]
+				input#week1(type="week")
+			p: label(for="week2", data-checked)
+				span input[type="week"]
+				input#week2(type="week", placeholder="required", required)
+		fieldset
+			legend input[type="time"]
+			p: label(for="time1")
+				span input[type="time"]
+				input#time1(type="time")
+			p: label(for="time2", data-checked)
+				span input[type="time"]
+				input#time2(type="time", placeholder="required", required)
+		fieldset
+			legend input[type="range"]
+			p: label(for="range1")
+				span input[type="range"]
+				input#range1(type="range", max=10, min=-10)
+		fieldset
+			legend input[type="color"]
+			p: label(for="color1")
+				span input[type="color"]
+				input#color1(type="color")
+		fieldset
+			legend input[type="checkbox"]
+			p: label(for="checkbox1")
+				span input[type="checkbox"]
+				input#checkbox1(type="checkbox")
+			p: label(for="checkbox2")
+				input#checkbox2(type="checkbox", required)
+				span input[type="checkbox"]
+			p
+				span
+					input#checkbox3(type="checkbox")
+					label(for="checkbox3")
+						span input[type="checkbox"]
+				span
+					input#checkbox4(type="checkbox")
+					label(for="checkbox4")
+						span input[type="checkbox"]
+				span
+					input#checkbox5(type="checkbox")
+					label(for="checkbox5")
+						span input[type="checkbox"]
+			p
+				label(for="checkbox6")
+					span input[type="checkbox"]
+					input#checkbox6(type="checkbox")
+				label(for="checkbox7")
+					span input[type="checkbox"]
+					input#checkbox7(type="checkbox")
+		fieldset
+			legend input[type="radio"]
+			p: label(for="radio1")
+				input#radio1(type="radio", name="radio")
+				span input[type="radio"]
+			p: label(for="radio11")
+				span input[type="radio"]
+				input#radio11(type="radio", name="radio")
+			p
+				span
+					input#radio2(type="radio", name="radio")
+					label(for="radio2")
+						span input[type="radio"]
+				span
+					input#radio3(type="radio", name="radio")
+					label(for="radio3")
+						span input[type="radio"]
+				span
+					input#radio4(type="radio", name="radio")
+					label(for="radio4")
+						span input[type="radio"]
+				span
+					input#radio5(type="radio", name="radio")
+					label(for="radio5")
+						span input[type="radio"]
+			p
+				label(for="radio6")
+					span input[type="radio"]
+					input#radio6(type="radio", name="radio")
+				label(for="radio7")
+					span input[type="radio"]
+					input#radio7(type="radio", name="radio")
+		fieldset
+			legend input[type="file"]
+			p: label(for="file1")
+				span input[type="file"]
+				input#file1(type="file")
+			p: label(for="file2", data-checked)
+				span input[type="file"]
+				input#file2(type="file", placeholder="required", required)
+			p
+				span input[type="file"]
+				label(for="file3")
+					input#file3(type="file")
+					span ファイルを選択
+			p
+				span input[type="file"]
+				label(for="file4")
+					input#file4(type="file", required)
+					span ファイルを選択
+		fieldset
+			legend input[type="submit"]
+			p: input(type="submit")
+			p: input(type="submit", value="SUBMIT")
+		fieldset
+			legend input[type="button"]
+			p: input(type="button")
+			p: input(type="button", value="BUTTON")
+		fieldset
+			legend input[type="reset"]
+			p: input(type="reset")
+			p: input(type="reset", value="RESET")
+		fieldset
+			legend input[type="image"]
+			p: input(type="image", src="https://placehold.jp/150x150.png", value="clickしてね！")
+			p: input(type="image", src="https://placehold.jp/150x150.png", value="BLANKだ", formtarget="_blank")
+		fieldset
+			legend button
+			p: button BUTTON
+			p: button: span &lt;span&gt;BUTTON&lt;/span&gt;
+		fieldset
+			legend select
+			p: select#select1(name="select")
+				option(value="content1") CONTENT1
+				option(value="content2" selected) CONTENT2
+				option(value="content3") CONTENT3
+			p: select#select1(name="select")
+				optgroup(label="CONTENT")
+					option(value="content1") CONTENT1
+					option(value="content2") CONTENT2
+					option(value="content3") CONTENT3
+				optgroup(label="label")
+					option(value="label1") group1
+					option(value="label2" selected) group2
+					option(value="label3") group3
+			p 独自スタイルをつける [.selectWrap select]
+			div: p.selectWrap: select#select1(name="select")
+				option(value="content1") CONTENT1
+				option(value="content2" selected) CONTENT2
+				option(value="content3") CONTENT3
+		fieldset
+			legend textarea
+			p: textarea(name="textarea1", placeholder="ご記入下さい")
+			p: textarea(name="textarea2", cols="30", rows="10", placeholder="ご記入下さい", required)
+		fieldset
+			legend progress
+			p: progress(max="100")
+			p: progress(max="100", value="20")
+			p: progress(max="100", value="80")
+		fieldset
+			legend meter
+			p: meter(max="30", value="30")
+			p: meter(max="30", min="0", optimum="30", high="20", low="10", value="18")
+			p: meter(max="30", min="0", optimum="30", high="20", low="10", value="25")
+			p: meter(max="30", min="0", optimum="30", high="20", low="10", value="10")
+			p: meter(max="30", min="0", optimum="30", high="20", low="10", value="5")
 
 block script
 	//- ページ固有のjs

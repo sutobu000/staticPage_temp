@@ -14,8 +14,9 @@ block link
 	//- link(rel='stylesheet', href=DIR_CSS + _page_category + ".css")
 block body
 	section
-		p.color-base &lt;section&gt;で囲む
 		p: a(href="#content") #contentにアンカー
+	section
+		p.color-base &lt;section&gt;で囲む
 		article
 			p.color-base &lt;article&gt;で囲む
 			h1.color-base &lt;h1&gt; Head1
@@ -34,33 +35,44 @@ block body
 				| Dummy Dummy Dummy Dummy Dummy Dummy Dummy
 		article
 			p.color-base &lt;article&gt;で囲む
-			h4.color-base Head4
+			h4.color-base &lt;h4&gt; Head4
 			p
 				span.color-base &lt;p&gt;
 				| Dummy Dummy Dummy Dummy Dummy Dummy Dummy
 		article
 			p.color-base &lt;article&gt;で囲む
-			h5.color-base Head5
+			h5.color-base &lt;h5&gt; Head5
 			p
 				span.color-base &lt;p&gt;
 				| Dummy Dummy Dummy Dummy Dummy Dummy Dummy
 		article
 			p.color-base &lt;article&gt;で囲む
-			h6.color-base Head6
+			h6.color-base &lt;h6&gt; Head6
 			p
 				span.color-base &lt;p&gt;
 				| Dummy Dummy Dummy Dummy Dummy Dummy Dummy
 
 	section
 		p.color-base &lt;section&gt;で囲む
+		h2.color-base &lt;p&gt;
 		p
-			span.color-base &lt;p&gt;
 			| Dummy Dummy Dummy Dummy Dummy Dummy Dummy
 			br
 			span.color-base &lt;span&gt;
 			span Dummy Dummy Dummy Dummy Dummy Dummy Dummy
+		h2.color-base &lt;b&gt; &lt;em&gt; &lt;strong&gt;
+		p
+			span
+				| Dummy 
+				b Dummy 
+				| Dummy 
+				em Dummy 
+				| Dummy 
+				strong Dummy 
+				| Dummy
 	section
 		p.color-base &lt;section&gt;で囲む
+		h2.color-base &lt;ul&gt; &lt;ol&gt; &lt;li&gt;
 		ul
 			li
 				span.color-base &lt;ul&gt;&lt;li&gt;
@@ -118,10 +130,8 @@ block body
 						span.color-base &lt;ul&gt;&lt;li&gt;
 						| Dummy Dummy Dummy Dummy Dummy Dummy Dummy
 	section
-		p#inline-frame-wrap
-			//- iframe(src="http://netmokei.place-on.net/netmokei/superworks/sample2/", id="inline-frame", frameborder="0")
-	section
 		p.color-base &lt;section&gt;で囲む
+		h2.color-base &lt;a&gt;
 		p
 			a(href="")
 				span.color-base &lt;a&gt;
@@ -134,6 +144,7 @@ block body
 			span Dummy Dummy
 	section#content
 		p.color-base &lt;section&gt;で囲む
+		h2.color-base &lt;div.tableWrap&gt; &lt;table&gt;
 		.tableWrap
 			table
 				thead
@@ -165,6 +176,7 @@ block body
 
 	section
 		p.color-base &lt;section&gt;で囲む
+		h2.color-base &lt;dl&gt; &lt;dt&gt; &lt;dd&gt;
 		dl
 			dt DUMMY
 			dd dummy
@@ -174,10 +186,30 @@ block body
 
 	section
 		p.color-base &lt;section&gt;で囲む
+		h2.color-base &lt;details&gt; &lt;summary&gt;
+		details
+			summary 詳細はこちらから
+			section
+				dl
+					dt details
+					dd べんりだね
+				dl
+					dt summary
+					dd すてきだね
+
+	section
+		p.color-base &lt;section&gt;で囲む
+		h2.color-base &lt;figure&gt; &lt;figcaption&gt; &lt;img&gt;
 		figure
 			img(src="https://placehold.jp/150x150.png", alt="dummy")
 			figcaption: span Dummy
 
+	section
+		p.color-base &lt;section&gt;で囲む
+		h2.color-base &lt;iframe&gt; &lt;canvas&gt; &lt;video&gt;
+		iframe(src="https://sutobu000.com", frameborder="0")
+		canvas
+		video(src="")
 
 block script
 	//- ページ固有のjs

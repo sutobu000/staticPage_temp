@@ -1,0 +1,391 @@
+/* -----------------------------------------------
+  COMMON SETTINGS SP
+  ----------------------------------------------- */
+// html,body
+//   width: 100%
+//   height: 100%
+body
+  // color: $COL_FONT_BASE
+  // backface-visibility: hidden
+  // font-family: $FONT_BASE
+  +MIX_FONT_VW($DE_FONT)
+  // font-size: 1rem
+  // line-height: 1.5
+
+// a
+//   outline: none
+//   text-decoration: none
+
+
+/* コンテンツ */
+main.main
+  // .color-base
+  //   color: $COL_BASE
+  // .color-sub
+  //   color: $COL_SUB
+  // .color-fontBase
+  //   color: $COL_FONT_BASE
+  // .bgcolor-base
+  //   background:
+  //     color: $COL_BASE
+  // @for $i from 1 through 10
+  //   .bgcolor-base-#{$i}
+  //     background:
+  //       color: rgba($COL_BASE, $i/10)
+  // .bgcolor-sub
+  //   background:
+  //     color: $COL_SUB
+  // @for $i from 1 through 10
+  //   .bgcolor-sub-#{$i}
+  //     background:
+  //       color: rgba($COL_SUB, $i/10)
+  // .bgcolor-fontBase
+  //   background:
+  //     color: $COL_FONT_BASE
+  // @for $i from 1 through 10
+  //   .bgcolor-fontBase-#{$i}
+  //     background:
+  //       color: rgba($COL_FONT_BASE, $i/10)
+  section
+    // width: 100%
+    // padding: 1rem
+    &+section
+      margin:
+        top: 4rem
+  article
+    // width: 100%
+    // height: 100%
+    &+article
+      margin:
+        top: 2rem
+
+
+
+  /* -- text -- */
+  h1
+    +MIX_FONT_VW(42)
+    // line-height: 1.2
+    // letter-spacing: .05em
+  h2
+    // margin-bottom: 1rem
+    +MIX_FONT_VW(38)
+    // line-height: 1.2
+    // letter-spacing: .05em
+  h3
+    // margin-bottom: 1rem
+    +MIX_FONT_VW(34)
+    // line-height: 1.2
+    // letter-spacing: .05em
+  h4
+    // margin-bottom: 1rem
+    +MIX_FONT_VW(30)
+    // line-height: 1.2
+    // letter-spacing: .05em
+  h5
+    // margin-bottom: 1rem
+    +MIX_FONT_VW(26)
+    // line-height: 1.2
+    // letter-spacing: .05em
+  h6
+    // margin-bottom: 1rem
+    +MIX_FONT_VW(22)
+    // line-height: 1.2
+    // letter-spacing: .05em
+  p
+    +MIX_FONT_VW(16)
+    // line-height: 1.2
+    // letter-spacing: .05em
+    // &+p
+    //   margin-top: .5rem
+  span
+    +MIX_FONT_VW(16)
+    // line-height: 1.2
+    // letter-spacing: .05em
+  a
+    // color: $COL_BASE
+    +MIX_FONT_VW(16)
+    // line-height: 1.2
+    // letter-spacing: .05em
+    transition: none
+    &:hover
+      color: $COL_BASE
+    // &[target="_blank"]
+    //   text-decoration: underline
+    //   &:after
+    //     content: "*"
+
+  // b, em, strong
+  //   font-size: 1em
+  //   font-weight: bold
+  //   font-style: normal
+
+  // small
+  //   font-size: .8em
+
+  // sub, sup
+  //   font-size: .5em
+
+  // i
+  //   font-style: italic
+
+  // mark
+  //   color: #eee
+  //   background-color: $COL_FONT_BASE
+
+  // details
+  //   padding: 1rem
+  // summary
+  //   +MIX_REM(12)
+  //   line-height: 1.2
+  //   letter-spacing: .05em
+
+
+  /* -- list -- */
+  // ul
+  //   ul,ol
+  //     padding:
+  //       left: 1rem
+  //   &>li
+  //     &:before
+  //       content: "・"
+  //       position: absolute
+  //       top: 0
+  //       left: 0
+  // ol
+  //   counter-reset: item
+  //   ol,ul
+  //     padding:
+  //       left: 1rem
+  //   &>li
+  //     &:before
+  //       content: counter(item)"."
+  //       counter-increment: item
+  //       position: absolute
+  //       top: 0
+  //       left: 0
+  li
+    // position: relative
+    // padding:
+    //   left: 1em
+    +MIX_FONT_VW(16)
+    // line-height: 1.2
+    // letter-spacing: .05em
+
+
+
+  /* -- table -- */
+  .tableWrap
+    width: 100%
+    overflow: auto
+    -webkit-overflow-scrolling: touch
+    table
+      width: auto
+  table
+    // width: 100%
+    // border: 1px solid $COL_FONT_BASE
+  // thead
+  // tbody
+  // tr
+  th,td
+    padding: 1em
+    +MIX_FONT_VW(16)
+    // line-height: 1.2
+    // letter-spacing: .05em
+  // th
+  //   text-align: center
+  // td
+  //   text-align: center
+
+
+
+  /* -- dl, dt, dd -- */
+  // dl
+  dt
+    // display: inline-block
+    // vertical-align: top
+    +MIX_FONT_VW(16)
+    // line-height: 1.2
+    // letter-spacing: .05em
+    // &:after
+    //   content: ":"
+  dd
+    // display: inline-block
+    // vertical-align: top
+    +MIX_FONT_VW(16)
+    // line-height: 1.2
+    // letter-spacing: .05em
+
+  /* -- figure -- */
+  // figure
+  //   display: inline-block
+  //   vertical-align: top
+  //   img
+  //     display: block
+  //     width: 100%
+  //     height: auto
+  //   figcaption
+  //     text-align: center
+
+
+
+
+  iframe, canvas, video
+    max-width: 100%
+    min-width: 300px
+    max-height: 100%
+    min-height: 300px
+    background-color: #eee
+
+
+
+    /* -- form, input -- */
+  input, select
+    vertical-align: middle
+
+  input[type="text"],input[type="search"]
+    -webkit-appearance: none
+    -moz-appearance: none
+    appearance: none
+    padding: 0
+    border: none
+    border-radius: 0
+    outline: none
+    background: none
+
+  input[type="radio"], input[type="chackbox"] 
+    display: none
+  input[type="radio"]:checked + label, input[type="chackbox"]:checked + label
+    background: transparent
+
+  select
+    -webkit-appearance: none
+    -moz-appearance: none
+    appearance: none
+    border: none
+    outline: none
+    background: transparent
+
+  textarea
+    -webkit-appearance: none
+    -moz-appearance: none
+    appearance: none
+    resize: none
+    padding: 0
+    border: 0
+    outline: none
+    background: transparent
+
+  button, input[type="submit"]
+    -webkit-appearance: none
+    -moz-appearance: none
+    appearance: none
+    padding: 0
+    border: none
+    outline: none
+    background: transparent
+
+  input[type="submit"]::-webkit-search-decoration, input[type="button"]::-webkit-search-decoration
+    display: none
+  input[type="submit"]::focus,input[type="button"]::focus
+    outline-offset: -2px
+
+
+
+  /* -- button -- */
+  button
+    padding: .5rem 2rem
+    background-color: $COL_SUB
+    cursor: pointer
+    span
+      color: #fff
+    &[btn-hover1]
+      position: relative
+      z-index: 1
+      border: 2px solid $COL_SUB
+      &:before
+        content: ""
+        position: absolute
+        top: 0
+        left: 0
+        width: 0
+        height: 100%
+        background-color: #fff
+        transition: width .3s
+      span
+        position: relative
+        z-index: 2
+        transition: color .2s
+      &:hover
+        &:before
+          width: 100%
+        span
+          color: $COL_SUB
+    &[btn-hover2]
+      position: relative
+      z-index: 1
+      border: 2px solid $COL_SUB
+      &:before
+        content: ""
+        position: absolute
+        top: 0
+        left: 50%
+        width: 0
+        height: 100%
+        transform: translateX(-50%)
+        background-color: #fff
+        transition: width .3s
+      span
+        position: relative
+        z-index: 2
+        transition: color .2s
+      &:hover
+        &:before
+          width: 100%
+        span
+          color: $COL_SUB
+    &[btn-hover3]
+      position: relative
+      z-index: 1
+      border: 2px solid $COL_SUB
+      &:before
+        content: ""
+        position: absolute
+        top: 0
+        left: 0
+        width: 100%
+        height: 0
+        background-color: #fff
+        transition: height .3s
+      span
+        position: relative
+        z-index: 2
+        transition: color .2s
+      &:hover
+        &:before
+          height: 100%
+        span
+          color: $COL_SUB
+    &[btn-hover4]
+      position: relative
+      z-index: 1
+      border: 2px solid $COL_SUB
+      &:before
+        content: ""
+        position: absolute
+        top: 50%
+        left: 0
+        width: 100%
+        height: 0
+        transform: translateY(-50%)
+        background-color: #fff
+        transition: height .3s
+      span
+        position: relative
+        z-index: 2
+        transition: color .2s
+      &:hover
+        &:before
+          height: 100%
+        span
+          color: $COL_SUB
+

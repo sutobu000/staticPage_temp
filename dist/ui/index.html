@@ -60,8 +60,10 @@
       <main class="main">
         <div class="container">
           <section>
-            <p class="color-base">&lt;section&gt;で囲む</p>
             <p><a href="#content">#contentにアンカー</a></p>
+          </section>
+          <section>
+            <p class="color-base">&lt;section&gt;で囲む</p>
             <article>
               <p class="color-base">&lt;article&gt;で囲む</p>
               <h1 class="color-base">&lt;h1&gt; Head1</h1>
@@ -79,26 +81,30 @@
             </article>
             <article>
               <p class="color-base">&lt;article&gt;で囲む</p>
-              <h4 class="color-base">Head4</h4>
+              <h4 class="color-base">&lt;h4&gt; Head4</h4>
               <p><span class="color-base">&lt;p&gt;</span>Dummy Dummy Dummy Dummy Dummy Dummy Dummy</p>
             </article>
             <article>
               <p class="color-base">&lt;article&gt;で囲む</p>
-              <h5 class="color-base">Head5</h5>
+              <h5 class="color-base">&lt;h5&gt; Head5</h5>
               <p><span class="color-base">&lt;p&gt;</span>Dummy Dummy Dummy Dummy Dummy Dummy Dummy</p>
             </article>
             <article>
               <p class="color-base">&lt;article&gt;で囲む</p>
-              <h6 class="color-base">Head6</h6>
+              <h6 class="color-base">&lt;h6&gt; Head6</h6>
               <p><span class="color-base">&lt;p&gt;</span>Dummy Dummy Dummy Dummy Dummy Dummy Dummy</p>
             </article>
           </section>
           <section>
             <p class="color-base">&lt;section&gt;で囲む</p>
-            <p><span class="color-base">&lt;p&gt;</span>Dummy Dummy Dummy Dummy Dummy Dummy Dummy<br><span class="color-base">&lt;span&gt;</span><span>Dummy Dummy Dummy Dummy Dummy Dummy Dummy</span></p>
+            <h2 class="color-base">&lt;p&gt;</h2>
+            <p>Dummy Dummy Dummy Dummy Dummy Dummy Dummy<br><span class="color-base">&lt;span&gt;</span><span>Dummy Dummy Dummy Dummy Dummy Dummy Dummy</span></p>
+            <h2 class="color-base">&lt;b&gt; &lt;em&gt; &lt;strong&gt;</h2>
+            <p><span>Dummy <b>Dummy </b>Dummy <em>Dummy </em>Dummy <strong>Dummy </strong>Dummy</span></p>
           </section>
           <section>
             <p class="color-base">&lt;section&gt;で囲む</p>
+            <h2 class="color-base">&lt;ul&gt; &lt;ol&gt; &lt;li&gt;</h2>
             <ul>
               <li><span class="color-base">&lt;ul&gt;&lt;li&gt;</span>Dummy Dummy Dummy Dummy Dummy Dummy Dummy</li>
               <li><span class="color-base">&lt;ul&gt;&lt;li&gt;</span>Dummy Dummy Dummy Dummy Dummy Dummy Dummy</li>
@@ -133,14 +139,13 @@
             </ol>
           </section>
           <section>
-            <p id="inline-frame-wrap"></p>
-          </section>
-          <section>
             <p class="color-base">&lt;section&gt;で囲む</p>
+            <h2 class="color-base">&lt;a&gt;</h2>
             <p><a href=""><span class="color-base">&lt;a&gt;</span>Dummy Dummy</a><span>Dummy Dummy</span><br><a href="" target="_blank" rel="noopener"><span class="color-base">&lt;a&gt;</span>blank Dummy</a><span>Dummy Dummy</span></p>
           </section>
           <section id="content">
             <p class="color-base">&lt;section&gt;で囲む</p>
+            <h2 class="color-base">&lt;div.tableWrap&gt; &lt;table&gt;</h2>
             <div class="tableWrap">
               <table>
                 <thead>
@@ -180,6 +185,7 @@
           </section>
           <section>
             <p class="color-base">&lt;section&gt;で囲む</p>
+            <h2 class="color-base">&lt;dl&gt; &lt;dt&gt; &lt;dd&gt;</h2>
             <dl>
               <dt>DUMMY</dt>
               <dd>dummy</dd>
@@ -191,9 +197,34 @@
           </section>
           <section>
             <p class="color-base">&lt;section&gt;で囲む</p>
+            <h2 class="color-base">&lt;details&gt; &lt;summary&gt;</h2>
+            <details>
+              <summary>詳細はこちらから</summary>
+              <section>
+                <dl>
+                  <dt>details</dt>
+                  <dd>べんりだね</dd>
+                </dl>
+                <dl>
+                  <dt>summary</dt>
+                  <dd>すてきだね</dd>
+                </dl>
+              </section>
+            </details>
+          </section>
+          <section>
+            <p class="color-base">&lt;section&gt;で囲む</p>
+            <h2 class="color-base">&lt;figure&gt; &lt;figcaption&gt; &lt;img&gt;</h2>
             <figure><img src="https://placehold.jp/150x150.png" alt="dummy">
               <figcaption><span>Dummy</span></figcaption>
             </figure>
+          </section>
+          <section>
+            <p class="color-base">&lt;section&gt;で囲む</p>
+            <h2 class="color-base">&lt;iframe&gt; &lt;canvas&gt; &lt;video&gt;</h2>
+            <iframe src="https://sutobu000.com" frameborder="0"></iframe>
+            <canvas></canvas>
+            <video src=""></video>
           </section>
         </div>
         <div class="pagetop js-hover">
@@ -210,7 +241,7 @@
       <!---->
       <footer class="footer">
         <div class="footer__wrapper">
-          <div class="footer__copylight"><small>&copy; 2018 Corporation</small></div>
+          <div class="footer__copylight"><small>&copy; 2020 Corporation</small></div>
         </div>
       </footer>
     </div>

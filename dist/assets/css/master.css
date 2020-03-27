@@ -92,67 +92,6 @@ hr {
   border-top: 1px solid #cccccc;
 }
 
-input, select {
-  vertical-align: middle;
-}
-
-input[type="text"] {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  padding: 0;
-  border: none;
-  border-radius: 0;
-  outline: none;
-  background: none;
-}
-
-input[type="radio"], input[type="chackbox"] {
-  display: none;
-}
-
-input[type="radio"]:checked + label, input[type="chackbox"]:checked + label {
-  background: transparent;
-}
-
-select {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  border: none;
-  outline: none;
-  background: transparent;
-}
-
-textarea {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  resize: none;
-  padding: 0;
-  border: 0;
-  outline: none;
-  background: transparent;
-}
-
-button, input[type="submit"] {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  padding: 0;
-  border: none;
-  outline: none;
-  background: transparent;
-}
-
-input[type="submit"]::-webkit-search-decoration, input[type="button"]::-webkit-search-decoration {
-  display: none;
-}
-
-input[type="submit"]::focus, input[type="button"]::focus {
-  outline-offset: -2px;
-}
-
 /* -----------------------------------------------
   COMMON SETTINGS
   ----------------------------------------------- */
@@ -175,77 +114,20 @@ a {
   text-decoration: none;
 }
 
-.wrapper {
-  width: 100%;
-  height: 100%;
-}
-
-/* ヘッダー */
-header.header {
-  position: relative;
-  width: 100%;
-}
-
-.header__wrapper {
-  padding: 20px 0;
-}
-
-.header__menubtn {
-  display: none;
-}
-
-.gnav__lists {
-  text-align: center;
-}
-
-.gnav__item {
-  display: inline-block;
-  vertical-align: top;
-  margin: 0 20px;
-}
-
-.gnav__item a {
-  display: block;
-}
-
-.gnav__item a:hover span {
-  color: #642;
-}
-
-.gnav__item span {
-  color: #333;
-  font-size: 12px;
-  font-size: 0.75rem;
-  line-height: 1;
-  letter-spacing: .05em;
-}
-
-.gnav__item[data-current=true] a {
-  pointer-events: none;
-}
-
-.gnav__item[data-current=true] span {
-  color: #642;
-}
-
-/* フッター */
-.footer__wrapper {
-  padding: 25px 0;
-}
-
-.footer__copylight {
-  text-align: center;
-}
-
-.footer__copylight small {
-  color: #333;
-  font-size: 12px;
-  font-size: 0.75rem;
-  line-height: 1;
-  letter-spacing: .05em;
-}
-
 /* コンテンツ */
+main.main {
+  /* -- text -- */
+  /* -- list -- */
+  /* -- table -- */
+  /* -- dl, dt, dd -- */
+  /* -- figure -- */
+  /* -- button -- */
+}
+
+main.main * {
+  box-sizing: border-box;
+}
+
 main.main .color-base {
   color: #642;
 }
@@ -494,6 +376,40 @@ main.main a[target="_blank"]:after {
   content: "*";
 }
 
+main.main b, main.main em, main.main strong {
+  font-size: 1em;
+  font-weight: bold;
+  font-style: normal;
+}
+
+main.main small {
+  font-size: .8em;
+}
+
+main.main sub, main.main sup {
+  font-size: .5em;
+}
+
+main.main i {
+  font-style: italic;
+}
+
+main.main mark {
+  color: #eee;
+  background-color: #333;
+}
+
+main.main details {
+  padding: 1rem;
+}
+
+main.main summary {
+  font-size: 12px;
+  font-size: 0.75rem;
+  line-height: 1.2;
+  letter-spacing: .05em;
+}
+
 main.main ul ul, main.main ul ol {
   padding-left: 1rem;
 }
@@ -592,6 +508,375 @@ main.main figure figcaption {
   text-align: center;
 }
 
+main.main iframe, main.main canvas, main.main video {
+  max-width: 100%;
+  min-width: 300px;
+  max-height: 100%;
+  min-height: 300px;
+  background-color: #eee;
+  /* -- form, input -- */
+}
+
+main.main fieldset {
+  margin: 1rem;
+  padding: 1rem;
+  border: 1px solid #246;
+}
+
+main.main legend {
+  color: #333;
+  font-size: 1rem;
+  line-height: 1.5;
+  letter-spacing: .05em;
+}
+
+main.main label {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+main.main label + label {
+  margin-left: 1rem;
+}
+
+main.main label input, main.main label select {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+main.main label input + span, main.main label select + span {
+  margin-left: .5rem;
+}
+
+main.main label input[type="checkbox"] + span, main.main label input[type="radio"] + span {
+  margin-left: 0.2rem;
+}
+
+main.main label span {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+main.main label span + input, main.main label span + select {
+  margin-left: .5rem;
+}
+
+main.main label span + input[type="checkbox"], main.main label span + input[type="radio"] {
+  margin-left: 0.2rem;
+}
+
+main.main label[data-checked] > span {
+  position: relative;
+}
+
+main.main label[data-checked] > span:after {
+  content: "*";
+  position: absolute;
+  top: -.5em;
+  right: -.5em;
+  color: #d33;
+}
+
+main.main label input[type="file"]:first-child {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+
+main.main label input[type="file"]:first-child + span {
+  margin: 0;
+  padding: .5rem 2rem;
+  border: 2px solid #246;
+  background-color: #246;
+  color: #fff;
+  transition: color .3s, background .3s;
+}
+
+main.main label input[type="file"]:first-child:hover + span {
+  background-color: #fff;
+  color: #246;
+}
+
+main.main label input[type="checkbox"], main.main label input[type="radio"] {
+  display: inline-block;
+}
+
+main.main input[type="checkbox"] {
+  display: none;
+}
+
+main.main input[type="checkbox"] + label {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  padding-left: 1.5rem;
+}
+
+main.main input[type="checkbox"] + label:before {
+  content: "";
+  position: absolute;
+  top: .2rem;
+  left: .3rem;
+  width: .6rem;
+  height: .6rem;
+  background-color: #ccc;
+}
+
+main.main input[type="checkbox"] + label:after {
+  content: "";
+  position: absolute;
+  top: .1rem;
+  left: .5rem;
+  width: .2rem;
+  height: .5rem;
+  border-bottom: 2px solid #246;
+  border-right: 2px solid #246;
+  transform: rotate(180deg);
+  opacity: 0;
+  transition: transform .2s, opacity .2s;
+}
+
+main.main input[type="checkbox"]:checked + label:after {
+  transform: rotate(45deg);
+  opacity: 1;
+}
+
+main.main input[type="radio"] {
+  display: none;
+}
+
+main.main input[type="radio"] + label {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  padding-left: 1.5rem;
+}
+
+main.main input[type="radio"] + label:before {
+  content: "";
+  position: absolute;
+  top: 0rem;
+  left: .1rem;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  background-color: #ccc;
+}
+
+main.main input[type="radio"] + label:after {
+  content: "";
+  position: absolute;
+  top: .25rem;
+  left: .35rem;
+  width: .5rem;
+  height: .5rem;
+  border-radius: 50%;
+  background-color: #246;
+  transform: scale(0);
+  opacity: 0;
+  transition: transform .2s, opacity .2s;
+}
+
+main.main input[type="radio"]:checked + label:after {
+  transform: scale(1);
+  opacity: 1;
+}
+
+main.main input, main.main select {
+  vertical-align: middle;
+}
+
+main.main input:required + span, main.main select:required + span {
+  position: relative;
+}
+
+main.main input:required + span:after, main.main select:required + span:after {
+  content: "*";
+  position: absolute;
+  top: -.5em;
+  right: -.8em;
+  color: #d33;
+}
+
+main.main input[type="text"], main.main input[type="search"], main.main input[type="tel"], main.main input[type="url"], main.main input[type="email"], main.main input[type="number"], main.main input[type="password"], main.main input[type="datatime"], main.main input[type="datetime-local"], main.main input[type="date"], main.main input[type="month"], main.main input[type="week"], main.main input[type="time"] {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  padding: .1em .5em;
+  border: 1px solid #333;
+  border-radius: 0;
+  outline: none;
+  background: #eee;
+  color: #333;
+  font-size: 1rem;
+  line-height: 1.5;
+  letter-spacing: .05em;
+  transition: border .2s;
+}
+
+main.main select {
+  padding: .1em .5em;
+  border: 1px solid #333;
+  border-radius: 0;
+  outline: none;
+  background: #eee;
+  color: #333;
+  font-size: 1rem;
+  line-height: 1.5;
+  letter-spacing: .05em;
+  transition: border .2s;
+}
+
+main.main .selectWrap {
+  position: relative;
+  display: inline-block;
+}
+
+main.main .selectWrap select {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  padding: .1em 1.5em .1em .5em;
+}
+
+main.main .selectWrap:before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 0.5em;
+  border-top: 0.4em solid #333;
+  border-bottom: 0 solid transparent;
+  border-left: .25em solid transparent;
+  border-right: .25em solid transparent;
+  transform: translate(-50%, -50%);
+}
+
+main.main textarea {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  resize: vertical;
+  overflow: auto;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  min-width: 100px;
+  max-height: 100%;
+  min-height: 100px;
+  padding: .1em .5em;
+  border: 1px solid #333;
+  border-radius: 0;
+  outline: none;
+  background: transparent;
+  font-size: 1rem;
+  line-height: 1.5;
+  letter-spacing: .05em;
+  transition: border .2s;
+}
+
+main.main input::-webkit-input-placeholder, main.main select::-webkit-input-placeholder, main.main textarea::-webkit-input-placeholder {
+  color: rgba(51, 51, 51, 0.5);
+}
+
+main.main input::-moz-placeholder, main.main select::-moz-placeholder, main.main textarea::-moz-placeholder {
+  color: rgba(51, 51, 51, 0.5);
+}
+
+main.main input:-ms-input-placeholder, main.main select:-ms-input-placeholder, main.main textarea:-ms-input-placeholder {
+  color: rgba(51, 51, 51, 0.5);
+}
+
+main.main input::-ms-input-placeholder, main.main select::-ms-input-placeholder, main.main textarea::-ms-input-placeholder {
+  color: rgba(51, 51, 51, 0.5);
+}
+
+main.main input::placeholder, main.main select::placeholder, main.main textarea::placeholder {
+  color: rgba(51, 51, 51, 0.5);
+}
+
+main.main input:focus, main.main select:focus, main.main textarea:focus {
+  border: 1px solid #642;
+}
+
+main.main progress {
+  display: block;
+  width: 100%;
+  height: .5rem;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  background: #ccc;
+  color: #246;
+}
+
+main.main progress::-webkit-progress-bar {
+  background: transparent;
+}
+
+main.main progress::-webkit-progress-value {
+  background: #246;
+  border-radius: .1em;
+}
+
+main.main progress::-moz-progress-bar {
+  background: #246;
+  border-radius: .1em;
+}
+
+main.main meter {
+  width: 100%;
+  height: .5rem;
+}
+
+main.main meter::-webkit-meter-bar {
+  background: transparent;
+}
+
+main.main meter::-webkit-meter-optimum-value {
+  background: linear-gradient(to bottom, #62c462, #51a351);
+  border-radius: .1em;
+}
+
+main.main meter::-webkit-meter-suboptimum-value {
+  background: linear-gradient(to bottom, #fbb450, #f89406);
+  border-radius: .1em;
+}
+
+main.main meter::-webkit-meter-even-less-good-value {
+  background: linear-gradient(to bottom, #ee5f5b, #bd362f);
+  border-radius: .1em;
+}
+
+main.main input[type="image"] {
+  transition: opacity .3s;
+}
+
+main.main input[type="image"]:hover {
+  opacity: .7;
+}
+
+main.main button, main.main input[type="submit"], main.main input[type="button"], main.main input[type="reset"] {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  padding: .5rem 2rem;
+  border: 2px solid #246;
+  outline: none;
+  background-color: #246;
+  color: #fff;
+  cursor: pointer;
+  transition: background .3s, color .3s;
+}
+
+main.main button:hover, main.main input[type="submit"]:hover, main.main input[type="button"]:hover, main.main input[type="reset"]:hover {
+  background: #fff;
+  color: #246;
+}
+
 main.main button {
   padding: .5rem 2rem;
   background-color: #246;
@@ -600,6 +885,15 @@ main.main button {
 
 main.main button span {
   color: #fff;
+  transition: color .2s;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+main.main button:hover span {
+  color: #246;
 }
 
 main.main button[btn-hover1] {
@@ -622,7 +916,6 @@ main.main button[btn-hover1]:before {
 main.main button[btn-hover1] span {
   position: relative;
   z-index: 2;
-  transition: color .2s;
 }
 
 main.main button[btn-hover1]:hover:before {
@@ -654,7 +947,6 @@ main.main button[btn-hover2]:before {
 main.main button[btn-hover2] span {
   position: relative;
   z-index: 2;
-  transition: color .2s;
 }
 
 main.main button[btn-hover2]:hover:before {
@@ -685,7 +977,6 @@ main.main button[btn-hover3]:before {
 main.main button[btn-hover3] span {
   position: relative;
   z-index: 2;
-  transition: color .2s;
 }
 
 main.main button[btn-hover3]:hover:before {
@@ -717,7 +1008,6 @@ main.main button[btn-hover4]:before {
 main.main button[btn-hover4] span {
   position: relative;
   z-index: 2;
-  transition: color .2s;
 }
 
 main.main button[btn-hover4]:hover:before {
@@ -728,46 +1018,346 @@ main.main button[btn-hover4]:hover span {
   color: #246;
 }
 
-main.main .mlWrap {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
+@media screen and (max-width: 767px) {
+  /* -----------------------------------------------
+  COMMON SETTINGS SP
+  ----------------------------------------------- */
+  body {
+    font-size: 8px;
+    font-size: 2.13333vw;
+  }
+  /* コンテンツ */
+  main.main {
+    /* -- text -- */
+    /* -- list -- */
+    /* -- table -- */
+    /* -- dl, dt, dd -- */
+    /* -- figure -- */
+    /* -- button -- */
+  }
+  main.main section + section {
+    margin-top: 4rem;
+  }
+  main.main article + article {
+    margin-top: 2rem;
+  }
+  main.main h1 {
+    font-size: 21px;
+    font-size: 5.6vw;
+  }
+  main.main h2 {
+    font-size: 19px;
+    font-size: 5.06667vw;
+  }
+  main.main h3 {
+    font-size: 17px;
+    font-size: 4.53333vw;
+  }
+  main.main h4 {
+    font-size: 15px;
+    font-size: 4vw;
+  }
+  main.main h5 {
+    font-size: 13px;
+    font-size: 3.46667vw;
+  }
+  main.main h6 {
+    font-size: 11px;
+    font-size: 2.93333vw;
+  }
+  main.main p {
+    font-size: 8px;
+    font-size: 2.13333vw;
+  }
+  main.main span {
+    font-size: 8px;
+    font-size: 2.13333vw;
+  }
+  main.main a {
+    font-size: 8px;
+    font-size: 2.13333vw;
+    transition: none;
+  }
+  main.main a:hover {
+    color: #642;
+  }
+  main.main li {
+    font-size: 8px;
+    font-size: 2.13333vw;
+  }
+  main.main .tableWrap {
+    width: 100%;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  main.main .tableWrap table {
+    width: auto;
+  }
+  main.main th, main.main td {
+    padding: 1em;
+    font-size: 8px;
+    font-size: 2.13333vw;
+  }
+  main.main dt {
+    font-size: 8px;
+    font-size: 2.13333vw;
+  }
+  main.main dd {
+    font-size: 8px;
+    font-size: 2.13333vw;
+  }
+  main.main iframe, main.main canvas, main.main video {
+    max-width: 100%;
+    min-width: 300px;
+    max-height: 100%;
+    min-height: 300px;
+    background-color: #eee;
+    /* -- form, input -- */
+  }
+  main.main input, main.main select {
+    vertical-align: middle;
+  }
+  main.main input[type="text"], main.main input[type="search"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    outline: none;
+    background: none;
+  }
+  main.main input[type="radio"], main.main input[type="chackbox"] {
+    display: none;
+  }
+  main.main input[type="radio"]:checked + label, main.main input[type="chackbox"]:checked + label {
+    background: transparent;
+  }
+  main.main select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: none;
+    outline: none;
+    background: transparent;
+  }
+  main.main textarea {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    resize: none;
+    padding: 0;
+    border: 0;
+    outline: none;
+    background: transparent;
+  }
+  main.main button, main.main input[type="submit"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+  }
+  main.main input[type="submit"]::-webkit-search-decoration, main.main input[type="button"]::-webkit-search-decoration {
+    display: none;
+  }
+  main.main input[type="submit"]::focus, main.main input[type="button"]::focus {
+    outline-offset: -2px;
+  }
+  main.main button {
+    padding: .5rem 2rem;
+    background-color: #246;
+    cursor: pointer;
+  }
+  main.main button span {
+    color: #fff;
+  }
+  main.main button[btn-hover1] {
+    position: relative;
+    z-index: 1;
+    border: 2px solid #246;
+  }
+  main.main button[btn-hover1]:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background-color: #fff;
+    transition: width .3s;
+  }
+  main.main button[btn-hover1] span {
+    position: relative;
+    z-index: 2;
+    transition: color .2s;
+  }
+  main.main button[btn-hover1]:hover:before {
+    width: 100%;
+  }
+  main.main button[btn-hover1]:hover span {
+    color: #246;
+  }
+  main.main button[btn-hover2] {
+    position: relative;
+    z-index: 1;
+    border: 2px solid #246;
+  }
+  main.main button[btn-hover2]:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 0;
+    height: 100%;
+    transform: translateX(-50%);
+    background-color: #fff;
+    transition: width .3s;
+  }
+  main.main button[btn-hover2] span {
+    position: relative;
+    z-index: 2;
+    transition: color .2s;
+  }
+  main.main button[btn-hover2]:hover:before {
+    width: 100%;
+  }
+  main.main button[btn-hover2]:hover span {
+    color: #246;
+  }
+  main.main button[btn-hover3] {
+    position: relative;
+    z-index: 1;
+    border: 2px solid #246;
+  }
+  main.main button[btn-hover3]:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 0;
+    background-color: #fff;
+    transition: height .3s;
+  }
+  main.main button[btn-hover3] span {
+    position: relative;
+    z-index: 2;
+    transition: color .2s;
+  }
+  main.main button[btn-hover3]:hover:before {
+    height: 100%;
+  }
+  main.main button[btn-hover3]:hover span {
+    color: #246;
+  }
+  main.main button[btn-hover4] {
+    position: relative;
+    z-index: 1;
+    border: 2px solid #246;
+  }
+  main.main button[btn-hover4]:before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 0;
+    transform: translateY(-50%);
+    background-color: #fff;
+    transition: height .3s;
+  }
+  main.main button[btn-hover4] span {
+    position: relative;
+    z-index: 2;
+    transition: color .2s;
+  }
+  main.main button[btn-hover4]:hover:before {
+    height: 100%;
+  }
+  main.main button[btn-hover4]:hover span {
+    color: #246;
+  }
+}
+
+/* -----------------------------------------------
+  COMMON SETTINGS
+  ----------------------------------------------- */
+.wrapper {
   width: 100%;
   height: 100%;
-  opacity: 0;
-  background-color: rgba(17, 17, 17, 0.7);
-  transition: opacity 0.2s;
-  transition-delay: .1s;
-}
-
-main.main .mlWrap[data-current=true] {
-  display: block;
-  opacity: 1;
-}
-
-main.main .mlWrap[data-current=true] .mlWrap__container {
-  width: 50%;
-  height: auto;
-  padding: 1.5rem;
-}
-
-main.main .mlWrap__container {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 0;
-  height: 0;
-  padding: 0;
-  background-color: #ccc;
-  transition: all 0.3s;
-  transition-delay: .2s;
 }
 
 .container {
   max-width: 1280px;
   margin: 0 auto;
+}
+
+/* ヘッダー */
+header.header {
+  position: relative;
+  width: 100%;
+}
+
+.header__wrapper {
+  padding: 20px 0;
+}
+
+.header__menubtn {
+  display: none;
+}
+
+.gnav__lists {
+  text-align: center;
+}
+
+.gnav__item {
+  display: inline-block;
+  vertical-align: top;
+  margin: 0 20px;
+}
+
+.gnav__item a {
+  display: block;
+}
+
+.gnav__item a:hover span {
+  color: #642;
+}
+
+.gnav__item span {
+  color: #333;
+  font-size: 12px;
+  font-size: 0.75rem;
+  line-height: 1;
+  letter-spacing: .05em;
+}
+
+.gnav__item[data-current=true] a {
+  pointer-events: none;
+}
+
+.gnav__item[data-current=true] span {
+  color: #642;
+}
+
+/* フッター */
+.footer__wrapper {
+  padding: 25px 0;
+}
+
+.footer__copylight {
+  text-align: center;
+}
+
+.footer__copylight small {
+  color: #333;
+  font-size: 12px;
+  font-size: 0.75rem;
+  line-height: 1;
+  letter-spacing: .05em;
 }
 
 /* ページトップ */
@@ -810,13 +1400,50 @@ main.main .mlWrap__container {
   display: none;
 }
 
+/* モーダル */
+.mlWrap {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  background-color: rgba(17, 17, 17, 0.7);
+  transition: opacity 0.2s;
+  transition-delay: .1s;
+}
+
+.mlWrap[data-current=true] {
+  display: block;
+  opacity: 1;
+}
+
+.mlWrap[data-current=true] .mlWrap__container {
+  width: 50%;
+  height: auto;
+  padding: 1.5rem;
+}
+
+.mlWrap__container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 0;
+  height: 0;
+  padding: 0;
+  background-color: #ccc;
+  transition: all 0.3s;
+  transition-delay: .2s;
+}
+
 @media screen and (max-width: 767px) {
   /* -----------------------------------------------
   COMMON SETTINGS SP
   ----------------------------------------------- */
-  body {
-    font-size: 8px;
-    font-size: 2.13333vw;
+  .container {
+    max-width: 100%;
   }
   /* ヘッダー */
   header.header {
@@ -826,6 +1453,10 @@ main.main .mlWrap__container {
     padding: 0;
   }
   .header__menubtn {
+    -webkit-appearance: none;
+       -moz-appearance: none;
+            appearance: none;
+    outline: none;
     display: block;
     position: fixed;
     top: 10px;
@@ -833,6 +1464,10 @@ main.main .mlWrap__container {
     z-index: 9999;
     width: 50px;
     height: 50px;
+    padding: 0;
+    border: 0;
+    background-color: transparent;
+    font-size: 0;
     cursor: pointer;
   }
   .header__menubtn[data-open=true]:before, .header__menubtn[data-open=true]:after {
@@ -899,82 +1534,7 @@ main.main .mlWrap__container {
   .footer__copylight small {
     color: #333;
     font-size: 6px;
-    font-size: 0.75rem;
-  }
-  /* コンテンツ */
-  main.main section + section {
-    margin-top: 4rem;
-  }
-  main.main article + article {
-    margin-top: 2rem;
-  }
-  main.main h1 {
-    font-size: 21px;
-    font-size: 2.625rem;
-  }
-  main.main h2 {
-    font-size: 19px;
-    font-size: 2.375rem;
-  }
-  main.main h3 {
-    font-size: 17px;
-    font-size: 2.125rem;
-  }
-  main.main h4 {
-    font-size: 15px;
-    font-size: 1.875rem;
-  }
-  main.main h5 {
-    font-size: 13px;
-    font-size: 1.625rem;
-  }
-  main.main h6 {
-    font-size: 11px;
-    font-size: 1.375rem;
-  }
-  main.main p {
-    font-size: 8px;
-    font-size: 1rem;
-  }
-  main.main span {
-    font-size: 8px;
-    font-size: 1rem;
-  }
-  main.main a {
-    font-size: 8px;
-    font-size: 1rem;
-    transition: none;
-  }
-  main.main a:hover {
-    color: #642;
-  }
-  main.main li {
-    font-size: 8px;
-    font-size: 1rem;
-  }
-  main.main .tableWrap {
-    width: 100%;
-    overflow: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-  main.main .tableWrap table {
-    width: auto;
-  }
-  main.main th, main.main td {
-    padding: 1em;
-    font-size: 8px;
-    font-size: 1rem;
-  }
-  main.main dt {
-    font-size: 8px;
-    font-size: 1rem;
-  }
-  main.main dd {
-    font-size: 8px;
-    font-size: 1rem;
-  }
-  .container {
-    max-width: 100%;
+    font-size: 1.6vw;
   }
   /* ページトップ */
   .pagetop {
@@ -986,7 +1546,7 @@ main.main .mlWrap__container {
   .pagetop__inner {
     position: relative;
     width: 100%;
-    height: 60px;
+    height: auto;
     background-color: #642;
   }
   .pagetop__obj {
@@ -1004,7 +1564,7 @@ main.main .mlWrap__container {
     display: inline;
     color: #fff;
     font-size: 10px;
-    font-size: 1.25rem;
+    font-size: 2.66667vw;
     line-height: 1;
     letter-spacing: .05em;
   }

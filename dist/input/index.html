@@ -59,7 +59,421 @@
       <!---->
       <main class="main">
         <div class="container">
-          <section></section>
+          <section>
+            <h2 class="color-base">&lt;form&gt;</h2>
+            <form action="" method="post"></form>
+            <fieldset>
+              <legend>input[type="text"]</legend>
+              <p>
+                <label for="text1"><span>input[type="text"]</span>
+                  <input id="text1" type="text" autofocus>
+                </label>
+              </p>
+              <p>
+                <label for="text2"><span>input[type="text"]</span>
+                  <input id="text2" type="text" placeholder="required" required>
+                </label>
+              </p>
+              <p>
+                <label for="text3"><span>input[type="text"]</span>
+                  <input id="text3" type="text" list="text" placeholder="datalist">
+                  <datalist id="text">
+                    <option value="content 1"></option>
+                    <option value="content 2"></option>
+                    <option value="content 3"></option>
+                  </datalist>
+                </label>
+              </p>
+            </fieldset>
+            <fieldset>
+              <legend>input[type="search"]</legend>
+              <p>
+                <label for="search1"><span>input[type="search"]</span>
+                  <input id="search1" type="search">
+                </label>
+              </p>
+              <p>
+                <label for="search2"><span>input[type="search"]</span>
+                  <input id="search2" type="search" placeholder="required" required>
+                </label>
+              </p>
+              <p>
+                <label for="search3"><span>input[type="search"]</span>
+                  <input id="search3" type="search" list="search" placeholder="datalist">
+                  <datalist id="search">
+                    <option value="content 1"></option>
+                    <option value="content 2"></option>
+                    <option value="content 3"></option>
+                  </datalist>
+                </label>
+              </p>
+            </fieldset>
+            <fieldset>
+              <legend>input[type="tel"]</legend>
+              <p>
+                <label for="tel1"><span>input[type="tel"]</span>
+                  <input id="tel1" type="tel">
+                </label>
+              </p>
+              <p>
+                <label for="tel2"><span>input[type="tel"]</span>
+                  <input id="tel2" type="tel" placeholder="required" required>
+                </label>
+              </p>
+              <p>
+                <label for="tel3"><span>input[type="tel"]</span>
+                  <input id="tel3" type="tel" list="tel" placeholder="datalist">
+                  <datalist id="tel">
+                    <option value="content 1"></option>
+                    <option value="content 2"></option>
+                    <option value="content 3"></option>
+                  </datalist>
+                </label>
+              </p>
+            </fieldset>
+            <fieldset>
+              <legend>input[type="url"]</legend>
+              <p>
+                <label for="url1"><span>input[type="url"]</span>
+                  <input id="url1" type="url">
+                </label>
+              </p>
+              <p>
+                <label for="url2"><span>input[type="url"]</span>
+                  <input id="url2" type="url" placeholder="required" required>
+                </label>
+              </p>
+              <p>
+                <label for="url3"><span>input[type="url"]</span>
+                  <input id="url3" type="url" list="url" placeholder="datalist">
+                  <datalist id="url">
+                    <option value="content 1"></option>
+                    <option value="content 2"></option>
+                    <option value="content 3"></option>
+                  </datalist>
+                </label>
+              </p>
+            </fieldset>
+            <fieldset>
+              <legend>input[type="email"]</legend>
+              <p>
+                <label for="email1"><span>input[type="email"]</span>
+                  <input id="email1" type="email" pattern="[^s]+@[^s]+">
+                </label>
+              </p>
+              <p>
+                <label for="email2"><span>input[type="email"]</span>
+                  <input id="email2" type="email" pattern="[^s]+@[^s]+" placeholder="required" required>
+                </label>
+              </p>
+            </fieldset>
+            <fieldset>
+              <legend>input[type="number"]</legend>
+              <p>
+                <label for="number1"><span>input[type="number"]</span>
+                  <input id="number1" type="number">
+                </label>
+              </p>
+              <p>
+                <label for="number2"><span>input[type="number"]</span>
+                  <input id="number2" type="number" placeholder="required" required>
+                </label>
+              </p>
+            </fieldset>
+            <fieldset>
+              <legend>input[type="password"]</legend>
+              <p>
+                <label for="password1"><span>input[type="password"]</span>
+                  <input id="password1" type="password">
+                </label>
+              </p>
+              <p>
+                <label for="password2"><span>input[type="password"]</span>
+                  <input id="password2" type="password" placeholder="required" required>
+                </label>
+              </p>
+            </fieldset>
+            <fieldset>
+              <legend>input[type="datetime-local"]</legend>
+              <p>
+                <label for="datetime1"><span>input[type="datetime-local"]#datetime1</span>
+                  <input type="datetime-local">
+                </label>
+              </p>
+              <p>
+                <label for="datetime2" data-checked><span>input[type="datetime-local"]#datetime2</span>
+                  <input type="datetime-local" value="2018-06-12T19:30" required>
+                </label>
+              </p>
+            </fieldset>
+            <fieldset>
+              <legend>input[type="date"]</legend>
+              <p>
+                <label for="date1"><span>input[type="date"]</span>
+                  <input id="date1" type="date">
+                </label>
+              </p>
+              <p>
+                <label for="date2" data-checked><span>input[type="date"]</span>
+                  <input id="date2" type="date" placeholder="required" required>
+                </label>
+              </p>
+            </fieldset>
+            <fieldset>
+              <legend>input[type="month"]</legend>
+              <p>
+                <label for="month1"><span>input[type="month"]</span>
+                  <input id="month1" type="month">
+                </label>
+              </p>
+              <p>
+                <label for="month2" data-checked><span>input[type="month"]</span>
+                  <input id="month2" type="month" placeholder="required" required>
+                </label>
+              </p>
+            </fieldset>
+            <fieldset>
+              <legend>input[type="week"]</legend>
+              <p>
+                <label for="week1"><span>input[type="week"]</span>
+                  <input id="week1" type="week">
+                </label>
+              </p>
+              <p>
+                <label for="week2" data-checked><span>input[type="week"]</span>
+                  <input id="week2" type="week" placeholder="required" required>
+                </label>
+              </p>
+            </fieldset>
+            <fieldset>
+              <legend>input[type="time"]</legend>
+              <p>
+                <label for="time1"><span>input[type="time"]</span>
+                  <input id="time1" type="time">
+                </label>
+              </p>
+              <p>
+                <label for="time2" data-checked><span>input[type="time"]</span>
+                  <input id="time2" type="time" placeholder="required" required>
+                </label>
+              </p>
+            </fieldset>
+            <fieldset>
+              <legend>input[type="range"]</legend>
+              <p>
+                <label for="range1"><span>input[type="range"]</span>
+                  <input id="range1" type="range" max="10" min="-10">
+                </label>
+              </p>
+            </fieldset>
+            <fieldset>
+              <legend>input[type="color"]</legend>
+              <p>
+                <label for="color1"><span>input[type="color"]</span>
+                  <input id="color1" type="color">
+                </label>
+              </p>
+            </fieldset>
+            <fieldset>
+              <legend>input[type="checkbox"]</legend>
+              <p>
+                <label for="checkbox1"><span>input[type="checkbox"]</span>
+                  <input id="checkbox1" type="checkbox">
+                </label>
+              </p>
+              <p>
+                <label for="checkbox2">
+                  <input id="checkbox2" type="checkbox" required><span>input[type="checkbox"]</span>
+                </label>
+              </p>
+              <p><span>
+                  <input id="checkbox3" type="checkbox">
+                  <label for="checkbox3"><span>input[type="checkbox"]</span></label></span><span>
+                  <input id="checkbox4" type="checkbox">
+                  <label for="checkbox4"><span>input[type="checkbox"]</span></label></span><span>
+                  <input id="checkbox5" type="checkbox">
+                  <label for="checkbox5"><span>input[type="checkbox"]</span></label></span></p>
+              <p>
+                <label for="checkbox6"><span>input[type="checkbox"]</span>
+                  <input id="checkbox6" type="checkbox">
+                </label>
+                <label for="checkbox7"><span>input[type="checkbox"]</span>
+                  <input id="checkbox7" type="checkbox">
+                </label>
+              </p>
+            </fieldset>
+            <fieldset>
+              <legend>input[type="radio"]</legend>
+              <p>
+                <label for="radio1">
+                  <input id="radio1" type="radio" name="radio"><span>input[type="radio"]</span>
+                </label>
+              </p>
+              <p>
+                <label for="radio11"><span>input[type="radio"]</span>
+                  <input id="radio11" type="radio" name="radio">
+                </label>
+              </p>
+              <p><span>
+                  <input id="radio2" type="radio" name="radio">
+                  <label for="radio2"><span>input[type="radio"]</span></label></span><span>
+                  <input id="radio3" type="radio" name="radio">
+                  <label for="radio3"><span>input[type="radio"]</span></label></span><span>
+                  <input id="radio4" type="radio" name="radio">
+                  <label for="radio4"><span>input[type="radio"]</span></label></span><span>
+                  <input id="radio5" type="radio" name="radio">
+                  <label for="radio5"><span>input[type="radio"]</span></label></span></p>
+              <p>
+                <label for="radio6"><span>input[type="radio"]</span>
+                  <input id="radio6" type="radio" name="radio">
+                </label>
+                <label for="radio7"><span>input[type="radio"]</span>
+                  <input id="radio7" type="radio" name="radio">
+                </label>
+              </p>
+            </fieldset>
+            <fieldset>
+              <legend>input[type="file"]</legend>
+              <p>
+                <label for="file1"><span>input[type="file"]</span>
+                  <input id="file1" type="file">
+                </label>
+              </p>
+              <p>
+                <label for="file2" data-checked><span>input[type="file"]</span>
+                  <input id="file2" type="file" placeholder="required" required>
+                </label>
+              </p>
+              <p><span>input[type="file"]</span>
+                <label for="file3">
+                  <input id="file3" type="file"><span>ファイルを選択</span>
+                </label>
+              </p>
+              <p><span>input[type="file"]</span>
+                <label for="file4">
+                  <input id="file4" type="file" required><span>ファイルを選択</span>
+                </label>
+              </p>
+            </fieldset>
+            <fieldset>
+              <legend>input[type="submit"]</legend>
+              <p>
+                <input type="submit">
+              </p>
+              <p>
+                <input type="submit" value="SUBMIT">
+              </p>
+            </fieldset>
+            <fieldset>
+              <legend>input[type="button"]</legend>
+              <p>
+                <input type="button">
+              </p>
+              <p>
+                <input type="button" value="BUTTON">
+              </p>
+            </fieldset>
+            <fieldset>
+              <legend>input[type="reset"]</legend>
+              <p>
+                <input type="reset">
+              </p>
+              <p>
+                <input type="reset" value="RESET">
+              </p>
+            </fieldset>
+            <fieldset>
+              <legend>input[type="image"]</legend>
+              <p>
+                <input type="image" src="https://placehold.jp/150x150.png" value="clickしてね！">
+              </p>
+              <p>
+                <input type="image" src="https://placehold.jp/150x150.png" value="BLANKだ" formtarget="_blank">
+              </p>
+            </fieldset>
+            <fieldset>
+              <legend>button</legend>
+              <p>
+                <button>BUTTON</button>
+              </p>
+              <p>
+                <button><span>&lt;span&gt;BUTTON&lt;/span&gt;</span></button>
+              </p>
+            </fieldset>
+            <fieldset>
+              <legend>select</legend>
+              <p>
+                <select id="select1" name="select">
+                  <option value="content1">CONTENT1</option>
+                  <option value="content2" selected>CONTENT2</option>
+                  <option value="content3">CONTENT3</option>
+                </select>
+              </p>
+              <p>
+                <select id="select1" name="select">
+                  <optgroup label="CONTENT">
+                    <option value="content1">CONTENT1</option>
+                    <option value="content2">CONTENT2</option>
+                    <option value="content3">CONTENT3</option>
+                  </optgroup>
+                  <optgroup label="label">
+                    <option value="label1">group1</option>
+                    <option value="label2" selected>group2</option>
+                    <option value="label3">group3</option>
+                  </optgroup>
+                </select>
+              </p>
+              <p>独自スタイルをつける [.selectWrap select]</p>
+              <div>
+                <p class="selectWrap">
+                  <select id="select1" name="select">
+                    <option value="content1">CONTENT1</option>
+                    <option value="content2" selected>CONTENT2</option>
+                    <option value="content3">CONTENT3</option>
+                  </select>
+                </p>
+              </div>
+            </fieldset>
+            <fieldset>
+              <legend>textarea</legend>
+              <p>
+                <textarea name="textarea1" placeholder="ご記入下さい"></textarea>
+              </p>
+              <p>
+                <textarea name="textarea2" cols="30" rows="10" placeholder="ご記入下さい" required></textarea>
+              </p>
+            </fieldset>
+            <fieldset>
+              <legend>progress</legend>
+              <p>
+                <progress max="100"></progress>
+              </p>
+              <p>
+                <progress max="100" value="20"></progress>
+              </p>
+              <p>
+                <progress max="100" value="80"></progress>
+              </p>
+            </fieldset>
+            <fieldset>
+              <legend>meter</legend>
+              <p>
+                <meter max="30" value="30"></meter>
+              </p>
+              <p>
+                <meter max="30" min="0" optimum="30" high="20" low="10" value="18"></meter>
+              </p>
+              <p>
+                <meter max="30" min="0" optimum="30" high="20" low="10" value="25"></meter>
+              </p>
+              <p>
+                <meter max="30" min="0" optimum="30" high="20" low="10" value="10"></meter>
+              </p>
+              <p>
+                <meter max="30" min="0" optimum="30" high="20" low="10" value="5"></meter>
+              </p>
+            </fieldset>
+          </section>
         </div>
         <div class="pagetop js-hover">
           <div class="pagetop__inner">
@@ -75,7 +489,7 @@
       <!---->
       <footer class="footer">
         <div class="footer__wrapper">
-          <div class="footer__copylight"><small>&copy; 2018 Corporation</small></div>
+          <div class="footer__copylight"><small>&copy; 2020 Corporation</small></div>
         </div>
       </footer>
     </div>
