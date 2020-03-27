@@ -19,6 +19,8 @@ body
 
 /* コンテンツ */
 main.main
+  *
+    box-sizing: border-box
   // .color-base
   //   color: $COL_BASE
   // .color-sub
@@ -229,163 +231,382 @@ main.main
 
 
 
-  iframe, canvas, video
-    max-width: 100%
-    min-width: 300px
-    max-height: 100%
-    min-height: 300px
-    background-color: #eee
+  // iframe, canvas, video
+  //   max-width: 100%
+  //   min-width: 300px
+  //   max-height: 100%
+  //   min-height: 300px
+  //   background-color: #eee
 
 
 
-    /* -- form, input -- */
-  input, select
-    vertical-align: middle
+  /* -- form, input -- */
+  fieldset
+    // margin: 1rem
+    // padding: 1rem
+    // border: 1px solid $COL_SUB
+  legend
+    // color: $COL_FONT_BASE
+    +MIX_FONT_VW(16)
+    // line-height: 1.5
+    // letter-spacing: .05em
 
-  input[type="text"],input[type="search"]
-    -webkit-appearance: none
-    -moz-appearance: none
-    appearance: none
-    padding: 0
-    border: none
-    border-radius: 0
-    outline: none
-    background: none
+  label
+    // position: relative
+    display: block
+    // vertical-align: middle
+    &+label
+      margin:
+        left: 0
+        top: 1rem
+    // input, select
+    //   display: inline-block
+    //   vertical-align: middle
+    //   &+span
+    //     margin-left: .5rem
+    // input[type="checkbox"],input[type="radio"]
+    //   &+span
+    //     margin-left: .2rem
+    // span
+    //   display: inline-block
+    //   vertical-align: middle
+    //   &+input, &+select
+    //     margin-left: .5rem
+    //   &+input[type="checkbox"],&+input[type="radio"]
+    //     margin-left: 0.2rem
+    // &[data-checked]
+    //   &>span
+    //     position: relative
+    //     &:after
+    //       content: "*"
+    //       position: absolute
+    //       top: -.5em
+    //       right: -.5em
+    //       color: #d33
 
-  input[type="radio"], input[type="chackbox"] 
-    display: none
-  input[type="radio"]:checked + label, input[type="chackbox"]:checked + label
-    background: transparent
+    input[type="file"]:first-child
+      // position: absolute
+      // top: 0
+      // left: 0
+      // width: 100%
+      // height: 100%
+      // opacity: 0
+      &+span
+        // margin: 0
+        // padding: .5rem 2rem
+        // border: 2px solid $COL_SUB
+        // background-color: $COL_SUB
+        // color: #fff
+        transition: none
+      &:hover
+        &+span
+          background-color: $COL_SUB
+          color: #fff
+
+
+    // input[type="checkbox"], input[type="radio"]
+    //   display: inline-block
+
+  input[type="checkbox"]
+    // display: none
+    &+label
+      // position: relative
+      // display: inline-block
+      // vertical-align: middle
+      // padding-left: 1.5rem
+      &:before
+        // content: ""
+        // position: absolute
+        top: .1rem
+        left: .3rem
+        width: .8rem
+        height: .8rem
+        // background-color: #ccc
+      &:after
+        // content: ""
+        // position: absolute
+        top: .1rem
+        left: .6rem
+        // width: .2rem
+        // height: .5rem
+        // border:
+        //   bottom: 2px solid $COL_SUB
+        //   right: 2px solid $COL_SUB
+        // transform: rotate(180deg)
+        // opacity: 0
+        // transition: transform .2s, opacity .2s
+    // &:checked
+    //   &+label
+    //     &:after
+    //       transform: rotate(45deg)
+    //       opacity: 1
+
+  input[type="radio"]
+    // display: none
+    // &+label
+    //   position: relative
+    //   display: inline-block
+    //   vertical-align: middle
+    //   padding-left: 1.5rem
+    //   &:before
+    //     content: ""
+    //     position: absolute
+    //     top: 0rem
+    //     left: .1rem
+    //     width: 1rem
+    //     height: 1rem
+    //     border:
+    //       radius: 50%
+    //     background-color: #ccc
+    //   &:after
+    //     content: ""
+    //     position: absolute
+    //     top: .25rem
+    //     left: .35rem
+    //     width: .5rem
+    //     height: .5rem
+    //     border:
+    //       radius: 50%
+    //     background-color: $COL_SUB
+    //     transform: scale(0)
+    //     opacity: 0
+    //     transition: transform .2s, opacity .2s
+    // &:checked
+    //   &+label
+    //     &:after
+    //       transform: scale(1)
+    //       opacity: 1
+
+  // input, select
+  //   vertical-align: middle
+  //   &:required
+  //     &+span
+  //       position: relative
+  //       &:after
+  //         content: "*"
+  //         position: absolute
+  //         top: -.5em
+  //         right: -.8em
+  //         color: #d33
+
+
+
+  input[type="text"],input[type="search"], input[type="tel"], input[type="url"], input[type="email"], input[type="number"], input[type="password"], input[type="datatime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="week"], input[type="time"]
+    // appearance: none
+    // padding: .1em .5em
+    // border: 1px solid $COL_FONT_BASE
+    //     radius: 0
+    // outline: none
+    // background: #eee
+    // color: $COL_FONT_BASE
+    +MIX_FONT_VW(16)
+    // line-height: 1.5
+    // letter-spacing: .05em
+    // transition: border .2s
 
   select
-    -webkit-appearance: none
-    -moz-appearance: none
-    appearance: none
-    border: none
-    outline: none
-    background: transparent
+    // padding: .1em .5em
+    // border: 1px solid $COL_FONT_BASE
+    //   radius: 0
+    // outline: none
+    // background: #eee
+    // color: $COL_FONT_BASE
+    +MIX_FONT_VW(16)
+    // line-height: 1.5
+    // letter-spacing: .05em
+    // transition: border .2s
+  // .selectWrap
+  //   position: relative
+  //   display: inline-block
+  //   select
+  //     appearance: none
+  //     padding: .1em 1.5em .1em .5em
+  //   &:before
+  //     content: ""
+  //     position: absolute
+  //     top: 50%
+  //     right: 0.5em
+  //     border:
+  //       top: .4em solid $COL_FONT_BASE
+  //       bottom: 0 solid transparent
+  //       left: .25em solid transparent
+  //       right: .25em solid transparent
+  //     transform: translate(-50%,-50%)
+
 
   textarea
-    -webkit-appearance: none
-    -moz-appearance: none
-    appearance: none
-    resize: none
-    padding: 0
-    border: 0
-    outline: none
-    background: transparent
+    // appearance: none
+    // resize: vertical
+    // // resize: none
+    // overflow: auto
+    // width: 100%
+    // height: 100%
+    // max-width: 100%
+    // min-width: 100px
+    // max-height: 100%
+    // min-height: 100px
+    // padding: .1em .5em
+    // border: 1px solid $COL_FONT_BASE
+    //     radius: 0
+    // outline: none
+    // background: transparent
+    +MIX_FONT_VW(16)
+    // line-height: 1.5
+    // letter-spacing: .05em
+    // transition: border .2s
 
-  button, input[type="submit"]
-    -webkit-appearance: none
-    -moz-appearance: none
-    appearance: none
-    padding: 0
-    border: none
-    outline: none
-    background: transparent
+  // input::placeholder,select::placeholder, textarea::placeholder
+  //   color: rgba($COL_FONT_BASE, .5)
+  // input:focus,select:focus, textarea:focus
+  //   border: 1px solid $COL_BASE
 
-  input[type="submit"]::-webkit-search-decoration, input[type="button"]::-webkit-search-decoration
-    display: none
-  input[type="submit"]::focus,input[type="button"]::focus
-    outline-offset: -2px
+  // progress
+  //   display: block
+  //   width: 100%
+  //   height: .5rem
+  //   appearance: none
+  //   background: #ccc
+  //   color: $COL_SUB
+  //   &::-webkit-progress-bar
+  //     background: transparent
+  //   &::-webkit-progress-value
+  //     background: $COL_SUB
+  //     border-radius: .1em
+  //   &::-moz-progress-bar
+  //     background: $COL_SUB
+  //     border-radius: .1em
 
+  // meter
+  //   width: 100%
+  //   height: .5rem
+  //   &::-webkit-meter-bar
+  //     background: transparent
+  //   &::-webkit-meter-optimum-value
+  //     background: linear-gradient(to bottom, #62c462, #51a351)
+  //     border-radius: .1em
+  //   &::-webkit-meter-suboptimum-value
+  //     background: linear-gradient(to bottom, #fbb450, #f89406)
+  //     border-radius: .1em
+  //   &::-webkit-meter-even-less-good-value
+  //     background: linear-gradient(to bottom, #ee5f5b, #bd362f)
+  //     border-radius: .1em
 
 
   /* -- button -- */
-  button
-    padding: .5rem 2rem
-    background-color: $COL_SUB
-    cursor: pointer
-    span
+  input[type="image"]
+    transition: none
+    &:hover
+      opacity: 1
+  button, input[type="submit"], input[type="button"], input[type="reset"]
+    // appearance: none
+    // padding: .5rem 2rem
+    // border: 2px solid $COL_SUB
+    // outline: none
+    // background-color: $COL_SUB
+    // color: #fff
+    // cursor: pointer
+    transition: none
+    &:hover
+      background: $COL_SUB
       color: #fff
+
+
+  // input[type="submit"]::-webkit-search-decoration, input[type="button"]::-webkit-search-decoration, input[type="reset"]::-webkit-search-decoration
+  //   display: none
+  // input[type="submit"]::focus,input[type="button"]::focus, input[type="reset"]::focus
+  //   outline-offset: -2px
+
+
+  button, a.btn
+    // display: inline-block
+    // position: relative
+    // padding: .5rem 2rem
+    // border: 2px solid $COL_SUB
+    // background-color: $COL_SUB
+    // cursor: pointer
+    span
+      // color: #fff
+      transition: none
+      // user-select: none
+    &:hover
+      span
+        color: #fff
     &[btn-hover1]
-      position: relative
-      z-index: 1
-      border: 2px solid $COL_SUB
+      // position: relative
+      // z-index: 1
+      // border: 2px solid $COL_SUB
       &:before
-        content: ""
-        position: absolute
-        top: 0
-        left: 0
-        width: 0
-        height: 100%
-        background-color: #fff
-        transition: width .3s
-      span
-        position: relative
-        z-index: 2
-        transition: color .2s
-      &:hover
-        &:before
-          width: 100%
-        span
-          color: $COL_SUB
+        content: none
+      //   position: absolute
+      //   top: 0
+      //   left: 0
+      //   width: 0
+      //   height: 100%
+      //   background-color: #fff
+      //   transition: width .3s
+      // span
+      //   position: relative
+      //   z-index: 2
+      // &:hover
+      //   &:before
+      //     width: 100%
     &[btn-hover2]
-      position: relative
-      z-index: 1
-      border: 2px solid $COL_SUB
+      // position: relative
+      // z-index: 1
+      // border: 2px solid $COL_SUB
       &:before
-        content: ""
-        position: absolute
-        top: 0
-        left: 50%
-        width: 0
-        height: 100%
-        transform: translateX(-50%)
-        background-color: #fff
-        transition: width .3s
-      span
-        position: relative
-        z-index: 2
-        transition: color .2s
-      &:hover
-        &:before
-          width: 100%
-        span
-          color: $COL_SUB
+        content: none
+      //   position: absolute
+      //   top: 0
+      //   left: 50%
+      //   width: 0
+      //   height: 100%
+      //   transform: translateX(-50%)
+      //   background-color: #fff
+      //   transition: width .3s
+      // span
+      //   position: relative
+      //   z-index: 2
+      // &:hover
+      //   &:before
+      //     width: 100%
     &[btn-hover3]
-      position: relative
-      z-index: 1
-      border: 2px solid $COL_SUB
+      // position: relative
+      // z-index: 1
+      // border: 2px solid $COL_SUB
       &:before
-        content: ""
-        position: absolute
-        top: 0
-        left: 0
-        width: 100%
-        height: 0
-        background-color: #fff
-        transition: height .3s
-      span
-        position: relative
-        z-index: 2
-        transition: color .2s
-      &:hover
-        &:before
-          height: 100%
-        span
-          color: $COL_SUB
+        content: none
+      //   position: absolute
+      //   top: 0
+      //   left: 0
+      //   width: 100%
+      //   height: 0
+      //   background-color: #fff
+      //   transition: height .3s
+      // span
+      //   position: relative
+      //   z-index: 2
+      // &:hover
+      //   &:before
+      //     height: 100%
     &[btn-hover4]
-      position: relative
-      z-index: 1
-      border: 2px solid $COL_SUB
+      // position: relative
+      // z-index: 1
+      // border: 2px solid $COL_SUB
       &:before
-        content: ""
-        position: absolute
-        top: 50%
-        left: 0
-        width: 100%
-        height: 0
-        transform: translateY(-50%)
-        background-color: #fff
-        transition: height .3s
-      span
-        position: relative
-        z-index: 2
-        transition: color .2s
-      &:hover
-        &:before
-          height: 100%
-        span
-          color: $COL_SUB
+        content: none
+      //   position: absolute
+      //   top: 50%
+      //   left: 0
+      //   width: 100%
+      //   height: 0
+      //   transform: translateY(-50%)
+      //   background-color: #fff
+      //   transition: height .3s
+      // span
+      //   position: relative
+      //   z-index: 2
+      // &:hover
+      //   &:before
+      //     height: 100%
 

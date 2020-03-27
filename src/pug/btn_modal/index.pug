@@ -15,7 +15,7 @@ block link
 block body
 	section
 		article
-			p: button(btn-hover1): span hoverアニメーション1
+			p: a.btn(btn-hover1): span hoverアニメーション1
 		article
 			p: button(btn-hover2): span hoverアニメーション2
 		article
@@ -24,28 +24,19 @@ block body
 			p: button(btn-hover4): span hoverアニメーション4
 	section
 		article
-			p モーダル 1
-			p: button(btn-hover2,modal-select="1"): span click
-		article
-			p モーダル 2
-			p: button(btn-hover2,modal-select="2"): span click
+			p モーダル
+			p: a.btn(href="#ml1",noscroll,btn-hover2): span click
 
-	.mlWrap(modal-select="1", data-current="false")
-		.mlWrap__close
+	.mlWrap#ml1
+		a.mlWrap__overlay(href="#",noscroll)
 		.mlWrap__container
+			a.mlWrap__close(href="#",noscroll)
 			section
 				article
 					h3 モーダルタイトル
 					p テストてすとtestTest テストてすとtestTest テストてすとtestTest テストてすとtestTest テストてすとtestTest テストてすとtestTest テストてすとtestTest テストてすとtestTest テストてすとtestTest
 					p: button(btn-hover4): span hoverアニメーション4
-	.mlWrap(modal-select="2", data-current="false")
-		.mlWrap__close
-		.mlWrap__container
-			section
-				article
-					h3 モーダルタイトル
-					p テストてすとtestTest テストてすとtestTest テストてすとtestTest テストてすとtestTest テストてすとtestTest テストてすとtestTest テストてすとtestTest テストてすとtestTest テストてすとtestTest
-					p: button(btn-hover4): span hoverアニメーション4
+
 block script
 	//- ページ固有のjs
 	script(src=DIR_JS + _page_category + ".min.js")

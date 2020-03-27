@@ -563,7 +563,7 @@ main.main label span + input, main.main label span + select {
 }
 
 main.main label span + input[type="checkbox"], main.main label span + input[type="radio"] {
-  margin-left: 0.2rem;
+  margin-left: .2rem;
 }
 
 main.main label[data-checked] > span {
@@ -877,13 +877,16 @@ main.main button:hover, main.main input[type="submit"]:hover, main.main input[ty
   color: #246;
 }
 
-main.main button {
+main.main button, main.main a.btn {
+  display: inline-block;
+  position: relative;
   padding: .5rem 2rem;
+  border: 2px solid #246;
   background-color: #246;
   cursor: pointer;
 }
 
-main.main button span {
+main.main button span, main.main a.btn span {
   color: #fff;
   transition: color .2s;
   -webkit-user-select: none;
@@ -892,17 +895,17 @@ main.main button span {
           user-select: none;
 }
 
-main.main button:hover span {
+main.main button:hover span, main.main a.btn:hover span {
   color: #246;
 }
 
-main.main button[btn-hover1] {
+main.main button[btn-hover1], main.main a.btn[btn-hover1] {
   position: relative;
   z-index: 1;
   border: 2px solid #246;
 }
 
-main.main button[btn-hover1]:before {
+main.main button[btn-hover1]:before, main.main a.btn[btn-hover1]:before {
   content: "";
   position: absolute;
   top: 0;
@@ -913,26 +916,22 @@ main.main button[btn-hover1]:before {
   transition: width .3s;
 }
 
-main.main button[btn-hover1] span {
+main.main button[btn-hover1] span, main.main a.btn[btn-hover1] span {
   position: relative;
   z-index: 2;
 }
 
-main.main button[btn-hover1]:hover:before {
+main.main button[btn-hover1]:hover:before, main.main a.btn[btn-hover1]:hover:before {
   width: 100%;
 }
 
-main.main button[btn-hover1]:hover span {
-  color: #246;
-}
-
-main.main button[btn-hover2] {
+main.main button[btn-hover2], main.main a.btn[btn-hover2] {
   position: relative;
   z-index: 1;
   border: 2px solid #246;
 }
 
-main.main button[btn-hover2]:before {
+main.main button[btn-hover2]:before, main.main a.btn[btn-hover2]:before {
   content: "";
   position: absolute;
   top: 0;
@@ -944,26 +943,22 @@ main.main button[btn-hover2]:before {
   transition: width .3s;
 }
 
-main.main button[btn-hover2] span {
+main.main button[btn-hover2] span, main.main a.btn[btn-hover2] span {
   position: relative;
   z-index: 2;
 }
 
-main.main button[btn-hover2]:hover:before {
+main.main button[btn-hover2]:hover:before, main.main a.btn[btn-hover2]:hover:before {
   width: 100%;
 }
 
-main.main button[btn-hover2]:hover span {
-  color: #246;
-}
-
-main.main button[btn-hover3] {
+main.main button[btn-hover3], main.main a.btn[btn-hover3] {
   position: relative;
   z-index: 1;
   border: 2px solid #246;
 }
 
-main.main button[btn-hover3]:before {
+main.main button[btn-hover3]:before, main.main a.btn[btn-hover3]:before {
   content: "";
   position: absolute;
   top: 0;
@@ -974,26 +969,22 @@ main.main button[btn-hover3]:before {
   transition: height .3s;
 }
 
-main.main button[btn-hover3] span {
+main.main button[btn-hover3] span, main.main a.btn[btn-hover3] span {
   position: relative;
   z-index: 2;
 }
 
-main.main button[btn-hover3]:hover:before {
+main.main button[btn-hover3]:hover:before, main.main a.btn[btn-hover3]:hover:before {
   height: 100%;
 }
 
-main.main button[btn-hover3]:hover span {
-  color: #246;
-}
-
-main.main button[btn-hover4] {
+main.main button[btn-hover4], main.main a.btn[btn-hover4] {
   position: relative;
   z-index: 1;
   border: 2px solid #246;
 }
 
-main.main button[btn-hover4]:before {
+main.main button[btn-hover4]:before, main.main a.btn[btn-hover4]:before {
   content: "";
   position: absolute;
   top: 50%;
@@ -1005,17 +996,13 @@ main.main button[btn-hover4]:before {
   transition: height .3s;
 }
 
-main.main button[btn-hover4] span {
+main.main button[btn-hover4] span, main.main a.btn[btn-hover4] span {
   position: relative;
   z-index: 2;
 }
 
-main.main button[btn-hover4]:hover:before {
+main.main button[btn-hover4]:hover:before, main.main a.btn[btn-hover4]:hover:before {
   height: 100%;
-}
-
-main.main button[btn-hover4]:hover span {
-  color: #246;
 }
 
 @media screen and (max-width: 767px) {
@@ -1033,7 +1020,11 @@ main.main button[btn-hover4]:hover span {
     /* -- table -- */
     /* -- dl, dt, dd -- */
     /* -- figure -- */
+    /* -- form, input -- */
     /* -- button -- */
+  }
+  main.main * {
+    box-sizing: border-box;
   }
   main.main section + section {
     margin-top: 4rem;
@@ -1106,179 +1097,76 @@ main.main button[btn-hover4]:hover span {
     font-size: 8px;
     font-size: 2.13333vw;
   }
-  main.main iframe, main.main canvas, main.main video {
-    max-width: 100%;
-    min-width: 300px;
-    max-height: 100%;
-    min-height: 300px;
-    background-color: #eee;
-    /* -- form, input -- */
+  main.main legend {
+    font-size: 8px;
+    font-size: 2.13333vw;
   }
-  main.main input, main.main select {
-    vertical-align: middle;
+  main.main label {
+    display: block;
   }
-  main.main input[type="text"], main.main input[type="search"] {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    padding: 0;
-    border: none;
-    border-radius: 0;
-    outline: none;
-    background: none;
+  main.main label + label {
+    margin-left: 0;
+    margin-top: 1rem;
   }
-  main.main input[type="radio"], main.main input[type="chackbox"] {
-    display: none;
+  main.main label input[type="file"]:first-child + span {
+    transition: none;
   }
-  main.main input[type="radio"]:checked + label, main.main input[type="chackbox"]:checked + label {
-    background: transparent;
-  }
-  main.main select {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    border: none;
-    outline: none;
-    background: transparent;
-  }
-  main.main textarea {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    resize: none;
-    padding: 0;
-    border: 0;
-    outline: none;
-    background: transparent;
-  }
-  main.main button, main.main input[type="submit"] {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    padding: 0;
-    border: none;
-    outline: none;
-    background: transparent;
-  }
-  main.main input[type="submit"]::-webkit-search-decoration, main.main input[type="button"]::-webkit-search-decoration {
-    display: none;
-  }
-  main.main input[type="submit"]::focus, main.main input[type="button"]::focus {
-    outline-offset: -2px;
-  }
-  main.main button {
-    padding: .5rem 2rem;
+  main.main label input[type="file"]:first-child:hover + span {
     background-color: #246;
-    cursor: pointer;
-  }
-  main.main button span {
     color: #fff;
   }
-  main.main button[btn-hover1] {
-    position: relative;
-    z-index: 1;
-    border: 2px solid #246;
+  main.main input[type="checkbox"] + label:before {
+    top: .1rem;
+    left: .3rem;
+    width: .8rem;
+    height: .8rem;
   }
-  main.main button[btn-hover1]:before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 0;
-    height: 100%;
-    background-color: #fff;
-    transition: width .3s;
+  main.main input[type="checkbox"] + label:after {
+    top: .1rem;
+    left: .6rem;
   }
-  main.main button[btn-hover1] span {
-    position: relative;
-    z-index: 2;
-    transition: color .2s;
+  main.main input[type="text"], main.main input[type="search"], main.main input[type="tel"], main.main input[type="url"], main.main input[type="email"], main.main input[type="number"], main.main input[type="password"], main.main input[type="datatime"], main.main input[type="datetime-local"], main.main input[type="date"], main.main input[type="month"], main.main input[type="week"], main.main input[type="time"] {
+    font-size: 8px;
+    font-size: 2.13333vw;
   }
-  main.main button[btn-hover1]:hover:before {
-    width: 100%;
+  main.main select {
+    font-size: 8px;
+    font-size: 2.13333vw;
   }
-  main.main button[btn-hover1]:hover span {
-    color: #246;
+  main.main textarea {
+    font-size: 8px;
+    font-size: 2.13333vw;
   }
-  main.main button[btn-hover2] {
-    position: relative;
-    z-index: 1;
-    border: 2px solid #246;
+  main.main input[type="image"] {
+    transition: none;
   }
-  main.main button[btn-hover2]:before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 50%;
-    width: 0;
-    height: 100%;
-    transform: translateX(-50%);
-    background-color: #fff;
-    transition: width .3s;
+  main.main input[type="image"]:hover {
+    opacity: 1;
   }
-  main.main button[btn-hover2] span {
-    position: relative;
-    z-index: 2;
-    transition: color .2s;
+  main.main button, main.main input[type="submit"], main.main input[type="button"], main.main input[type="reset"] {
+    transition: none;
   }
-  main.main button[btn-hover2]:hover:before {
-    width: 100%;
+  main.main button:hover, main.main input[type="submit"]:hover, main.main input[type="button"]:hover, main.main input[type="reset"]:hover {
+    background: #246;
+    color: #fff;
   }
-  main.main button[btn-hover2]:hover span {
-    color: #246;
+  main.main button span, main.main a.btn span {
+    transition: none;
   }
-  main.main button[btn-hover3] {
-    position: relative;
-    z-index: 1;
-    border: 2px solid #246;
+  main.main button:hover span, main.main a.btn:hover span {
+    color: #fff;
   }
-  main.main button[btn-hover3]:before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 0;
-    background-color: #fff;
-    transition: height .3s;
+  main.main button[btn-hover1]:before, main.main a.btn[btn-hover1]:before {
+    content: none;
   }
-  main.main button[btn-hover3] span {
-    position: relative;
-    z-index: 2;
-    transition: color .2s;
+  main.main button[btn-hover2]:before, main.main a.btn[btn-hover2]:before {
+    content: none;
   }
-  main.main button[btn-hover3]:hover:before {
-    height: 100%;
+  main.main button[btn-hover3]:before, main.main a.btn[btn-hover3]:before {
+    content: none;
   }
-  main.main button[btn-hover3]:hover span {
-    color: #246;
-  }
-  main.main button[btn-hover4] {
-    position: relative;
-    z-index: 1;
-    border: 2px solid #246;
-  }
-  main.main button[btn-hover4]:before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 0;
-    width: 100%;
-    height: 0;
-    transform: translateY(-50%);
-    background-color: #fff;
-    transition: height .3s;
-  }
-  main.main button[btn-hover4] span {
-    position: relative;
-    z-index: 2;
-    transition: color .2s;
-  }
-  main.main button[btn-hover4]:hover:before {
-    height: 100%;
-  }
-  main.main button[btn-hover4]:hover span {
-    color: #246;
+  main.main button[btn-hover4]:before, main.main a.btn[btn-hover4]:before {
+    content: none;
   }
 }
 
@@ -1402,40 +1290,87 @@ header.header {
 
 /* モーダル */
 .mlWrap {
-  display: none;
+  display: block;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+  z-index: -1;
   opacity: 0;
-  background-color: rgba(17, 17, 17, 0.7);
   transition: opacity 0.2s;
   transition-delay: .1s;
+  pointer-events: none;
 }
 
-.mlWrap[data-current=true] {
-  display: block;
+.mlWrap:target {
   opacity: 1;
+  z-index: 10;
+  pointer-events: auto;
 }
 
-.mlWrap[data-current=true] .mlWrap__container {
-  width: 50%;
-  height: auto;
-  padding: 1.5rem;
+.mlWrap__close {
+  position: absolute;
+  top: -15px;
+  right: -15px;
+  z-index: 2;
+  width: 30px;
+  height: 30px;
+  background-color: #246;
+}
+
+.mlWrap__close:before, .mlWrap__close:after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 75%;
+  height: 2px;
+  background-color: #fff;
+  transition: transform 0.3s, height 0.3s;
+  transition-delay: .3s, .1s;
+}
+
+.mlWrap__close:before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.mlWrap__close:after {
+  transform: translate(-50%, -50%) rotate(135deg);
+}
+
+.mlWrap__close:hover:before, .mlWrap__close:hover:after {
+  height: 75%;
+  transition-delay: .1s, .3s;
+}
+
+.mlWrap__close:hover:before {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.mlWrap__close:hover:after {
+  transform: translate(-50%, -50%) rotate(180deg);
+}
+
+.mlWrap__overlay {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(17, 17, 17, 0.7);
 }
 
 .mlWrap__container {
   position: absolute;
   top: 50%;
   left: 50%;
+  z-index: 5;
   transform: translate(-50%, -50%);
-  width: 0;
-  height: 0;
-  padding: 0;
-  background-color: #ccc;
-  transition: all 0.3s;
-  transition-delay: .2s;
+  max-width: 80%;
+  padding: 1.5rem;
+  background-color: #eee;
 }
 
 @media screen and (max-width: 767px) {
@@ -1493,7 +1428,7 @@ header.header {
     top: 30px;
   }
   .gnav {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     z-index: 1;
@@ -1536,36 +1471,21 @@ header.header {
     font-size: 6px;
     font-size: 1.6vw;
   }
-  /* ページトップ */
-  .pagetop {
-    position: static;
-    bottom: auto;
-    right: auto;
-    transition: 0;
+  /* モーダル */
+  .mlWrap__close:before, .mlWrap__close:after {
+    transition: none;
   }
-  .pagetop__inner {
-    position: relative;
+  .mlWrap__close:hover:before, .mlWrap__close:hover:after {
+    height: 2px;
+  }
+  .mlWrap__close:hover:before {
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+  .mlWrap__close:hover:after {
+    transform: translate(-50%, -50%) rotate(135deg);
+  }
+  .mlWrap__container {
+    max-width: 90%;
     width: 100%;
-    height: auto;
-    background-color: #642;
-  }
-  .pagetop__obj {
-    position: static;
-    top: auto;
-    left: auto;
-    transform: none;
-    width: auto;
-    height: auto;
-    padding: 16px 0;
-    border: 0;
-    text-align: center;
-  }
-  .pagetop__obj span {
-    display: inline;
-    color: #fff;
-    font-size: 10px;
-    font-size: 2.66667vw;
-    line-height: 1;
-    letter-spacing: .05em;
   }
 }

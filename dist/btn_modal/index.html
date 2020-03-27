@@ -61,9 +61,7 @@
         <div class="container">
           <section>
             <article>
-              <p>
-                <button btn-hover1><span>hoverアニメーション1</span></button>
-              </p>
+              <p><a class="btn" btn-hover1><span>hoverアニメーション1</span></a></p>
             </article>
             <article>
               <p>
@@ -83,35 +81,12 @@
           </section>
           <section>
             <article>
-              <p>モーダル 1</p>
-              <p>
-                <button btn-hover2 modal-select="1"><span>click</span></button>
-              </p>
-            </article>
-            <article>
-              <p>モーダル 2</p>
-              <p>
-                <button btn-hover2 modal-select="2"><span>click</span></button>
-              </p>
+              <p>モーダル</p>
+              <p><a class="btn" href="#ml1" noscroll btn-hover2><span>click</span></a></p>
             </article>
           </section>
-          <div class="mlWrap" modal-select="1" data-current="false">
-            <div class="mlWrap__close"></div>
-            <div class="mlWrap__container">
-              <section>
-                <article>
-                  <h3>モーダルタイトル</h3>
-                  <p>テストてすとtestTest テストてすとtestTest テストてすとtestTest テストてすとtestTest テストてすとtestTest テストてすとtestTest テストてすとtestTest テストてすとtestTest テストてすとtestTest</p>
-                  <p>
-                    <button btn-hover4><span>hoverアニメーション4</span></button>
-                  </p>
-                </article>
-              </section>
-            </div>
-          </div>
-          <div class="mlWrap" modal-select="2" data-current="false">
-            <div class="mlWrap__close"></div>
-            <div class="mlWrap__container">
+          <div class="mlWrap" id="ml1"><a class="mlWrap__overlay" href="#" noscroll></a>
+            <div class="mlWrap__container"><a class="mlWrap__close" href="#" noscroll></a>
               <section>
                 <article>
                   <h3>モーダルタイトル</h3>

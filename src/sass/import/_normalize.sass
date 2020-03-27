@@ -263,7 +263,7 @@ main.main
       &+input, &+select
         margin-left: .5rem
       &+input[type="checkbox"],&+input[type="radio"]
-        margin-left: 0.2rem
+        margin-left: .2rem
     &[data-checked]
       &>span
         position: relative
@@ -500,7 +500,6 @@ main.main
       background: #fff
       color: $COL_SUB
 
-  
 
   // input[type="submit"]::-webkit-search-decoration, input[type="button"]::-webkit-search-decoration, input[type="reset"]::-webkit-search-decoration
   //   display: none
@@ -508,8 +507,11 @@ main.main
   //   outline-offset: -2px
 
 
-  button
+  button, a.btn
+    display: inline-block
+    position: relative
     padding: .5rem 2rem
+    border: 2px solid $COL_SUB
     background-color: $COL_SUB
     cursor: pointer
     span
@@ -538,8 +540,6 @@ main.main
       &:hover
         &:before
           width: 100%
-        span
-          color: $COL_SUB
     &[btn-hover2]
       position: relative
       z-index: 1
@@ -560,8 +560,6 @@ main.main
       &:hover
         &:before
           width: 100%
-        span
-          color: $COL_SUB
     &[btn-hover3]
       position: relative
       z-index: 1
@@ -581,8 +579,6 @@ main.main
       &:hover
         &:before
           height: 100%
-        span
-          color: $COL_SUB
     &[btn-hover4]
       position: relative
       z-index: 1
@@ -603,6 +599,4 @@ main.main
       &:hover
         &:before
           height: 100%
-        span
-          color: $COL_SUB
 

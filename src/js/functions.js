@@ -89,7 +89,8 @@ let menuBtnTop;
 let is_gnav = false;
 let is_open = false;
 
-/*--アンカーリンク処理 --- */
+/*--
+console.log($ancLink);アンカーリンク処理 --- */
 let $ancLink = document.querySelectorAll("a[href^='#']")
 let ancTopArr = [];
 
@@ -222,13 +223,15 @@ let readyInit = () => {
 
 	// アンカーリンク
 	for (let ancCount = 0; ancCount < $ancLink.length; ancCount++) {
-		let ancObj = document.getElementById($ancLink[ancCount].getAttribute("href").slice(1));
-		ancTopArr[ancCount] = _sTop + ancObj.getBoundingClientRect().top
-		$ancLink[ancCount].addEventListener("click", function(e) {
-			e.preventDefault();
-			let href = this.getAttribute("href");
-			scrollAnc(href, userSet.anchorLink.duration, ancTopArr[ancCount]);
-		})
+		if(!$ancLink[ancCount].hasAttribute("noscroll")){
+			let ancObj = document.getElementById($ancLink[ancCount].getAttribute("href").slice(1));
+			ancTopArr[ancCount] = _sTop + ancObj.getBoundingClientRect().top
+			$ancLink[ancCount].addEventListener("click", function(e) {
+				e.preventDefault();
+				let href = this.getAttribute("href");
+				scrollAnc(href, userSet.anchorLink.duration, ancTopArr[ancCount]);
+			})
+		}
 	}
 
 	/* sliSL */

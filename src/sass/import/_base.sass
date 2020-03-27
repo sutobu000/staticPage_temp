@@ -95,31 +95,71 @@ footer.footer
 
 /* モーダル */
 .mlWrap
-  display: none
+  display: block
   position: fixed
   top: 0
   left: 0
   width: 100%
   height: 100%
+  z-index: -1
   opacity: 0
-  background-color: rgba(#111, .7)
   transition: opacity .2s
     delay: .1s
-  &[data-current=true]
-    display: block
+  pointer-events: none
+  &:target
     opacity: 1
-    .mlWrap__container
-      width: 50%
-      height: auto
-      padding: 1.5rem
+    z-index: 10
+    pointer-events: auto
+.mlWrap__close
+  position: absolute
+  top: -15px
+  right: -15px
+  z-index: 2
+  width: 30px
+  height: 30px
+  background-color: $COL_SUB
+  &:before,&:after
+    content: ""
+    position: absolute
+    top: 50%
+    left: 50%
+    width: 75%
+    height: 2px
+    background-color: #fff
+    transition: transform .3s, height .3s
+      delay: .3s, .1s
+  &:before
+    transform: translate(-50%,-50%) rotate(45deg)
+  &:after
+    transform: translate(-50%,-50%) rotate(135deg)
+  &:hover
+    &:before,&:after
+      height: 75%
+      transition:
+        delay: .1s, .3s
+    &:before
+      transform: translate(-50%,-50%) rotate(90deg)
+    &:after
+      transform: translate(-50%,-50%) rotate(180deg)
+.mlWrap__overlay
+  position: absolute
+  z-index: 1
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  background-color: rgba(#111, .7)
 .mlWrap__container
   position: absolute
   top: 50%
   left: 50%
+  z-index: 5
   transform: translate(-50%,-50%)
-  width: 0
-  height: 0
-  padding: 0
-  background-color: #ccc
-  transition: all .3s
-    delay: .2s
+  max-width: 80%
+  // width: 0
+  // height: 0
+  padding: 1.5rem
+  background-color: #eee
+  // transition: all .3s
+  //   delay: .2s
+

@@ -55,7 +55,7 @@ header.header
     top: 30px
 
 .gnav
-  position: absolute
+  position: fixed
   top: 0
   left: 0
   z-index: 1
@@ -108,38 +108,109 @@ header.header
     // letter-spacing: .05em
 
 
-/* ページトップ */
-.pagetop
-  position: static
-  bottom: auto
-  right: auto
-  transition: 0
+// /* ページトップ */
+// .pagetop
+//   position: static
+//   bottom: auto
+//   right: auto
+//   transition: 0
+//   // pointer-events: none
+//   // cursor: pointer
+//   // &[data-current=true]
+//   //   opacity: 1
+//   //   pointer-events: auto
+// .pagetop__inner
+//   position: relative
+//   width: 100%
+//   height: auto
+//   // border:
+//   //   radius: 0
+//   background-color: $COL_BASE
+// .pagetop__obj
+//   position: static
+//   top: auto
+//   left: auto
+//   transform: none
+//   width: auto
+//   height: auto
+//   padding: 16px 0
+//   border: 0
+//   text-align: center
+//   span
+//     display: inline
+//     color: #fff
+//     +MIX_FONT_VW(20)
+//     line-height: 1
+//     letter-spacing: .05em
+
+
+/* モーダル */
+.mlWrap
+  // display: block
+  // position: fixed
+  // top: 0
+  // left: 0
+  // width: 100%
+  // height: 100%
+  // z-index: -1
+  // opacity: 0
+  // transition: opacity .2s
+  //   delay: .1s
   // pointer-events: none
-  // cursor: pointer
-  // &[data-current=true]
+  // &:target
   //   opacity: 1
+  //   z-index: 10
   //   pointer-events: auto
-.pagetop__inner
-  position: relative
+.mlWrap__close
+  // position: absolute
+  // top: -15px
+  // right: -15px
+  // z-index: 2
+  // width: 30px
+  // height: 30px
+  // background-color: $COL_SUB
+  &:before,&:after
+    // content: ""
+    // position: absolute
+    // top: 50%
+    // left: 50%
+    // width: 75%
+    // height: 2px
+    // background-color: #fff
+    transition: none
+      // delay: .3s, .1s
+  // &:before
+  //   transform: translate(-50%,-50%) rotate(45deg)
+  // &:after
+  //   transform: translate(-50%,-50%) rotate(135deg)
+  &:hover
+    &:before,&:after
+      height: 2px
+      // transition:
+      //   delay: .1s, .3s
+    &:before
+      transform: translate(-50%,-50%) rotate(45deg)
+    &:after
+      transform: translate(-50%,-50%) rotate(135deg)
+// .mlWrap__overlay
+//   position: absolute
+//   z-index: 1
+//   top: 0
+//   left: 0
+//   width: 100%
+//   height: 100%
+//   background-color: rgba(#111, .7)
+.mlWrap__container
+  // position: absolute
+  // top: 50%
+  // left: 50%
+  // z-index: 5
+  // transform: translate(-50%,-50%)
+  max-width: 90%
   width: 100%
-  height: auto
-  // border:
-  //   radius: 0
-  background-color: $COL_BASE
-.pagetop__obj
-  position: static
-  top: auto
-  left: auto
-  transform: none
-  width: auto
-  height: auto
-  padding: 16px 0
-  border: 0
-  text-align: center
-  span
-    display: inline
-    color: #fff
-    +MIX_FONT_VW(20)
-    line-height: 1
-    letter-spacing: .05em
+  // height: 0
+  // padding: 1.5rem
+  // background-color: #eee
+  // transition: all .3s
+  //   delay: .2s
 
